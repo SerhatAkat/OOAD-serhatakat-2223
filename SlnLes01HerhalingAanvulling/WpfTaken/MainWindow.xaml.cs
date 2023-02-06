@@ -20,30 +20,33 @@ namespace WpfTaken
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        Stack<ListBoxItem> deletedItems = new Stack<ListBoxItem>();
+        // checkForm methode
         private bool CheckForm()
         {
+            bool formValid = true;
             if (dtmDatum.SelectedDate == null)
             {
                 txtBMessageDeadline.Foreground = Brushes.Red;
                 txtBMessageDeadline.Text = "gelieve een deadline te kiezen";
-                return false;
+                formValid = false;
             }
             if (rbnAdam.IsChecked == false && rbnBilal.IsChecked == false && rbnChelsey.IsChecked == false)
             {
                 txtBMessageUitvoerder.Foreground = Brushes.Red;
                 txtBMessageUitvoerder.Text = "gelieve een uitvoerder te kiezen";
-                return false;
+                formValid = false;
             }
-            else
-            {
-                return true;
-            }
+            return formValid;
         }
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        // items toevoegen in de lijst
         private void btnToevoegen_Click(object sender, RoutedEventArgs e)
         {
             if (CheckForm() == true && rbnAdam.IsChecked == true)
@@ -99,6 +102,56 @@ namespace WpfTaken
                 {
                     item.Background = Brushes.Green;
                 }
+            }
+            if (lstTaken.Items.Count > 0)
+            {
+                btnVerwijderen.IsEnabled = true;
+            }
+            else if (lstTaken.Items.Count == 0)
+            {
+                btnVerwijderen.IsEnabled = false;
+            }
+        }
+        //geselecteerde item uit de lijst verwijderen en bijhouden met Push()
+        private void btnVerwijderen_Click(object sender, RoutedEventArgs e)
+        {
+            ListBoxItem selectedItem = lstTaken.SelectedItem as ListBoxItem;
+            if (selectedItem != null)
+            {
+                deletedItems.Push(selectedItem);
+                lstTaken.Items.Remove(selectedItem);
+            }
+            if (lstTaken.Items.Count == 0)
+            {
+                btnVerwijderen.IsEnabled = false;
+            }
+            if (deletedItems.Count > 0)
+            {
+                btnTerugzetten.IsEnabled = true;
+            }
+            if (deletedItems.Count < 0)
+            {
+                btnTerugzetten.IsEnabled = false;
+            }
+        }
+        //verwijderde items terugzetten met Pop()
+        private void btnTerugzetten_Click(object sender, RoutedEventArgs e)
+        {
+            ListBoxItem selectedItem = lstTaken.SelectedItem as ListBoxItem;
+            if (selectedItem != null)
+            {
+                deletedItems.Push(selectedItem);
+                lstTaken.Items.Remove(selectedItem);
+            }
+            if (deletedItems.Count > 0)
+            {
+                ListBoxItem restoredItem = deletedItems.Pop();
+                lstTaken.Items.Add(restoredItem);
+                btnVerwijderen.IsEnabled = true;
+            }
+            if (deletedItems.Count <= 0)
+            {
+                btnTerugzetten.IsEnabled = false;
             }
         }
     }

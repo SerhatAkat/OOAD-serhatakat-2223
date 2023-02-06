@@ -24,8 +24,8 @@
         <RadioButton x:Name="rbnChelsey" Content="Chelsey" HorizontalAlignment="Left" Margin="298,142,0,0" VerticalAlignment="Top" Height="21" Width="68" GroupName="rbnUitvoerder"/>
         <Button x:Name="btnToevoegen" Content="TOEVOEGEN »" HorizontalAlignment="Left" Margin="266,178,0,0" VerticalAlignment="Top" Height="29" Width="100" Click="btnToevoegen_Click"/>
         <ListBox x:Name="lstTaken" Margin="400,44,10,227"/>
-        <Button x:Name="btnTerugzetten" Content="TERUGZETTEN" HorizontalAlignment="Left" Margin="486,217,0,0" VerticalAlignment="Top" Height="29" Width="100" IsEnabled="False"/>
-        <Button x:Name="btnVerwijderen" Content="VERWIJDEREN" HorizontalAlignment="Left" Margin="595,217,0,0" VerticalAlignment="Top" Height="29" Width="100" IsEnabled="False"/>
+        <Button x:Name="btnTerugzetten" Content="TERUGZETTEN" HorizontalAlignment="Left" Margin="486,217,0,0" VerticalAlignment="Top" Height="29" Width="100" Click="btnTerugzetten_Click" IsEnabled="False"/>
+        <Button x:Name="btnVerwijderen" Content="VERWIJDEREN" HorizontalAlignment="Left" Margin="595,217,0,0" VerticalAlignment="Top" Height="29" Width="100" Click="btnVerwijderen_Click" IsEnabled="False"/>
         <TextBlock x:Name="txtBMessageDeadline" HorizontalAlignment="Left" Margin="80,334,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="23" Width="286"/>
         <TextBlock x:Name="txtBMessageUitvoerder" HorizontalAlignment="Left" Margin="80,362,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="23" Width="286"/>
     </Grid>
