@@ -20,7 +20,6 @@ namespace WpfTaken
     /// </summary>
     public partial class MainWindow : Window
     {
-
         Stack<ListBoxItem> deletedItems = new Stack<ListBoxItem>();
         // checkForm methode
         private bool CheckForm()
@@ -153,6 +152,26 @@ namespace WpfTaken
             {
                 btnTerugzetten.IsEnabled = false;
             }
+        }
+
+        private void dtmDatum_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            txtBMessageDeadline.Text = "";
+        }
+
+        private void rbnAdam_Checked(object sender, RoutedEventArgs e)
+        {
+            txtBMessageUitvoerder.Text = "";
+        }
+
+        private void rbnBilal_Checked(object sender, RoutedEventArgs e)
+        {
+            txtBMessageUitvoerder.Text = "";
+        }
+
+        private void rbnChelsey_Checked(object sender, RoutedEventArgs e)
+        {
+            txtBMessageUitvoerder.Text = "";
         }
     }
 }
