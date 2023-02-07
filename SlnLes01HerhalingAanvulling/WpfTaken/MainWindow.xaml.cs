@@ -20,21 +20,33 @@ namespace WpfTaken
     /// </summary>
     public partial class MainWindow : Window
     {
+        // globale variable om te zien of button toevoegen is geklikt of niet.
+        int isclicked = 0;
         Stack<ListBoxItem> deletedItems = new Stack<ListBoxItem>();
         // checkForm methode
         private bool CheckForm()
         {
             bool formValid = true;
+            txtBMessage.Text = "";
+            txtBMessage.Foreground = Brushes.Red;
+            if (txtTaak.Text == "")
+            {
+                txtBMessage.Text += "gelieve een Taak in te vullen kiezen \n";
+                formValid = false;
+            }
+            if (cbxPrioriteit.SelectedIndex == -1)
+            {
+                txtBMessage.Text += "gelieve een Prioriteit aan te duiden \n";
+                formValid = false;
+            }
             if (dtmDatum.SelectedDate == null)
             {
-                txtBMessageDeadline.Foreground = Brushes.Red;
-                txtBMessageDeadline.Text = "gelieve een deadline te kiezen";
+                txtBMessage.Text += "gelieve een deadline te kiezen \n";
                 formValid = false;
             }
             if (rbnAdam.IsChecked == false && rbnBilal.IsChecked == false && rbnChelsey.IsChecked == false)
             {
-                txtBMessageUitvoerder.Foreground = Brushes.Red;
-                txtBMessageUitvoerder.Text = "gelieve een uitvoerder te kiezen";
+                txtBMessage.Text += "gelieve een uitvoerder te kiezen \n";
                 formValid = false;
             }
             return formValid;
@@ -48,6 +60,7 @@ namespace WpfTaken
         // items toevoegen in de lijst
         private void btnToevoegen_Click(object sender, RoutedEventArgs e)
         {
+            isclicked = 1;
             if (CheckForm() == true && rbnAdam.IsChecked == true)
             {
                 ListBoxItem item = new ListBoxItem();
@@ -110,6 +123,13 @@ namespace WpfTaken
             {
                 btnVerwijderen.IsEnabled = false;
             }
+            txtTaak.Text = "";
+            cbxPrioriteit.SelectedIndex = -1;
+            dtmDatum.SelectedDate = null;
+            rbnAdam.IsChecked = false;
+            rbnBilal.IsChecked = false;
+            rbnChelsey.IsChecked = false;
+            CheckForm();
         }
         //geselecteerde item uit de lijst verwijderen en bijhouden met Push()
         private void btnVerwijderen_Click(object sender, RoutedEventArgs e)
@@ -120,18 +140,7 @@ namespace WpfTaken
                 deletedItems.Push(selectedItem);
                 lstTaken.Items.Remove(selectedItem);
             }
-            if (lstTaken.Items.Count == 0)
-            {
-                btnVerwijderen.IsEnabled = false;
-            }
-            if (deletedItems.Count > 0)
-            {
-                btnTerugzetten.IsEnabled = true;
-            }
-            if (deletedItems.Count < 0)
-            {
-                btnTerugzetten.IsEnabled = false;
-            }
+            ButtonStatus();
         }
         //verwijderde items terugzetten met Pop()
         private void btnTerugzetten_Click(object sender, RoutedEventArgs e)
@@ -153,25 +162,72 @@ namespace WpfTaken
                 btnTerugzetten.IsEnabled = false;
             }
         }
+        private void ButtonStatus()
+        {
+            if (lstTaken.Items.Count == 0)
+            {
+                btnVerwijderen.IsEnabled = false;
+            }
+            if (deletedItems.Count > 0)
+            {
+                btnTerugzetten.IsEnabled = true;
+            }
+            if (deletedItems.Count < 0)
+            {
+                btnTerugzetten.IsEnabled = false;
+            }
+        }
 
         private void dtmDatum_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            txtBMessageDeadline.Text = "";
+            if (isclicked == 1)
+            {
+                CheckForm();
+            }
         }
 
         private void rbnAdam_Checked(object sender, RoutedEventArgs e)
         {
-            txtBMessageUitvoerder.Text = "";
+            if (isclicked == 1)
+            {
+                CheckForm();
+
+            }
         }
 
         private void rbnBilal_Checked(object sender, RoutedEventArgs e)
         {
-            txtBMessageUitvoerder.Text = "";
+            if (isclicked == 1)
+            {
+                CheckForm();
+
+            }
         }
 
         private void rbnChelsey_Checked(object sender, RoutedEventArgs e)
         {
-            txtBMessageUitvoerder.Text = "";
+            if (isclicked == 1)
+            {
+                CheckForm();
+
+            }
+        }
+
+        private void txtTaak_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (isclicked == 1)
+            {
+                CheckForm();
+
+            }
+        }
+        private void cbxPrioriteit_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isclicked == 1)
+            {
+                CheckForm();
+
+            }
         }
     }
 }
