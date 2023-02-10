@@ -31,7 +31,7 @@ namespace WpfTaken
             txtBMessage.Foreground = Brushes.Red;
             if (txtTaak.Text == "")
             {
-                txtBMessage.Text += "gelieve een Taak in te vullen kiezen \n";
+                txtBMessage.Text += "gelieve een Taak in te vullen \n";
                 formValid = false;
             }
             if (cbxPrioriteit.SelectedIndex == -1)
@@ -177,7 +177,6 @@ namespace WpfTaken
                 btnTerugzetten.IsEnabled = false;
             }
         }
-
         private void dtmDatum_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (isclicked == 1)
@@ -185,40 +184,32 @@ namespace WpfTaken
                 CheckForm();
             }
         }
-
         private void rbnAdam_Checked(object sender, RoutedEventArgs e)
         {
             if (isclicked == 1)
             {
                 CheckForm();
-
             }
         }
-
         private void rbnBilal_Checked(object sender, RoutedEventArgs e)
         {
             if (isclicked == 1)
             {
                 CheckForm();
-
             }
         }
-
         private void rbnChelsey_Checked(object sender, RoutedEventArgs e)
         {
             if (isclicked == 1)
             {
                 CheckForm();
-
             }
         }
-
         private void txtTaak_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (isclicked == 1)
             {
                 CheckForm();
-
             }
         }
         private void cbxPrioriteit_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -226,7 +217,6 @@ namespace WpfTaken
             if (isclicked == 1)
             {
                 CheckForm();
-
             }
         }
     }

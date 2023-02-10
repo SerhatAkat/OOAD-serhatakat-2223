@@ -19,10 +19,18 @@ namespace ConsoleTafels
             }
             return str;
         }
-        private static string VraagPositiefGetal()
+        private static void VraagPositiefGetal()
         {
-            string vraag = "Het getal moet positief zijn. Geef een getal: ";
-            return vraag;
+            int get1 = Convert.ToInt32(Console.ReadLine());
+            while (get1 < 0)
+            {
+                Console.Write($"Het getal moet positief zijn! Geef een getal: ");
+                get1 = Convert.ToInt32(Console.ReadLine());
+            }
+            Console.Write("Geef een lengte: ");
+            int lengte = Convert.ToInt32(Console.ReadLine());
+            DrukTafel(get1, lengte);
+            Console.WriteLine(DrukTafel(get1, lengte));
         }
         static void Main(string[] args)
         {
@@ -30,17 +38,8 @@ namespace ConsoleTafels
             Console.WriteLine(DrukTafel(2, 5));
             Console.WriteLine();
             Console.Write($"Geef een getal: ");
-            int get1 = Convert.ToInt32(Console.ReadLine());
-            while (get1 < 0)
-            {
-                Console.WriteLine(VraagPositiefGetal());
-                get1 = Convert.ToInt32(Console.ReadLine());
-            }
-            Console.Write("Geef een lengte: ");
-            int lengte = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine(DrukTafel(get1, lengte));
+            VraagPositiefGetal();
             Console.ReadLine();
-
         }
     }
 }
