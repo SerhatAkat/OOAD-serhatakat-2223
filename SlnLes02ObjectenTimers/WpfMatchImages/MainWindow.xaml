@@ -1,0 +1,62 @@
+﻿<Window x:Class="WpfMatchImages.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfMatchImages"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="550">
+    <Grid>
+        <Button x:Name="btnBee" Margin="133,37,334,329" Click="Button_Click">
+            <Image x:Name="imgBee" Source="img/bee.png"/>
+        </Button>
+        <Button x:Name="btnEgg" Margin="216,37,252,329">
+            <Image x:Name="imgEgg" Source="img/egg.png"/>
+        </Button>
+        <Button x:Name="btnChicken" Margin="298,37,169,329">
+            <Image x:Name="imgChicken" Source="img/chicken.png"/>
+        </Button>
+        <Button x:Name="btnHouse" Margin="381,37,86,329">
+            <Image x:Name="imgHouse" Source="img/birdhouse.png"/>
+        </Button>
+        <Button x:Name="btnLeash" Margin="133,104,334,262">
+            <Image x:Name="imgLeash" Source="img/leash.png"/>
+        </Button>
+        <Button x:Name="btnPost" Margin="216,104,252,262">
+            <Image x:Name="imgPost" Source="/img/post.png"/>
+        </Button>
+        <Button x:Name="btnCow" Margin="298,104,169,262">
+            <Image x:Name="imgCow" Source="/img/cow.png"/>
+        </Button>
+        <Button x:Name="btnPenguin" Margin="381,104,86,262">
+            <Image x:Name="imgPenguin" Source="/img/penguin.png"/>
+        </Button>
+        <Button x:Name="btnHive" Margin="133,172,334,194">
+            <Image x:Name="imgHive" Source="/img/hive.png"/>
+        </Button>
+        <Button x:Name="btnDog" Margin="216,172,252,194">
+            <Image x:Name="imgDog" Source="/img/dog.png"/>
+        </Button>
+        <Button x:Name="btnCat" Margin="298,172,169,194">
+            <Image x:Name="imgCat" Source="/img/cat.png"/>
+        </Button>
+        <Button x:Name="btnBird" Margin="381,172,86,194">
+            <Image x:Name="imgBird" Source="/img/bird.png"/>
+        </Button>
+        <Button x:Name="btnOwl" Margin="133,239,334,127">
+            <Image x:Name="imgOwl" Source="/img/owl.png"/>
+        </Button>
+        <Button x:Name="btnNight" Margin="216,239,252,127">
+            <Image x:Name="imgNight" Source="/img/night.png"/>
+        </Button>
+        <Button x:Name="btnMilk" Margin="298,239,169,127">
+            <Image x:Name="imgMilk" Source="/img/milk.png"/>
+        </Button>
+        <Button x:Name="btnSnow" Margin="381,239,86,127">
+            <Image x:Name="imgSnow" Source="/img/snow.png"/>
+        </Button>
+        
+        <Label x:Name="lblMessage" Content="" HorizontalAlignment="Left" Margin="133,323,0,0" VerticalAlignment="Top" Width="331"/>
+        <Label x:Name="lblTimer" Content="" HorizontalAlignment="Left" Margin="133,354,0,0" VerticalAlignment="Top" Width="331"/>
+    </Grid>
+</Window>
