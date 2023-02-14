@@ -7,52 +7,52 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="550">
     <Grid>
-        <Button x:Name="btnBee" Margin="133,37,334,329" Click="Button_Click">
+        <Button x:Name="btnBee" Margin="133,37,334,329" Click="Button_Click" Tag="Bee">
             <Image x:Name="imgBee" Source="img/bee.png"/>
         </Button>
-        <Button x:Name="btnEgg" Margin="216,37,252,329">
+        <Button x:Name="btnEgg" Margin="216,37,252,329" Tag="Chicken">
             <Image x:Name="imgEgg" Source="img/egg.png"/>
         </Button>
-        <Button x:Name="btnChicken" Margin="298,37,169,329">
+        <Button x:Name="btnChicken" Margin="298,37,169,329" Tag="Chicken">
             <Image x:Name="imgChicken" Source="img/chicken.png"/>
         </Button>
-        <Button x:Name="btnHouse" Margin="381,37,86,329">
+        <Button x:Name="btnHouse" Margin="381,37,86,329" Tag="Bird">
             <Image x:Name="imgHouse" Source="img/birdhouse.png"/>
         </Button>
-        <Button x:Name="btnLeash" Margin="133,104,334,262">
+        <Button x:Name="btnLeash" Margin="133,104,334,262" Tag="Dog">
             <Image x:Name="imgLeash" Source="img/leash.png"/>
         </Button>
-        <Button x:Name="btnPost" Margin="216,104,252,262">
+        <Button x:Name="btnPost" Margin="216,104,252,262" Tag="Cat">
             <Image x:Name="imgPost" Source="/img/post.png"/>
         </Button>
-        <Button x:Name="btnCow" Margin="298,104,169,262">
+        <Button x:Name="btnCow" Margin="298,104,169,262" Tag="Cow">
             <Image x:Name="imgCow" Source="/img/cow.png"/>
         </Button>
-        <Button x:Name="btnPenguin" Margin="381,104,86,262">
+        <Button x:Name="btnPenguin" Margin="381,104,86,262" Tag="Penguin">
             <Image x:Name="imgPenguin" Source="/img/penguin.png"/>
         </Button>
-        <Button x:Name="btnHive" Margin="133,172,334,194">
+        <Button x:Name="btnHive" Margin="133,172,334,194" Tag="Bee">
             <Image x:Name="imgHive" Source="/img/hive.png"/>
         </Button>
-        <Button x:Name="btnDog" Margin="216,172,252,194">
+        <Button x:Name="btnDog" Margin="216,172,252,194" Tag="Dog">
             <Image x:Name="imgDog" Source="/img/dog.png"/>
         </Button>
-        <Button x:Name="btnCat" Margin="298,172,169,194">
+        <Button x:Name="btnCat" Margin="298,172,169,194" Tag="Cat">
             <Image x:Name="imgCat" Source="/img/cat.png"/>
         </Button>
-        <Button x:Name="btnBird" Margin="381,172,86,194">
+        <Button x:Name="btnBird" Margin="381,172,86,194" Tag="Bird">
             <Image x:Name="imgBird" Source="/img/bird.png"/>
         </Button>
-        <Button x:Name="btnOwl" Margin="133,239,334,127">
+        <Button x:Name="btnOwl" Margin="133,239,334,127" Tag="Owl">
             <Image x:Name="imgOwl" Source="/img/owl.png"/>
         </Button>
-        <Button x:Name="btnNight" Margin="216,239,252,127">
+        <Button x:Name="btnNight" Margin="216,239,252,127" Tag="Owl">
             <Image x:Name="imgNight" Source="/img/night.png"/>
         </Button>
-        <Button x:Name="btnMilk" Margin="298,239,169,127">
+        <Button x:Name="btnMilk" Margin="298,239,169,127" Tag="Cow">
             <Image x:Name="imgMilk" Source="/img/milk.png"/>
         </Button>
-        <Button x:Name="btnSnow" Margin="381,239,86,127">
+        <Button x:Name="btnSnow" Margin="381,239,86,127" Tag="Penguin">
             <Image x:Name="imgSnow" Source="/img/snow.png"/>
         </Button>
         

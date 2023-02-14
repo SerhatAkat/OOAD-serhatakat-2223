@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace WpfMatchImages
@@ -21,11 +11,19 @@ namespace WpfMatchImages
     /// </summary>
     public partial class MainWindow : Window
     {
-        private DispatcherTimer timer= new DispatcherTimer();
-        private int count = 0;
+        private DispatcherTimer timer = new DispatcherTimer();
+        private Stopwatch stopwatch = new Stopwatch();
+        private Button eersteButton;
+        private Button secondButton;
+        int AantalParen = 8;
+
         public MainWindow()
         {
             InitializeComponent();
+            lblMessage.Content = "Er zijn 8 paren die aangeklikt moeten worden.";
+            timer.Interval = TimeSpan.FromMilliseconds(1);
+            timer.Tick += Timer_Tick;
+
             btnBird.Click += Button_Click;
             btnCat.Click += Button_Click;
             btnChicken.Click += Button_Click;
@@ -41,17 +39,49 @@ namespace WpfMatchImages
             btnPenguin.Click += Button_Click;
             btnPost.Click += Button_Click;
             btnSnow.Click += Button_Click;
-            timer.Interval = TimeSpan.FromMilliseconds(1000);
-            timer.Tick += timer_Tick;
         }
-        private void timer_Tick(object sender, EventArgs e)
+
+        private void Timer_Tick(object sender, EventArgs e)
         {
-            count++;
-            lblTimer.Content = count;
+            lblTimer.Content = stopwatch.Elapsed.ToString(@"hh\:mm\:ss\:ff");
         }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            timer.Start();
+            if (!timer.IsEnabled)
+            {
+                timer.Start();
+                stopwatch.Start();
+            }
+            if (eersteButton == null)
+            {
+                eersteButton = sender as Button;
+                eersteButton.IsEnabled = false;
+            }
+            else
+            {
+                secondButton = sender as Button;
+                secondButton.IsEnabled = false;
+                if (eersteButton.Tag.Equals(secondButton.Tag))
+                {
+                    eersteButton.Opacity = 0.5;
+                    secondButton.Opacity = 0.5;
+                    AantalParen--;
+                    lblMessage.Content = $"Juist! Nog {AantalParen} te gaan";
+                    if (AantalParen == 0)
+                    {
+                        timer.Stop();
+                        stopwatch.Stop();
+                        lblMessage.Content = $"Alles gevonden!";
+                    }
+                }
+                else
+                {
+                    eersteButton.IsEnabled = true;
+                    secondButton.IsEnabled = true;
+                }
+                eersteButton = null;
+            }
         }
     }
 }
