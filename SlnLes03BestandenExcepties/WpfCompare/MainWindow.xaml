@@ -1,0 +1,17 @@
+﻿<Window x:Class="WpfCompare.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfCompare"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <ListBox x:Name="lstFiles2" Margin="417,10,25,247"/>
+        <ListBox x:Name="lstFiles1" Margin="25,10,417,247"/>
+        <ListBox x:Name="lstSummary1" Margin="25,192,417,65"/>
+        <ListBox x:Name="lstSummary2" Margin="417,192,25,65"/>
+        <Button x:Name="btnCompare" Content="Compare!" HorizontalAlignment="Center" Margin="0,381,0,0" VerticalAlignment="Top" Height="31" Width="110" FontSize="15" Click="btnCompare_Click"/>
+
+    </Grid>
+</Window>
