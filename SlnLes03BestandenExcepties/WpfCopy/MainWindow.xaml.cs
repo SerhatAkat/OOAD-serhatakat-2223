@@ -31,8 +31,6 @@ namespace WpfCopy
                 chosenFileName = dialog.FileName;
                 txtFile.Text = chosenFileName;
 
-                string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
                 try
                 {
                     string filePath = System.IO.Path.Combine(folderPath, chosenFileName);
