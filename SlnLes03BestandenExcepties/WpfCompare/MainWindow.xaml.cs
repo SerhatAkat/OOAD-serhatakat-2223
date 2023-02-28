@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -24,23 +25,23 @@ namespace WpfCompare
         private void PopulateFileList(ListBox listBox)
         {
             listBox.Items.Clear();
-            var files = Directory.GetFiles(folderPath, "*.txt");
-            foreach (var file in files)
+            string[] files = Directory.GetFiles(folderPath, "*.txt");
+            foreach (string file in files)
             {
                 listBox.Items.Add(Path.GetFileName(file));
             }
         }
         private void FileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var listBox = (ListBox)sender;
-            var fileName = (string)listBox.SelectedItem;
-            var filePath = Path.Combine(folderPath, fileName);
-            var fileContents = File.ReadAllText(filePath);
+            ListBox listBox = (ListBox)sender;
+            string fileName = (string)listBox.SelectedItem;
+            string filePath = Path.Combine(folderPath, fileName);
+            string fileContents = File.ReadAllText(filePath);
 
             if (listBox == lstFiles1)
             {
                 lstSummary1.Items.Clear();
-                foreach (var line in fileContents.Split('\n'))
+                foreach (string line in fileContents.Split('\n'))
                 {
                     lstSummary1.Items.Add(line);
 
@@ -49,7 +50,7 @@ namespace WpfCompare
             else if (listBox == lstFiles2)
             {
                 lstSummary2.Items.Clear();
-                foreach (var line in fileContents.Split('\n'))
+                foreach (string line in fileContents.Split('\n'))
                 {
                     lstSummary2.Items.Add(line);
                 }
@@ -58,14 +59,20 @@ namespace WpfCompare
 
         private void btnCompare_Click(object sender, RoutedEventArgs e)
         {
-            var differences = lstSummary1.Items.Cast<string>()
-                .Select((line, index) => new { Line = line, Index = index })
-                .Where(item => lstSummary2.Items.Count > item.Index && item.Line != lstSummary2.Items[item.Index] as string)
-                .Select(item => item.Index);
+            List<string> differences = new List<string>();
+            foreach (string line in lstSummary1.Items.Cast<string>())
+            {
+                int index = lstSummary1.Items.IndexOf(line);
+                if (lstSummary2.Items.Count > index && line != lstSummary2.Items[index] as string)
+                {
+                    differences.Add(line);
+                }
+            }
 
             lstSummary2.SelectedItem = null;
-            foreach (var index in differences)
+            foreach (string line in differences)
             {
+                int index = lstSummary1.Items.IndexOf(line);
                 lstSummary2.SelectedItem = lstSummary2.Items[index];
             }
         }
