@@ -13,7 +13,7 @@ namespace ConsoleCsv
         {
             Random rnd = new Random();
             string[] Games = { "Schaken", "Backgammon", "Dammen" };
-            string[,] teams = new string[,] { { "Peter", "Jan", "Lukas", "Marie", "Kobe" }, { "Axel", "Pieter-Jan", "Serhat", "Niels", "Amber" } };
+            string[,] teams = new string[,] { { "Zakaria", "Saleha", "Indra", "Ralph", "Francisco" }, { "Marie", "Jens", "Serhat", "Niels", "Amber" } };
             string Noteer = "";
             for (int i = 0; i < 100; i++)
             {
