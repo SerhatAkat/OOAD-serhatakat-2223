@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows;
 
 namespace WpfFileInfo
@@ -46,7 +45,26 @@ namespace WpfFileInfo
                     else
                         AantalWoorden[line.ToLower()] = 1;
                 }
-                AantalWoorden = AantalWoorden.OrderByDescending(a => a.Value).Take(3).ToDictionary(a => a.Key, x => x.Value);
+                Dictionary<string, int> top3 = new Dictionary<string, int>();
+                foreach (KeyValuePair<string, int> kvp in AantalWoorden)
+                {
+                    if (top3.Count < 3)
+                    {
+                        top3.Add(kvp.Key, kvp.Value);
+                    }
+                    else
+                    {
+                        foreach (KeyValuePair<string, int> topKvp in top3)
+                        {
+                            if (kvp.Value > topKvp.Value)
+                            {
+                                top3.Remove(topKvp.Key);
+                                top3.Add(kvp.Key, kvp.Value);
+                                break;
+                            }
+                        }
+                    }
+                }
 
                 FileInfo fi = new FileInfo(fileName);
                 lblNaam.Content = $"bestandsnaam: {fi.Name}";
@@ -54,7 +72,13 @@ namespace WpfFileInfo
                 lblDatum.Content = $"gemaakt op: {fi.CreationTime}";
                 lblMap.Content = $"mapnaam: {fi.Directory.Name}";
                 lblAantal.Content = $"aantal woorden: {teller}";
-                lblWoorden.Content = $"meest voorkomende woorden: {string.Join(", ", AantalWoorden.Keys)}";
+
+                List<string> common3Words = new List<string>();
+                foreach (KeyValuePair<string, int> kvp in top3)
+                {
+                    common3Words.Add(kvp.Key);
+                }
+                lblWoorden.Content = $"meest voorkomende woorden: {string.Join(", ", common3Words)}";
             }
         }
     }
