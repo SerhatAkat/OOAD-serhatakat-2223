@@ -24,5 +24,20 @@ namespace WpfVcardEditor
         {
             InitializeComponent();
         }
+
+        private void MenuAbout_Click(object sender, RoutedEventArgs e)
+        {
+            AboutWindow About = new AboutWindow();
+            About.Show();
+        }
+
+        private void btnExit_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult resultaat = MessageBox.Show("Ben je zeker dat je de applicatie wil afsluiten?", "Afsluiten", MessageBoxButton.OKCancel);
+            if (resultaat == MessageBoxResult.OK)
+            {
+                this.Close();
+            }
+        }
     }
 }
