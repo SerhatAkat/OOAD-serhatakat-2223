@@ -10,7 +10,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem x:Name="btnFile" Header="vCard" IsHitTestVisible="True">
                 <MenuItem x:Name="btnNew" Header="New"/>
-                <MenuItem x:Name="btnOpen" Header="Open..."/>
+                <MenuItem x:Name="btnOpen" Header="Open..." Click="btnOpen_Click"/>
                 <MenuItem x:Name="btnSave" Header="Save" IsEnabled="false"/>
                 <MenuItem x:Name="btnSaveAs" Header="Save_As..." IsEnabled="false"/>
                 <Separator/>
@@ -61,9 +61,9 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <RadioButton Content="Man" GroupName="Geslacht" Grid.Column="0" Margin="0 5 3 10"/>
-                            <RadioButton Content="Vrouw" GroupName="Geslacht" Grid.Column="1" Margin="0 5 3 10"/>
-                            <RadioButton Content="Onbekend" GroupName="Geslacht" Grid.Column="2" Margin="0 5 3 10"/>
+                            <RadioButton x:Name="rbnMan" Content="Man" GroupName="Geslacht" Grid.Column="0" Margin="0 5 3 10"/>
+                            <RadioButton x:Name="rbnVrouw" Content="Vrouw" GroupName="Geslacht" Grid.Column="1" Margin="0 5 3 10"/>
+                            <RadioButton x:Name="rbnOnbekend" Content="Onbekend" GroupName="Geslacht" Grid.Column="2" Margin="0 5 3 10"/>
                         </Grid>
                         <Label Grid.Row="4" Content="Privé email:"></Label>
                         <TextBox Name="txtEmail" Grid.Row="4" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
