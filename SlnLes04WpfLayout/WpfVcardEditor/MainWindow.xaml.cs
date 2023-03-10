@@ -12,6 +12,7 @@ namespace WpfVcardEditor
     public partial class MainWindow : Window
     {
         OpenFileDialog openFileDialog = new OpenFileDialog();
+        bool checkWijziging = false;
 
         public MainWindow()
         {
@@ -147,6 +148,7 @@ namespace WpfVcardEditor
                 }
                 btnSave.IsEnabled = true;
                 btnSaveAs.IsEnabled = true;
+                checkWijziging = false;
             }
         }
 
@@ -239,7 +241,7 @@ namespace WpfVcardEditor
 
         private void btnNew_Click(object sender, RoutedEventArgs e)
         {
-            if (UnsavedChanges())
+            if (checkWijziging == true)
             {
                 if (MessageBox.Show("Er zijn onopgeslagen wijzigingen. Wilt u doorgaan en deze wijzigingen negeren?", "Waarschuwing", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                 {
@@ -266,25 +268,12 @@ namespace WpfVcardEditor
 
             btnSave.IsEnabled = false;
             btnSaveAs.IsEnabled = false;
-        }
-
-        private bool UnsavedChanges()
-        {
-            // Controleer of de tekstvakken leeg zijn
-            if (txtVoornaam.Text != "" || txtAchternaam.Text != "" || datGeboortedatum.SelectedDate != null ||
-                rbnMan.IsChecked == true || rbnVrouw.IsChecked == true || rbnOnbekend.IsChecked == true ||
-                txtEmail.Text != "" || txtTelefoon.Text != "" || txtFacebook.Text != "" || txtInstagram.Text != "" ||
-                txtLindkedin.Text != "" || txtYoutube.Text != "" || txtTelefoon.Text != "" || txtWerkemail.Text != "" || txtWerktelefoon.Text != "" || 
-                txtJobtitel.Text != "" || txtBedrijf.Text != "")
-            {
-                return true;
-            }
-            return false;
+            checkWijziging = false;
         }
 
         private void Card_Changed(object sender, EventArgs e)
         {
-
+            checkWijziging = true;
         }
     }
 }
