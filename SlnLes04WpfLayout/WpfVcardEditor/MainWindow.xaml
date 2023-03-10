@@ -9,7 +9,7 @@
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem x:Name="btnFile" Header="vCard" IsHitTestVisible="True">
-                <MenuItem x:Name="btnNew" Header="New"/>
+                <MenuItem x:Name="btnNew" Header="New" Click="btnNew_Click"/>
                 <MenuItem x:Name="btnOpen" Header="Open..." Click="btnOpen_Click"/>
                 <MenuItem x:Name="btnSave" Header="Save" IsEnabled="false" Click="btnSave_Click"/>
                 <MenuItem x:Name="btnSaveAs" Header="Save As..." IsEnabled="false" Click="btnSaveAs_Click"/>
@@ -49,11 +49,11 @@
 
                         </Grid.RowDefinitions>
                         <Label Content="Voornaam:"></Label>
-                        <TextBox x:Name="txtVoornaam" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
+                        <TextBox x:Name="txtVoornaam" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
                         <Label Grid.Row="1" Content="Achternaam:"></Label>
-                        <TextBox Name="txtAchternaam" Grid.Row="1" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
+                        <TextBox Name="txtAchternaam" Grid.Row="1" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
                         <Label Grid.Row="2" Content="Geboortedatum:"></Label>
-                        <DatePicker x:Name="datGeboortedatum" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="0 5 0 10" Padding="3"/>
+                        <DatePicker x:Name="datGeboortedatum" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="0 5 0 10" Padding="3" SelectedDateChanged="Card_Changed"/>
                         <Label Grid.Row="3" Content="Geslacht:"></Label>
                         <Grid Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
@@ -61,14 +61,14 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <RadioButton x:Name="rbnMan" Content="Man" GroupName="Geslacht" Grid.Column="0" Margin="0 5 3 10"/>
-                            <RadioButton x:Name="rbnVrouw" Content="Vrouw" GroupName="Geslacht" Grid.Column="1" Margin="0 5 3 10"/>
-                            <RadioButton x:Name="rbnOnbekend" Content="Onbekend" GroupName="Geslacht" Grid.Column="2" Margin="0 5 3 10"/>
+                            <RadioButton x:Name="rbnMan" Content="Man" GroupName="Geslacht" Grid.Column="0" Margin="0 5 3 10" Click="Card_Changed"/>
+                            <RadioButton x:Name="rbnVrouw" Content="Vrouw" GroupName="Geslacht" Grid.Column="1" Margin="0 5 3 10" Click="Card_Changed"/>
+                            <RadioButton x:Name="rbnOnbekend" Content="Onbekend" GroupName="Geslacht" Grid.Column="2" Margin="0 5 3 10" Click="Card_Changed"/>
                         </Grid>
                         <Label Grid.Row="4" Content="Privé email:"></Label>
-                        <TextBox Name="txtEmail" Grid.Row="4" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
+                        <TextBox Name="txtEmail" Grid.Row="4" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
                         <Label Grid.Row="6" Content="Privé telefoon:"></Label>
-                        <TextBox Name="txtTelefoon" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" MinWidth="233" Margin="0 5 0 10" Padding="3"/>
+                        <TextBox Name="txtTelefoon" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" MinWidth="233" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
                         <Label Grid.Row="7" Content="foto:"></Label>
                         <Grid Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left">
                             <Grid.ColumnDefinitions>
@@ -105,13 +105,13 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Label Content="Bedrijf:"></Label>
-                        <TextBox Name="txtBedrijf" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
+                        <TextBox Name="txtBedrijf" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
                         <Label Grid.Row="1" Content="Jobtitel:"></Label>
-                        <TextBox x:Name="txtJobtitel" Grid.Row="1" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
+                        <TextBox x:Name="txtJobtitel" Grid.Row="1" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
                         <Label Grid.Row="2" Content="Werk email:"></Label>
-                        <TextBox x:Name="txtWerkemail" Grid.Row="2" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
+                        <TextBox x:Name="txtWerkemail" Grid.Row="2" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
                         <Label Grid.Row="3" Content="Werk telefoon:"></Label>
-                        <TextBox x:Name="txtWerktelefoon" Grid.Row="3" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
+                        <TextBox x:Name="txtWerktelefoon" Grid.Row="3" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Sociaal" Padding="6">
@@ -129,13 +129,13 @@
 
                         </Grid.RowDefinitions>
                         <Label Content="LinkedIn:"></Label>
-                        <TextBox Name="txtLindkedin" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
+                        <TextBox Name="txtLindkedin" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
                         <Label Grid.Row="1" Content="Facebook:"></Label>
-                        <TextBox Name="txtFacebook" Grid.Row="1" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
+                        <TextBox Name="txtFacebook" Grid.Row="1" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
                         <Label Grid.Row="2" Content="Instagram:"></Label>
-                        <TextBox Name="txtInstagram" Grid.Row="2" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
+                        <TextBox Name="txtInstagram" Grid.Row="2" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
                         <Label Grid.Row="3" Content="Youtube:"></Label>
-                        <TextBox Name="txtYoutube" Grid.Row="3" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
+                        <TextBox Name="txtYoutube" Grid.Row="3" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
                     </Grid>
                 </TabItem>
             </TabControl>

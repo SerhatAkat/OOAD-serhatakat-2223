@@ -33,7 +33,6 @@ namespace WpfVcardEditor
             }
         }
 
-
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
             openFileDialog.Filter = "vCard files (*.vcf)|*.vcf|All files (*.*)|*.*";
@@ -148,10 +147,7 @@ namespace WpfVcardEditor
                 }
                 btnSave.IsEnabled = true;
                 btnSaveAs.IsEnabled = true;
-
             }
-
-
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
@@ -239,6 +235,56 @@ namespace WpfVcardEditor
                 }
                 sw.WriteLine("END:VCARD");
             }
+        }
+
+        private void btnNew_Click(object sender, RoutedEventArgs e)
+        {
+            if (UnsavedChanges())
+            {
+                if (MessageBox.Show("Er zijn onopgeslagen wijzigingen. Wilt u doorgaan en deze wijzigingen negeren?", "Waarschuwing", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                {
+                    return;
+                }
+            }
+
+            txtVoornaam.Text = "";
+            txtAchternaam.Text = "";
+            datGeboortedatum.SelectedDate = null;
+            rbnMan.IsChecked = false;
+            rbnVrouw.IsChecked = false;
+            rbnOnbekend.IsChecked = false;
+            txtEmail.Text = "";
+            txtTelefoon.Text = "";
+            txtWerktelefoon.Text = "";
+            txtBedrijf.Text = "";
+            txtJobtitel.Text = "";
+            txtWerkemail.Text = "";
+            txtFacebook.Text = "";
+            txtInstagram.Text = "";
+            txtLindkedin.Text = "";
+            txtYoutube.Text = "";
+
+            btnSave.IsEnabled = false;
+            btnSaveAs.IsEnabled = false;
+        }
+
+        private bool UnsavedChanges()
+        {
+            // Controleer of de tekstvakken leeg zijn
+            if (txtVoornaam.Text != "" || txtAchternaam.Text != "" || datGeboortedatum.SelectedDate != null ||
+                rbnMan.IsChecked == true || rbnVrouw.IsChecked == true || rbnOnbekend.IsChecked == true ||
+                txtEmail.Text != "" || txtTelefoon.Text != "" || txtFacebook.Text != "" || txtInstagram.Text != "" ||
+                txtLindkedin.Text != "" || txtYoutube.Text != "" || txtTelefoon.Text != "" || txtWerkemail.Text != "" || txtWerktelefoon.Text != "" || 
+                txtJobtitel.Text != "" || txtBedrijf.Text != "")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void Card_Changed(object sender, EventArgs e)
+        {
+
         }
     }
 }
