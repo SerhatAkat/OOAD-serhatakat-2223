@@ -1,20 +1,8 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WpfVcardEditor
 {
@@ -23,6 +11,8 @@ namespace WpfVcardEditor
     /// </summary>
     public partial class MainWindow : Window
     {
+        OpenFileDialog openFileDialog = new OpenFileDialog();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -46,7 +36,6 @@ namespace WpfVcardEditor
 
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "vCard files (*.vcf)|*.vcf|All files (*.*)|*.*";
             string workEmailPrefix = "EMAIL;CHARSET=UTF-8;type=WORK,INTERNET:";
             string homeEmailPrefix = "EMAIL;CHARSET=UTF-8;type=HOME,INTERNET:";
@@ -157,6 +146,98 @@ namespace WpfVcardEditor
                         datGeboortedatum.Text = birthDate.ToString("dd/MM/yyyy");
                     }
                 }
+                btnSave.IsEnabled = true;
+                btnSaveAs.IsEnabled = true;
+
+            }
+
+
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            SaveToFile(openFileDialog.FileName);
+        }
+
+        private void btnSaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "vCard files (*.vcf)|*.vcf|All files (*.*)|*.*";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                SaveToFile(saveFileDialog.FileName);
+            }
+        }
+        private void SaveToFile(string fileName)
+        {
+            using (StreamWriter sw = new StreamWriter(fileName))
+            {
+                sw.WriteLine($"BEGIN:VCARD");
+                sw.WriteLine($"VERSION:3.0");
+                if (txtVoornaam.Text != "" && txtAchternaam.Text != "")
+                {
+                    sw.WriteLine($"FN;CHARSET=UTF-8:{txtVoornaam.Text} {txtAchternaam.Text}");
+                    sw.WriteLine($"N;CHARSET=UTF-8:{txtAchternaam.Text};{txtVoornaam.Text};;;");
+                    sw.WriteLine($"NICKNAME;CHARSET=UTF-8:{txtVoornaam.Text}");
+                }
+                if (rbnMan.IsChecked == true)
+                {
+                    sw.WriteLine("GENDER:M");
+                }
+                else if (rbnVrouw.IsChecked == true)
+                {
+                    sw.WriteLine("GENDER:F");
+                }
+                else if (rbnOnbekend.IsChecked == true)
+                {
+                    sw.WriteLine("GENDER:O");
+                }
+                DateTime birthDate;
+                if (DateTime.TryParseExact(datGeboortedatum.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDate))
+                {
+                    sw.WriteLine($"BDAY:{birthDate.ToString("yyyyMMdd")}");
+                }
+                if (txtEmail.Text != "")
+                {
+                    sw.WriteLine($"EMAIL;CHARSET=UTF-8;type=HOME,INTERNET:{txtEmail.Text}");
+                }
+                if (txtWerkemail.Text != "")
+                {
+                    sw.WriteLine($"EMAIL;CHARSET=UTF-8;type=WORK,INTERNET:{txtWerkemail.Text}");
+                }
+                if (txtTelefoon.Text != "")
+                {
+                    sw.WriteLine($"TEL;TYPE=HOME,VOICE:{txtTelefoon.Text}");
+                }
+                if (txtWerktelefoon.Text != "")
+                {
+                    sw.WriteLine($"TEL;TYPE=WORK,VOICE:{txtWerktelefoon.Text}");
+                }
+                if (txtJobtitel.Text != "")
+                {
+                    sw.WriteLine($"TITLE;CHARSET=UTF-8:{txtJobtitel.Text}");
+                }
+                if (txtBedrijf.Text != "")
+                {
+                    sw.WriteLine($"ORG;CHARSET=UTF-8:{txtBedrijf.Text}");
+                }
+                if (txtFacebook.Text != "")
+                {
+                    sw.WriteLine($"X-SOCIALPROFILE;TYPE=facebook:{txtFacebook.Text}");
+                }
+                if (txtLindkedin.Text != "")
+                {
+                    sw.WriteLine($"X-SOCIALPROFILE;TYPE=linkedin:{txtLindkedin.Text}");
+                }
+                if (txtInstagram.Text != "")
+                {
+                    sw.WriteLine($"X-SOCIALPROFILE;TYPE=instagram:{txtInstagram.Text}");
+                }
+                if (txtYoutube.Text != "")
+                {
+                    sw.WriteLine($"X-SOCIALPROFILE;TYPE=youtube:{txtYoutube.Text}");
+                }
+                sw.WriteLine("END:VCARD");
             }
         }
     }
