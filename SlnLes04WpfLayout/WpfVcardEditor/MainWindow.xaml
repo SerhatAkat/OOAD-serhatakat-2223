@@ -12,7 +12,7 @@
                 <MenuItem x:Name="btnNew" Header="New" Click="btnNew_Click"/>
                 <MenuItem x:Name="btnOpen" Header="Open..." Click="btnOpen_Click"/>
                 <MenuItem x:Name="btnSave" Header="Save" IsEnabled="false" Click="btnSave_Click"/>
-                <MenuItem x:Name="btnSaveAs" Header="Save As..." IsEnabled="false" Click="btnSaveAs_Click"/>
+                <MenuItem x:Name="btnSaveAs" Header="Save As..." Click="btnSaveAs_Click"/>
                 <Separator/>
                 <MenuItem x:Name="btnExit" Header="Exit" Click="btnExit_Click"/>
             </MenuItem>
