@@ -155,6 +155,7 @@ namespace WpfVcardEditor
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             SaveToFile(openFileDialog.FileName);
+            MessageBox.Show("Bestand is opgeslagen");
         }
 
         private void btnSaveAs_Click(object sender, RoutedEventArgs e)
@@ -274,6 +275,7 @@ namespace WpfVcardEditor
         private void Card_Changed(object sender, EventArgs e)
         {
             checkWijziging = true;
+            btnSave.IsEnabled = true;
         }
     }
 }
