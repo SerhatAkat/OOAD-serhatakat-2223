@@ -3,6 +3,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace WpfVcardEditor
 {
@@ -12,6 +13,7 @@ namespace WpfVcardEditor
     public partial class MainWindow : Window
     {
         OpenFileDialog openFileDialog = new OpenFileDialog();
+
         bool checkWijziging = false;
 
         public MainWindow()
@@ -51,6 +53,7 @@ namespace WpfVcardEditor
             {
                 try
                 {
+                    lblKaart.Content = Path.GetFileName(openFileDialog.FileName);
                     string fileName = openFileDialog.FileName;
                     string[] lines = File.ReadAllLines(fileName);
 
@@ -146,6 +149,24 @@ namespace WpfVcardEditor
                             string dateField = line.Substring(5);
                             DateTime birthDate = DateTime.ParseExact(dateField, "yyyyMMdd", CultureInfo.InvariantCulture);
                             datGeboortedatum.Text = birthDate.ToString("dd/MM/yyyy");
+                        }
+
+                        // afbeelding
+                        else if (line.StartsWith("PHOTO;"))
+                        {
+                            string photoLine = line.Replace("PHOTO;ENCODING=b;TYPE=JPEG:", "");
+                            byte[] photoBytes = Convert.FromBase64String(photoLine);
+                            BitmapImage image = new BitmapImage();
+                            using (MemoryStream ms = new MemoryStream(photoBytes))
+                            {
+                                ms.Position = 0;
+                                image.BeginInit();
+                                image.CacheOption = BitmapCacheOption.OnLoad;
+                                image.StreamSource = ms;
+                                image.EndInit();
+                            }
+                            imgFoto.Source = image;
+                            ShowImageName(image);
                         }
                     }
                     btnSave.IsEnabled = true;
@@ -258,6 +279,17 @@ namespace WpfVcardEditor
                     {
                         sw.WriteLine($"X-SOCIALPROFILE;TYPE=youtube:{txtYoutube.Text}");
                     }
+                    if (imgFoto.Source != null)
+                    {
+                        BitmapEncoder encoder = new PngBitmapEncoder();
+                        encoder.Frames.Add(BitmapFrame.Create((BitmapSource)imgFoto.Source));
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            encoder.Save(ms);
+                            var imageData = ms.ToArray();
+                            sw.WriteLine($"PHOTO;TYPE=PNG;ENCODING=BASE64:{Convert.ToBase64String(imageData)}");
+                        }
+                    }
                     sw.WriteLine("END:VCARD");
                 }
             }
@@ -304,6 +336,27 @@ namespace WpfVcardEditor
         {
             checkWijziging = true;
             btnSave.IsEnabled = true;
+        }
+
+        private void btnSelecteer_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "Afbeeldingen|*.jpg;*.jpeg;*.png;*.gif";
+            if (dlg.ShowDialog() == true)
+            {
+                BitmapImage bitmap = new BitmapImage(new System.Uri(dlg.FileName));
+                imgFoto.Source = bitmap;
+                string bestandsnaam = System.IO.Path.GetFileName(dlg.FileName);
+                lblFoto.Content = bestandsnaam;
+            }
+        }
+        private void ShowImageName(BitmapImage image)
+        {
+            if (image != null && image.UriSource != null)
+            {
+                string imageName = Path.GetFileName(image.UriSource.LocalPath);
+                lblFoto.Content = imageName;
+            }
         }
     }
 }

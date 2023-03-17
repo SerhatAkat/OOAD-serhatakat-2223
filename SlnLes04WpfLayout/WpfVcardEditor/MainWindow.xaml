@@ -22,7 +22,7 @@
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <Label Content="huidige kaart: (geen geopend)" Padding="5" FontSize="12"/>
+                <Label x:Name="lblKaart" Content="huidige kaart: (geen geopend)" Padding="5" FontSize="12"/>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <TextBlock x:Name="txtPercentage" Text="percentage ingevuld: n.a." Grid.Column="2" FontSize="12"/>
@@ -75,7 +75,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="btnSelecteer" Content="SELECTEER..." Grid.Column="0" Margin="0 5 0 10" Padding="3"/>
+                            <Button x:Name="btnSelecteer" Content="SELECTEER..." Grid.Column="0" Margin="0 5 0 10" Padding="3" Click="btnSelecteer_Click"/>
                             <Label x:Name="lblFoto" Content="(geen geselecteerd)" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
                         </Grid>
                         <Grid Grid.Row="8" Grid.Column="1" VerticalAlignment="Center">
