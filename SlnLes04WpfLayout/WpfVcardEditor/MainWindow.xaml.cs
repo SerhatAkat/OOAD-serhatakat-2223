@@ -182,7 +182,6 @@ namespace WpfVcardEditor
                         MessageBoxImage.Error);
                 }
                 btnSave.IsEnabled = true;
-
             }
         }
 
@@ -309,7 +308,15 @@ namespace WpfVcardEditor
                     return;
                 }
             }
+            ClearAll();
 
+            btnSave.IsEnabled = false;
+            btnSaveAs.IsEnabled = false;
+            checkWijziging = false;
+        }
+
+        private void ClearAll()
+        {
             txtVoornaam.Text = "";
             txtAchternaam.Text = "";
             datGeboortedatum.SelectedDate = null;
@@ -326,10 +333,8 @@ namespace WpfVcardEditor
             txtInstagram.Text = "";
             txtLindkedin.Text = "";
             txtYoutube.Text = "";
-
-            btnSave.IsEnabled = false;
-            btnSaveAs.IsEnabled = false;
-            checkWijziging = false;
+            lblFoto.Content = "";
+            imgFoto.Source = null;
         }
 
         private void Card_Changed(object sender, EventArgs e)
@@ -346,8 +351,7 @@ namespace WpfVcardEditor
             {
                 BitmapImage bitmap = new BitmapImage(new System.Uri(dlg.FileName));
                 imgFoto.Source = bitmap;
-                string bestandsnaam = System.IO.Path.GetFileName(dlg.FileName);
-                lblFoto.Content = bestandsnaam;
+                lblFoto.Content = dlg.FileName;
             }
         }
         private void ShowImageName(BitmapImage image)
