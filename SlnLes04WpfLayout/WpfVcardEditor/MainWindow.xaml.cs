@@ -53,7 +53,7 @@ namespace WpfVcardEditor
             {
                 try
                 {
-                    lblKaart.Content = Path.GetFileName(openFileDialog.FileName);
+                    lblKaart.Content = Path.GetFullPath(openFileDialog.FileName);
                     string fileName = openFileDialog.FileName;
                     string[] lines = File.ReadAllLines(fileName);
 
@@ -286,7 +286,7 @@ namespace WpfVcardEditor
                         {
                             encoder.Save(ms);
                             var imageData = ms.ToArray();
-                            sw.WriteLine($"PHOTO;TYPE=PNG;ENCODING=BASE64:{Convert.ToBase64String(imageData)}");
+                            sw.WriteLine($"PHOTO;ENCODING=b;TYPE=JPEG:{ Convert.ToBase64String(imageData)}");
                         }
                     }
                     sw.WriteLine("END:VCARD");
