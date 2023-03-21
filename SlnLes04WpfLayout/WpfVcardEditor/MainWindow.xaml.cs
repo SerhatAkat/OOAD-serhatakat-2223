@@ -200,6 +200,7 @@ namespace WpfVcardEditor
                 try
                 {
                     SaveToFile(saveFileDialog.FileName);
+                    MessageBox.Show("Bestand is opgeslagen");
                 }
                 catch (Exception ex)
                 {
