@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Xml.Linq;
 
 namespace WpfVcardEditor
 {
@@ -15,6 +16,17 @@ namespace WpfVcardEditor
         OpenFileDialog openFileDialog = new OpenFileDialog();
 
         bool checkWijziging = false;
+
+        string workEmailPrefix = "EMAIL;CHARSET=UTF-8;type=WORK,INTERNET:";
+        string homeEmailPrefix = "EMAIL;CHARSET=UTF-8;type=HOME,INTERNET:";
+        string workPhonePrefix = "TEL;TYPE=WORK,VOICE:";
+        string homePhonePrefix = "TEL;TYPE=HOME,VOICE:";
+        string companyPrefix = "ORG;CHARSET=UTF-8:";
+        string titlePrefix = "TITLE;CHARSET=UTF-8:";
+        string facebookPrefix = "X-SOCIALPROFILE;TYPE=facebook:";
+        string linkedinPrefix = "X-SOCIALPROFILE;TYPE=linkedin:";
+        string instagramPrefix = "X-SOCIALPROFILE;TYPE=instagram:";
+        string youtubePrefix = "X-SOCIALPROFILE;TYPE=youtube:";
 
         public MainWindow()
         {
@@ -39,149 +51,11 @@ namespace WpfVcardEditor
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
             openFileDialog.Filter = "vCard files (*.vcf)|*.vcf|All files (*.*)|*.*";
-            string workEmailPrefix = "EMAIL;CHARSET=UTF-8;type=WORK,INTERNET:";
-            string homeEmailPrefix = "EMAIL;CHARSET=UTF-8;type=HOME,INTERNET:";
-            string workPhonePrefix = "TEL;TYPE=WORK,VOICE:";
-            string homePhonePrefix = "TEL;TYPE=HOME,VOICE:";
-            string companyPrefix = "ORG;CHARSET=UTF-8:";
-            string titlePrefix = "TITLE;CHARSET=UTF-8:";
-            string facebookPrefix = "X-SOCIALPROFILE;TYPE=facebook:";
-            string linkedinPrefix = "X-SOCIALPROFILE;TYPE=linkedin:";
-            string instagramPrefix = "X-SOCIALPROFILE;TYPE=instagram:";
-            string youtubePrefix = "X-SOCIALPROFILE;TYPE=youtube:";
             if (openFileDialog.ShowDialog() == true)
             {
-                try
-                {
-                    lblKaart.Content = Path.GetFullPath(openFileDialog.FileName);
-                    string fileName = openFileDialog.FileName;
-                    string[] lines = File.ReadAllLines(fileName);
-
-                    foreach (string line in lines)
-                    {
-                        // naam
-                        if (line.StartsWith("N;"))
-                        {
-                            string[] parts = line.Split(';', ':');
-                            string lastName = parts[2];
-                            string firstName = parts[3];
-                            txtVoornaam.Text = firstName;
-                            txtAchternaam.Text = lastName;
-                        }
-
-                        // emails
-                        else if (line.StartsWith(workEmailPrefix))
-                        {
-                            string workEmail = line.Substring(39);
-                            txtWerkemail.Text = workEmail;
-                        }
-                        else if (line.StartsWith(homeEmailPrefix))
-                        {
-                            string homeEmail = line.Substring(39);
-                            txtEmail.Text = homeEmail;
-                        }
-
-                        // telefoon
-                        else if (line.StartsWith(homePhonePrefix))
-                        {
-                            string homePhone = line.Substring(20);
-                            txtTelefoon.Text = homePhone;
-                        }
-                        else if (line.StartsWith(workPhonePrefix))
-                        {
-                            string workPhone = line.Substring(20);
-                            txtWerktelefoon.Text = workPhone;
-                        }
-
-                        // bedrijf
-                        else if (line.StartsWith(companyPrefix))
-                        {
-                            string company = line.Substring(18);
-                            txtBedrijf.Text = company;
-                        }
-
-                        // titel
-                        else if (line.StartsWith(titlePrefix))
-                        {
-                            string title = line.Substring(20);
-                            txtJobtitel.Text = title;
-                        }
-
-                        // sociale media
-                        else if (line.StartsWith(facebookPrefix))
-                        {
-                            string facebook = line.Substring(30);
-                            txtFacebook.Text = facebook;
-                        }
-                        else if (line.StartsWith(instagramPrefix))
-                        {
-                            string instagram = line.Substring(31);
-                            txtInstagram.Text = instagram;
-                        }
-                        else if (line.StartsWith(linkedinPrefix))
-                        {
-                            string linkedin = line.Substring(30);
-                            txtLindkedin.Text = linkedin;
-                        }
-                        else if (line.StartsWith(youtubePrefix))
-                        {
-                            string youtube = line.Substring(29);
-                            txtYoutube.Text = youtube;
-                        }
-
-                        // geslacht
-                        else if (line.Contains("GENDER:M"))
-                        {
-                            rbnMan.IsChecked = true;
-                        }
-                        else if (line.Contains("GENDER:F"))
-                        {
-                            rbnVrouw.IsChecked = true;
-                        }
-                        else if (line.Contains("GENDER:O"))
-                        {
-                            rbnOnbekend.IsChecked = true;
-                        }
-
-                        // geboortedatum
-                        else if (line.StartsWith("BDAY:"))
-                        {
-                            string dateField = line.Substring(5);
-                            DateTime birthDate = DateTime.ParseExact(dateField, "yyyyMMdd", CultureInfo.InvariantCulture);
-                            datGeboortedatum.Text = birthDate.ToString("dd/MM/yyyy");
-                        }
-
-                        // afbeelding
-                        else if (line.StartsWith("PHOTO;"))
-                        {
-                            string photoLine = line.Replace("PHOTO;ENCODING=b;TYPE=JPEG:", "");
-                            byte[] photoBytes = Convert.FromBase64String(photoLine);
-                            BitmapImage image = new BitmapImage();
-                            using (MemoryStream ms = new MemoryStream(photoBytes))
-                            {
-                                ms.Position = 0;
-                                image.BeginInit();
-                                image.CacheOption = BitmapCacheOption.OnLoad;
-                                image.StreamSource = ms;
-                                image.EndInit();
-                            }
-                            imgFoto.Source = image;
-                            ShowImageName(image);
-                        }
-                    }
-                    btnSave.IsEnabled = true;
-                    btnSaveAs.IsEnabled = true;
-                    checkWijziging = false;
-                }
-                catch (FileNotFoundException ex)
-                {
-                    MessageBox.Show(
-                        $"{ex.FileName} niet gevonden", // boodschap
-                        "Oeps!", // titel
-                        MessageBoxButton.OK, // buttons
-                        MessageBoxImage.Error);
-                }
-                btnSave.IsEnabled = true;
+                Vcard card = ReadVcardFromFile(openFileDialog.FileName);
+                ShowVcard(card);
+                ShowImageName()
             }
         }
 
@@ -294,7 +168,7 @@ namespace WpfVcardEditor
                         {
                             encoder.Save(ms);
                             var imageData = ms.ToArray();
-                            sw.WriteLine($"PHOTO;ENCODING=b;TYPE=JPEG:{ Convert.ToBase64String(imageData)}");
+                            sw.WriteLine($"PHOTO;ENCODING=b;TYPE=JPEG:{Convert.ToBase64String(imageData)}");
                         }
                     }
                     sw.WriteLine("END:VCARD");
@@ -365,11 +239,175 @@ namespace WpfVcardEditor
         }
         private void ShowImageName(BitmapImage image)
         {
+            Vcard card = new Vcard();
             if (image != null && image.UriSource != null)
             {
                 string imageName = Path.GetFileName(image.UriSource.LocalPath);
-                lblFoto.Content = imageName;
+                card.Img = Convert.ToBase64String(imageName);
             }
+        }
+
+        private Vcard ReadVcardFromFile(string filePath)
+        {
+            Vcard card = new Vcard();
+
+            try
+            {
+                lblKaart.Content = Path.GetFullPath(openFileDialog.FileName);
+                string fileName = openFileDialog.FileName;
+                string[] lines = File.ReadAllLines(fileName);
+
+                foreach (string line in lines)
+                {
+                    // naam
+                    if (line.StartsWith("N;"))
+                    {
+                        string[] parts = line.Split(';', ':');
+                        string lastName = parts[2];
+                        string firstName = parts[3];
+                        card.FirstName = firstName;
+                        card.LastName = lastName;
+                    }
+
+                    // emails
+                    else if (line.StartsWith(workEmailPrefix))
+                    {
+                        string workEmail = line.Substring(39);
+                        card.WorkEmail = workEmail;
+                    }
+                    else if (line.StartsWith(homeEmailPrefix))
+                    {
+                        string homeEmail = line.Substring(39);
+                        card.HomeEmail = homeEmail;
+                    }
+
+                    // telefoon
+                    else if (line.StartsWith(homePhonePrefix))
+                    {
+                        string homePhone = line.Substring(20);
+                        card.HomePhone = homePhone;
+                    }
+                    else if (line.StartsWith(workPhonePrefix))
+                    {
+                        string workPhone = line.Substring(20);
+                        card.WorkPhone = workPhone;
+                    }
+
+                    // bedrijf
+                    else if (line.StartsWith(companyPrefix))
+                    {
+                        string company = line.Substring(18);
+                        card.Company = company;
+                    }
+
+                    // titel
+                    else if (line.StartsWith(titlePrefix))
+                    {
+                        string title = line.Substring(20);
+                        card.JobTitel = title;
+                    }
+
+                    // sociale media
+                    else if (line.StartsWith(facebookPrefix))
+                    {
+                        string facebook = line.Substring(30);
+                        card.Facebook = facebook;
+                    }
+                    else if (line.StartsWith(instagramPrefix))
+                    {
+                        string instagram = line.Substring(31);
+                        card.Instagram = instagram;
+                    }
+                    else if (line.StartsWith(linkedinPrefix))
+                    {
+                        string linkedin = line.Substring(30);
+                        card.Linkedin = linkedin;
+                    }
+                    else if (line.StartsWith(youtubePrefix))
+                    {
+                        string youtube = line.Substring(29);
+                        card.Youtube = youtube;
+                    }
+
+                    // geslacht
+                    else if (line.Contains("GENDER"))
+                    {
+                        string[] parts = line.Split(':', ';');
+                        card.Gender = Convert.ToString(parts[1]);
+                    }
+
+                    // geboortedatum
+                    else if (line.StartsWith("BDAY:"))
+                    {
+                        string dateField = line.Substring(5);
+                        DateTime birthDate = DateTime.ParseExact(dateField, "yyyyMMdd", CultureInfo.InvariantCulture);
+                        card.BirthDate = birthDate;
+                    }
+
+                    // afbeelding
+                    else if (line.StartsWith("PHOTO;"))
+                    {
+                        string photoLine = line.Replace("PHOTO;ENCODING=b;TYPE=JPEG:", "");
+                        byte[] photoBytes = Convert.FromBase64String(photoLine);
+                        BitmapImage image = new BitmapImage();
+                        using (MemoryStream ms = new MemoryStream(photoBytes))
+                        {
+                            ms.Position = 0;
+                            image.BeginInit();
+                            image.CacheOption = BitmapCacheOption.OnLoad;
+                            image.StreamSource = ms;
+                            image.EndInit();
+                        }
+                        card.Img = image;
+                        ShowImageName(image);
+                    }
+                }
+                btnSave.IsEnabled = true;
+                btnSaveAs.IsEnabled = true;
+                checkWijziging = false;
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show(
+                    $"{ex.FileName} niet gevonden", // boodschap
+                    "Oeps!", // titel
+                    MessageBoxButton.OK, // buttons
+                    MessageBoxImage.Error);
+            }
+            btnSave.IsEnabled = true;
+
+            return card;
+        }
+
+        private void ShowVcard(Vcard vcard)
+        {
+            txtVoornaam.Text = vcard.FirstName;
+            txtAchternaam.Text = vcard.LastName;
+            txtWerkemail.Text = vcard.WorkEmail;
+            txtEmail.Text = vcard.HomeEmail;
+            txtWerktelefoon.Text = vcard.WorkPhone;
+            txtTelefoon.Text = vcard.HomePhone;
+            txtJobtitel.Text = vcard.JobTitel;
+            txtBedrijf.Text = vcard.Company;
+            txtFacebook.Text = vcard.Facebook;
+            txtLindkedin.Text = vcard.Linkedin;
+            txtInstagram.Text = vcard.Instagram;
+            txtYoutube.Text = vcard.Youtube;
+            datGeboortedatum.SelectedDate = vcard.BirthDate;
+            imgFoto.Source = vcard.Img;
+            switch (vcard.Gender)
+            {
+                case "F":
+                    rbnVrouw.IsChecked = true;
+                    break;
+                case "M":
+                    rbnMan.IsChecked = true;
+                    break;
+                default:
+                    rbnOnbekend.IsChecked = true;
+                    break;
+            }
+
         }
     }
 }
