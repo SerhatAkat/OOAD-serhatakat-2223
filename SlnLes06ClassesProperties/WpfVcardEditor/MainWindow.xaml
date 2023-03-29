@@ -1,0 +1,144 @@
+﻿<Window x:Class="WpfVcardEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfVcardEditor"
+        mc:Ignorable="d"
+        Title="MainWindow" MinWidth="495" MinHeight="550" Height="550" Width="800">
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem x:Name="btnFile" Header="vCard" IsHitTestVisible="True">
+                <MenuItem x:Name="btnNew" Header="New" Click="btnNew_Click"/>
+                <MenuItem x:Name="btnOpen" Header="Open..." Click="btnOpen_Click"/>
+                <MenuItem x:Name="btnSave" Header="Save" IsEnabled="false" Click="btnSave_Click"/>
+                <MenuItem x:Name="btnSaveAs" Header="Save As..." Click="btnSaveAs_Click"/>
+                <Separator/>
+                <MenuItem x:Name="btnExit" Header="Exit" Click="btnExit_Click"/>
+            </MenuItem>
+            <MenuItem x:Name="btnHelp" Header="Help">
+                <MenuItem Header="About" Click="MenuAbout_Click"/>
+            </MenuItem>
+        </Menu>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <Label x:Name="lblKaart" Content="huidige kaart: (geen geopend)" Padding="5" FontSize="12"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock x:Name="txtPercentage" Text="percentage ingevuld: n.a." Grid.Column="2" FontSize="12"/>
+            </StatusBarItem>
+        </StatusBar>
+        <Grid>
+            <TabControl DockPanel.Dock="Top" Margin="10">
+                <TabItem Header="Persoonlijk" Padding="6">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition MaxWidth="600"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+
+                        </Grid.RowDefinitions>
+                        <Label Content="Voornaam:"></Label>
+                        <TextBox x:Name="txtVoornaam" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
+                        <Label Grid.Row="1" Content="Achternaam:"></Label>
+                        <TextBox Name="txtAchternaam" Grid.Row="1" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
+                        <Label Grid.Row="2" Content="Geboortedatum:"></Label>
+                        <DatePicker x:Name="datGeboortedatum" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="0 5 0 10" Padding="3" SelectedDateChanged="Card_Changed"/>
+                        <Label Grid.Row="3" Content="Geslacht:"></Label>
+                        <Grid Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <RadioButton x:Name="rbnMan" Content="Man" GroupName="Geslacht" Grid.Column="0" Margin="0 5 3 10" Click="Card_Changed"/>
+                            <RadioButton x:Name="rbnVrouw" Content="Vrouw" GroupName="Geslacht" Grid.Column="1" Margin="0 5 3 10" Click="Card_Changed"/>
+                            <RadioButton x:Name="rbnOnbekend" Content="Onbekend" GroupName="Geslacht" Grid.Column="2" Margin="0 5 3 10" Click="Card_Changed"/>
+                        </Grid>
+                        <Label Grid.Row="4" Content="Privé email:"></Label>
+                        <TextBox Name="txtEmail" Grid.Row="4" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
+                        <Label Grid.Row="6" Content="Privé telefoon:"></Label>
+                        <TextBox Name="txtTelefoon" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" MinWidth="233" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
+                        <Label Grid.Row="7" Content="foto:"></Label>
+                        <Grid Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="btnSelecteer" Content="SELECTEER..." Grid.Column="0" Margin="0 5 0 10" Padding="3" Click="btnSelecteer_Click"/>
+                            <Label x:Name="lblFoto" Content="(geen geselecteerd)" Grid.Column="1" Margin="0 5 0 10" Padding="3"/>
+                        </Grid>
+                        <Grid Grid.Row="8" Grid.Column="1" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border BorderBrush="#FFCCCCCC" BorderThickness="1" HorizontalAlignment="Right" Width="100" Height="100">
+                                <Image Name="imgFoto"/>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Werk" Padding="6">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition MaxWidth="600"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Bedrijf:"></Label>
+                        <TextBox Name="txtBedrijf" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
+                        <Label Grid.Row="1" Content="Jobtitel:"></Label>
+                        <TextBox x:Name="txtJobtitel" Grid.Row="1" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
+                        <Label Grid.Row="2" Content="Werk email:"></Label>
+                        <TextBox x:Name="txtWerkemail" Grid.Row="2" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
+                        <Label Grid.Row="3" Content="Werk telefoon:"></Label>
+                        <TextBox x:Name="txtWerktelefoon" Grid.Row="3" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Sociaal" Padding="6">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition MaxWidth="600"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+
+                        </Grid.RowDefinitions>
+                        <Label Content="LinkedIn:"></Label>
+                        <TextBox Name="txtLindkedin" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
+                        <Label Grid.Row="1" Content="Facebook:"></Label>
+                        <TextBox Name="txtFacebook" Grid.Row="1" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
+                        <Label Grid.Row="2" Content="Instagram:"></Label>
+                        <TextBox Name="txtInstagram" Grid.Row="2" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
+                        <Label Grid.Row="3" Content="Youtube:"></Label>
+                        <TextBox Name="txtYoutube" Grid.Row="3" Grid.Column="1" Margin="0 5 0 10" Padding="3" TextChanged="Card_Changed"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </DockPanel>
+</Window>
