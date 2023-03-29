@@ -187,8 +187,15 @@ namespace WpfVcardEditor
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            SaveToFile(openFileDialog.FileName);
-            MessageBox.Show("Bestand is opgeslagen");
+            try
+            {
+                SaveToFile(openFileDialog.FileName);
+                MessageBox.Show("Bestand is opgeslagen");
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show($"ERROR: Kan bestand niet overschrijven! {ex.Message}", "Message", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btnSaveAs_Click(object sender, RoutedEventArgs e)
@@ -353,6 +360,7 @@ namespace WpfVcardEditor
                 BitmapImage bitmap = new BitmapImage(new System.Uri(dlg.FileName));
                 imgFoto.Source = bitmap;
                 lblFoto.Content = dlg.FileName;
+                checkWijziging = false;
             }
         }
         private void ShowImageName(BitmapImage image)
