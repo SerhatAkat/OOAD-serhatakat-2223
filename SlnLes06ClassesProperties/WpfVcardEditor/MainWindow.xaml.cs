@@ -3,8 +3,8 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Xml.Linq;
 
 namespace WpfVcardEditor
 {
@@ -55,10 +55,48 @@ namespace WpfVcardEditor
             {
                 Vcard card = ReadVcardFromFile(openFileDialog.FileName);
                 ShowVcard(card);
-                ShowImageName()
             }
         }
 
+        private Vcard ToVcard()
+        {
+            Vcard card = new Vcard();
+            card.FirstName = txtVoornaam.Text;
+            card.LastName = txtAchternaam.Text;
+            card.HomeEmail = txtEmail.Text;
+            card.WorkEmail = txtWerkemail.Text;
+            card.HomePhone = txtTelefoon.Text;
+            card.WorkPhone = txtWerktelefoon.Text;
+            card.JobTitel = txtJobtitel.Text;
+            card.Company = txtBedrijf.Text;
+            card.Facebook = txtFacebook.Text;
+            card.Linkedin = txtFacebook.Text;
+            card.Instagram = txtFacebook.Text;
+            card.Youtube = txtFacebook.Text;
+            card.BirthDate = datGeboortedatum.SelectedDate.Value;
+
+            BitmapImage bitmap = (BitmapImage)imgFoto.Source;
+            MemoryStream memoryStream = new MemoryStream();
+            BitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmap));
+            encoder.Save(memoryStream);
+            byte[] bytes = memoryStream.ToArray();
+            string base64String = Convert.ToBase64String(bytes);
+            card.Img = (BitmapSource)new ImageSourceConverter().ConvertFrom(Convert.FromBase64String(base64String));
+            if (rbnMan.IsChecked == true)
+            {
+                card.Gender = "M";
+            }
+            else if (rbnVrouw.IsChecked == true)
+            {
+                card.Gender = "F";
+            }
+            else if (rbnOnbekend.IsChecked == true)
+            {
+                card.Gender = "O";
+            }
+            return card;
+        }
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -93,86 +131,8 @@ namespace WpfVcardEditor
         {
             try
             {
-                using (StreamWriter sw = new StreamWriter(fileName))
-                {
-                    sw.WriteLine($"BEGIN:VCARD");
-                    sw.WriteLine($"VERSION:3.0");
-                    if (txtVoornaam.Text != "" && txtAchternaam.Text != "")
-                    {
-                        sw.WriteLine($"FN;CHARSET=UTF-8:{txtVoornaam.Text} {txtAchternaam.Text}");
-                        sw.WriteLine($"N;CHARSET=UTF-8:{txtAchternaam.Text};{txtVoornaam.Text};;;");
-                        sw.WriteLine($"NICKNAME;CHARSET=UTF-8:{txtVoornaam.Text}");
-                    }
-                    if (rbnMan.IsChecked == true)
-                    {
-                        sw.WriteLine("GENDER:M");
-                    }
-                    else if (rbnVrouw.IsChecked == true)
-                    {
-                        sw.WriteLine("GENDER:F");
-                    }
-                    else if (rbnOnbekend.IsChecked == true)
-                    {
-                        sw.WriteLine("GENDER:O");
-                    }
-                    DateTime birthDate;
-                    if (DateTime.TryParseExact(datGeboortedatum.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDate))
-                    {
-                        sw.WriteLine($"BDAY:{birthDate.ToString("yyyyMMdd")}");
-                    }
-                    if (txtEmail.Text != "")
-                    {
-                        sw.WriteLine($"EMAIL;CHARSET=UTF-8;type=HOME,INTERNET:{txtEmail.Text}");
-                    }
-                    if (txtWerkemail.Text != "")
-                    {
-                        sw.WriteLine($"EMAIL;CHARSET=UTF-8;type=WORK,INTERNET:{txtWerkemail.Text}");
-                    }
-                    if (txtTelefoon.Text != "")
-                    {
-                        sw.WriteLine($"TEL;TYPE=HOME,VOICE:{txtTelefoon.Text}");
-                    }
-                    if (txtWerktelefoon.Text != "")
-                    {
-                        sw.WriteLine($"TEL;TYPE=WORK,VOICE:{txtWerktelefoon.Text}");
-                    }
-                    if (txtJobtitel.Text != "")
-                    {
-                        sw.WriteLine($"TITLE;CHARSET=UTF-8:{txtJobtitel.Text}");
-                    }
-                    if (txtBedrijf.Text != "")
-                    {
-                        sw.WriteLine($"ORG;CHARSET=UTF-8:{txtBedrijf.Text}");
-                    }
-                    if (txtFacebook.Text != "")
-                    {
-                        sw.WriteLine($"X-SOCIALPROFILE;TYPE=facebook:{txtFacebook.Text}");
-                    }
-                    if (txtLindkedin.Text != "")
-                    {
-                        sw.WriteLine($"X-SOCIALPROFILE;TYPE=linkedin:{txtLindkedin.Text}");
-                    }
-                    if (txtInstagram.Text != "")
-                    {
-                        sw.WriteLine($"X-SOCIALPROFILE;TYPE=instagram:{txtInstagram.Text}");
-                    }
-                    if (txtYoutube.Text != "")
-                    {
-                        sw.WriteLine($"X-SOCIALPROFILE;TYPE=youtube:{txtYoutube.Text}");
-                    }
-                    if (imgFoto.Source != null)
-                    {
-                        BitmapEncoder encoder = new PngBitmapEncoder();
-                        encoder.Frames.Add(BitmapFrame.Create((BitmapSource)imgFoto.Source));
-                        using (MemoryStream ms = new MemoryStream())
-                        {
-                            encoder.Save(ms);
-                            var imageData = ms.ToArray();
-                            sw.WriteLine($"PHOTO;ENCODING=b;TYPE=JPEG:{Convert.ToBase64String(imageData)}");
-                        }
-                    }
-                    sw.WriteLine("END:VCARD");
-                }
+                Vcard card = ToVcard();
+                File.WriteAllText(fileName, card.GenerateVcardCode());
             }
             catch (Exception ex)
             {
@@ -234,16 +194,14 @@ namespace WpfVcardEditor
                 BitmapImage bitmap = new BitmapImage(new System.Uri(dlg.FileName));
                 imgFoto.Source = bitmap;
                 lblFoto.Content = dlg.FileName;
-                checkWijziging = false;
             }
         }
         private void ShowImageName(BitmapImage image)
         {
-            Vcard card = new Vcard();
             if (image != null && image.UriSource != null)
             {
                 string imageName = Path.GetFileName(image.UriSource.LocalPath);
-                card.Img = Convert.ToBase64String(imageName);
+                lblFoto.Content = imageName;
             }
         }
 

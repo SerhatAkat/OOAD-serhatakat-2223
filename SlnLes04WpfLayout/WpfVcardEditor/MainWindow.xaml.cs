@@ -101,7 +101,6 @@ namespace WpfVcardEditor
         {
             try
             {
-                
                 SaveToFile(openFileDialog.FileName);
                 MessageBox.Show("Bestand is opgeslagen");
             }
@@ -199,7 +198,6 @@ namespace WpfVcardEditor
         }
         private void ShowImageName(BitmapImage image)
         {
-            Vcard card = new Vcard();
             if (image != null && image.UriSource != null)
             {
                 string imageName = Path.GetFileName(image.UriSource.LocalPath);
