@@ -50,14 +50,14 @@ namespace WpfEscapeGame
 
             Item locker = new Item(
                "locker",
-               "A locker. I wonder what's inside. ");
+               "A locker. I wonder what's inside. ", false);
 
             locker.HiddenItem = key2;
             locker.IsLocked = true;
             locker.Key = key1;
             Item bed = new Item(
                "bed",
-               "Just a bed. I am not tired right now. ");
+               "Just a bed. I am not tired right now. ", false);
             bed.HiddenItem = key1;
 
             // item stoel en poster
@@ -149,7 +149,9 @@ namespace WpfEscapeGame
             lstMyItems.Items.Add(selItem);
             lstRoomItems.Items.Remove(selItem);
             currentRoom.Items.Remove(selItem);
+            btnDrop.IsEnabled = lstMyItems.Items.Count > 0;
         }
+
 
 
         private void BtnDrop_Click(object sender, RoutedEventArgs e)
@@ -161,6 +163,7 @@ namespace WpfEscapeGame
                 lstMyItems.Items.Remove(selItem);
                 lstRoomItems.Items.Add(selItem);
                 currentRoom.Items.Add(selItem);
+                btnDrop.IsEnabled = lstMyItems.Items.Count > 0;
             }
         }
     }
