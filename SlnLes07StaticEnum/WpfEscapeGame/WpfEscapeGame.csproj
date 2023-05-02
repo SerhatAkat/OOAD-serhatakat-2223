@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Door.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="RandomMessageGenerator.cs" />
     <Compile Include="Room.cs" />
@@ -96,6 +97,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\ss-bedroom.png" />
+    <Resource Include="images\ss-computer.png" />
+    <Resource Include="images\ss-living.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

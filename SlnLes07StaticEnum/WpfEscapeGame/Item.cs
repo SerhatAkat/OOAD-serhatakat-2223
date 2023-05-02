@@ -21,6 +21,11 @@ namespace WpfEscapeGame
             Description = desc;
         }
 
+        public Item(string name)
+        {
+            Name = name;
+        }
+
         public Item(string name, string desc, bool isPortable)
         {
             Name = name;
