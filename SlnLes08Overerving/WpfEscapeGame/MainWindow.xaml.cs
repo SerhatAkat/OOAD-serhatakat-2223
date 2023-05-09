@@ -102,7 +102,7 @@ namespace WpfEscapeGame
             computerRoom.Items.Add(new Item("computer", "A computer, looks like it doesn't work.", false));
 
 
-            // 2. Add four doors
+            // Add 4 deuren
             Door door1 = new Door(
                 "living door",
                 true, // isLocked
@@ -128,10 +128,10 @@ namespace WpfEscapeGame
                 bedroom); // null ruimte
 
 
-            // Set the keys for doors 1 and 4
+            // keys voor deuren 1 en 4
             door1.Key = largeKey;
 
-            // Add doors to the rooms
+            // deuren toevoegen aan kamers
             livingRoom.Doors.Add(door2);
             livingRoom.Doors.Add(door3);
             livingRoom.Doors.Add(door4);
@@ -169,12 +169,12 @@ namespace WpfEscapeGame
                 {
                     if (door.LeadsTo == currentRoom)
                     {
-                        continue; // Skip this door, it's the one leading to the current room
+                        continue;
                     }
 
                     if (currentRoom.Doors.Contains(door))
                     {
-                        continue; // Skip this door, it's already in the list
+                        continue;
                     }
 
                     lstRoomDoors.Items.Add(door);
@@ -203,15 +203,12 @@ namespace WpfEscapeGame
 
         private void BtnCheck_Click(object sender, RoutedEventArgs e)
         {
-            // 1. find item to check
             LockableItem roomItem = (LockableItem)lstRoomItems.SelectedItem;
-            // 2. is it locked?
             if (roomItem.IsLocked)
             {
                 lblMessage.Content = RandomMessageGenerator.GetRandomMessage(MessageType.Error);
                 return;
             }
-            // 3. does it contain a hidden item?
             Item foundItem = roomItem.HiddenItem;
             if (foundItem != null)
             {
@@ -220,24 +217,23 @@ namespace WpfEscapeGame
                 roomItem.HiddenItem = null;
                 return;
             }
-            // 4. just another item; show description
             lblMessage.Content = roomItem.Description;
         }
 
         private void BtnUseOn_Click(object sender, RoutedEventArgs e)
         {
-            // 1. find both items
+            // 1. vind beide items
             Item myItem = (Item)lstMyItems.SelectedItem;
             LockableItem roomItem = (LockableItem)lstRoomItems.SelectedItem;
 
-            // 2. check if items exist and item doesn't fit
+            // 2. check als items bestaat of niet past
             if (myItem == null || roomItem.Key != myItem)
             {
                 lblMessage.Content = RandomMessageGenerator.GetRandomMessage(MessageType.Error);
                 return;
             }
 
-            // 3. item fits; other item unlocked
+            // 3. item past, andere item unlocked
             roomItem.IsLocked = false;
             roomItem.Key = null;
             lstMyItems.Items.Remove(myItem);
@@ -248,7 +244,7 @@ namespace WpfEscapeGame
 
         private void BtnPickUp_Click(object sender, RoutedEventArgs e)
         {
-            // 1. find selected item
+            // 1. vind geselecteerde item
             Item selItem = (Item)lstRoomItems.SelectedItem;
 
             if (!selItem.IsPortable)
@@ -257,7 +253,7 @@ namespace WpfEscapeGame
                 return;
             }
 
-            // 2. add item to your items list
+            // 2. add item naar lstMyItems
             lblMessage.Content = RandomMessageGenerator.GetRandomMessage(MessageType.Info);
             lstMyItems.Items.Add(selItem);
             lstRoomItems.Items.Remove(selItem);
@@ -283,18 +279,18 @@ namespace WpfEscapeGame
             {
                 if (door.IsLocked)
                 {
-                    // 1. Find the key required to open the door.
+                    // 1. Vind de key om de deur te openen
                     Item requiredKey = door.Key;
 
-                    // 2. Check if the player has the required key.
+                    // 2. Check of de speler de nodige sleutel heeft in lstMyItems.
                     if (lstMyItems.Items.Contains(requiredKey))
                     {
 
-                        // 3. Unlock the door.
+                        // 3. Unlock de deur.
                         door.IsLocked = false;
                         lblMessage.Content = $"You unlocked the {door.Name} with the {requiredKey.Name}.";
 
-                        // 4. Go to the next room.
+                        // 4. Ga naar de volgende kamer.
                         currentRoom = door.LeadsTo;
                         txtRoomDesc.Text = currentRoom.Description;
                         UpdateUI();
@@ -345,7 +341,7 @@ namespace WpfEscapeGame
             }
             else
             {
-                imgFoto.Source = null; // Clear the image control if there's no image path
+                imgFoto.Source = null;
             }
         }
 

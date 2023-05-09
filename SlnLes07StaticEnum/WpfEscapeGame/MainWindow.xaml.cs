@@ -108,7 +108,7 @@ namespace WpfEscapeGame
             computerRoom.Items.Add(new Item("computer", "A computer, looks like it doesn't work.", false));
 
 
-            // 2. Add 4 deuren
+            // Add 4 deuren
             Door door1 = new Door(
                 "living room door",
                 true, // isLocked
@@ -240,7 +240,7 @@ namespace WpfEscapeGame
                 return;
             }
 
-            // 3. item past; andere item unlocked
+            // 3. item past, andere item unlocked
             roomItem.IsLocked = false;
             roomItem.Key = null;
             lstMyItems.Items.Remove(myItem);
@@ -348,7 +348,7 @@ namespace WpfEscapeGame
             }
             else
             {
-                imgFoto.Source = null; // Clear the image control if there's no image path
+                imgFoto.Source = null;
             }
         }
 
