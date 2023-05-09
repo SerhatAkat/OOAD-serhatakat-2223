@@ -8,10 +8,10 @@ namespace WpfEscapeGame
 {
     internal class Room
     {
-        public string Name { get; } // read-only: kan maar één keer ingesteld worden
+        public string Name { get; }
         public string Description { get; }
         public List<Item> Items { get; set; } = new List<Item>();
-        public List<Door> Doors { get; set; } = new List<Door>(); // Nieuwe lijst voor deuren
+        public List<Door> Doors { get; set; } = new List<Door>();
         public string ImagePath { get; set; }
 
 
