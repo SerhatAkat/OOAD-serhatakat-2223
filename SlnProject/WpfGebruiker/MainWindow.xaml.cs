@@ -21,9 +21,12 @@ namespace WpfGebruiker
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private Gebruiker ingelogdeGebruiker;
+
+        public MainWindow(Gebruiker gebruiker)
         {
             InitializeComponent();
+            ingelogdeGebruiker = gebruiker;
         }
     }
 }

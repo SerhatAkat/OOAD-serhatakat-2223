@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace MyClassLibrary
 {
-    internal class Foto
+    public class Foto
     {
+        public int Id { get; }
+        public string Image { get; set; }
+        public int Voertuig_Id { get; }
     }
 }

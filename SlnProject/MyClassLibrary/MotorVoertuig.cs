@@ -6,7 +6,21 @@ using System.Threading.Tasks;
 
 namespace MyClassLibrary
 {
-    internal class MotorVoertuig
+    public class MotorVoertuig
     {
+        public int Id { get; }
+        public int Voertuig_Id { get; }
+
+        public enum Transmissie
+        {
+            Manueel,
+            Automatisch
+        }
+
+        public enum Brandstof
+        {
+            Benzine,
+            Diesel
+        }
     }
 }
