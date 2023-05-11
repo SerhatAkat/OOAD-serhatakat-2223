@@ -92,9 +92,6 @@ namespace WpfEscapeGame
             bedroom.Items.Add(locker);
             bedroom.Items.Add(stoel);
             bedroom.Items.Add(poster);
-            bedroom.Items.Add(floorMat);
-            bedroom.Items.Add(smallKey);
-            bedroom.Items.Add(largeKey);
 
             // setup living room
             livingRoom.Items.Add(new Item("floor mat", "A cozy floor mat that complements the decor."));
