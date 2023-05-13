@@ -42,7 +42,7 @@ namespace MyClassLibrary
         public static Gebruiker GetGebruiker(string email, string paswoord)
         {
             string gehashtPaswoord = ComputeSha256Hash(paswoord);
-            string connectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=BuurlenenDB;Integrated Security=True";
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
