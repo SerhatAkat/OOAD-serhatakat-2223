@@ -9,6 +9,7 @@
       Title="HomePage">
 
     <Grid>
-        <Button Content="Terug naar overzicht" Click="GoBack_Click" />
+        <WrapPanel x:Name="pnlItems" Margin="10">
+        </WrapPanel>
     </Grid>
 </Page>
