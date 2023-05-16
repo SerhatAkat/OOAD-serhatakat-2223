@@ -44,8 +44,6 @@
   <ItemGroup>
     <Compile Include="Foto.cs" />
     <Compile Include="Gebruiker.cs" />
-    <Compile Include="GetrokkenVoertuig.cs" />
-    <Compile Include="MotorVoertuig.cs" />
     <Compile Include="Ontlening.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Voertuig.cs" />

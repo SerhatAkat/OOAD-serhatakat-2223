@@ -8,8 +8,8 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="HomePage">
 
-    <Grid>
-        <WrapPanel x:Name="pnlItems" Margin="10">
-        </WrapPanel>
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <UniformGrid x:Name="pnlItems" Rows="3">
+        </UniformGrid>
+    </ScrollViewer>
 </Page>

@@ -19,6 +19,7 @@ namespace WpfGebruiker
         {
             InitializeComponent();
             ingelogdeGebruiker = gebruiker;
+            MainFrame.Navigate(new HomePage());
         }
 
         private void btnHome_Click(object sender, RoutedEventArgs e)

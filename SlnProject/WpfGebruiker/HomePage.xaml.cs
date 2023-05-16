@@ -1,5 +1,4 @@
-﻿using MyClassLibrary;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MyClassLibrary;
 
 namespace WpfGebruiker
 {
@@ -66,21 +66,34 @@ namespace WpfGebruiker
                 btn.Content = "Info";
                 btn.Click += VoertuigChosen;
 
-                // Maak een StackPanel om de labels en de knop te groeperen
-                StackPanel pnlLabels = new StackPanel();
-                pnlLabels.Children.Add(lblNaam);
-                pnlLabels.Children.Add(lblMerk);
-                pnlLabels.Children.Add(lblModel);
-                pnlLabels.Children.Add(btn);
+                // Maak een StackPanel om de afbeelding en de labels te groeperen
+                StackPanel pnl = new StackPanel();
+                pnl.Orientation = Orientation.Vertical;
+                pnl.Children.Add(lblNaam);
+                pnl.Children.Add(lblMerk);
+                pnl.Children.Add(lblModel);
+                pnl.Children.Add(btn);
 
-                // Maak een WrapPanel om de afbeelding en de StackPanel te groeperen
-                WrapPanel pnl = new WrapPanel();
-                pnl.Margin = new Thickness(0, 0, 20, 20);
-                pnl.Children.Add(img);
-                pnl.Children.Add(pnlLabels);
+                // Maak een Grid om de afbeelding en het StackPanel te groeperen
+                Grid grid = new Grid();
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                img.SetValue(Grid.ColumnProperty, 0);
+                pnl.SetValue(Grid.ColumnProperty, 1);
+                grid.Children.Add(img);
+                grid.Children.Add(pnl);
 
-                // Voeg de WrapPanel toe aan het hoofdpaneel
-                pnlItems.Children.Add(pnl);
+                // Voeg een Border toe
+                Border border = new Border();
+                border.BorderBrush = Brushes.Black;
+                border.BorderThickness = new Thickness(1);
+                border.Margin = new Thickness(5);
+                border.HorizontalAlignment = HorizontalAlignment.Center;
+                border.VerticalAlignment = VerticalAlignment.Center;
+                border.Child = grid;
+
+                // Voeg de Border toe aan het hoofdpaneel
+                pnlItems.Children.Add(border);
             }
         }
         private void VoertuigChosen(object sender, RoutedEventArgs e)

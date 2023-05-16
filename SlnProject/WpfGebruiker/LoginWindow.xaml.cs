@@ -49,7 +49,6 @@ namespace WpfGebruiker
                 lblPaswoord.Content = "Gelieve een paswoord in te vullen";
             }
 
-            // Stop de uitvoering als één van de velden leeg is
             if (isEmailEmpty || isPasswordEmpty)
             {
                 return;

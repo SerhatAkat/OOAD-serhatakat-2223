@@ -10,6 +10,7 @@ namespace MyClassLibrary
 {
     public class Voertuig
     {
+        // gemeenschappelijk
         public int Id { get; set; }
         public string Naam { get; set; }
         public string Beschrijving { get; set; }
@@ -17,6 +18,25 @@ namespace MyClassLibrary
         public string Merk { get; set; }
         public string Model { get; set; }
         public int Eigenaar { get; set; }
+
+        // motorvoertuig
+        public enum Transmissie
+        {
+            Manueel,
+            Automatisch
+        }
+        public enum Brandstof
+        {
+            Benzine,
+            Diesel,
+            LPG
+        }
+
+        // getrokken voertuig
+        public int Gewicht { get; set; }
+        public int MaxBelasting { get; set; }
+        public string Afmetingen { get; set; }
+        public bool Geremd { get; set; }
 
         public static List<Voertuig> GetAllVoertuigen()
         {
