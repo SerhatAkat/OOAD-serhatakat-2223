@@ -55,9 +55,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GetrokkenInfo.xaml.cs">
+      <DependentUpon>GetrokkenInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MotorInfo.xaml.cs">
+      <DependentUpon>MotorInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VoertuigenPage.xaml.cs">
       <DependentUpon>VoertuigenPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="GetrokkenInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="HomePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -84,6 +94,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MotorInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="OntleningenPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

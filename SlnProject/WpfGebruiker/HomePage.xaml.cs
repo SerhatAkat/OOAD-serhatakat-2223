@@ -64,7 +64,7 @@ namespace WpfGebruiker
                 Button btn = new Button();
                 btn.Tag = voertuig.Id;
                 btn.Content = "Info";
-                btn.Click += VoertuigChosen;
+                btn.Click += VoertuigInfoButton_Click;
 
                 // Maak een StackPanel om de afbeelding en de labels te groeperen
                 StackPanel pnl = new StackPanel();
@@ -96,11 +96,43 @@ namespace WpfGebruiker
                 pnlItems.Children.Add(border);
             }
         }
-        private void VoertuigChosen(object sender, RoutedEventArgs e)
+
+        private void VoertuigInfoButton_Click(object sender, RoutedEventArgs e)
         {
-            Button clicked = sender as Button;
-            MessageBox.Show($"Voertuig {clicked.Tag} geselecteerd");
+            // Haal de Voertuig's ID uit de Tag van de knop
+            Button knop = sender as Button;
+            int voertuigId = int.Parse(knop.Tag.ToString());
+
+            // Zoek het Voertuig in je lijst
+            List<Voertuig> alleVoertuigen = Voertuig.GetAllVoertuigen();
+            Voertuig gevondenVoertuig = null;
+            foreach (Voertuig voertuig in alleVoertuigen)
+            {
+                if (voertuig.Id == voertuigId)
+                {
+                    gevondenVoertuig = voertuig;
+                    break;
+                }
+            }
+
+            if (gevondenVoertuig != null)
+            {
+                // Afhankelijk van het type van het Voertuig, navigeer naar de juiste pagina
+                if (gevondenVoertuig.Type == 1)
+                {
+                    // Vervang MotorInfoPage met de daadwerkelijke naam van je pagina
+                    MotorInfo pagina = new MotorInfo(gevondenVoertuig);
+                    this.NavigationService.Navigate(pagina);
+                }
+                else if (gevondenVoertuig.Type == 2)
+                {
+                    // Vervang GetrokkenPage met de daadwerkelijke naam van je pagina
+                    GetrokkenInfo pagina = new GetrokkenInfo(gevondenVoertuig);
+                    this.NavigationService.Navigate(pagina);
+                }
+            }
         }
+
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
             if (this.NavigationService.CanGoBack)

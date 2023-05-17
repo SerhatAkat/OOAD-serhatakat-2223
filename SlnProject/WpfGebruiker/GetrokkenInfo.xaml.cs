@@ -17,11 +17,11 @@ using MyClassLibrary;
 namespace WpfGebruiker
 {
     /// <summary>
-    /// Interaction logic for VoertuigenPage.xaml
+    /// Interaction logic for GetrokkenInfo.xaml
     /// </summary>
-    public partial class VoertuigenPage : Page
+    public partial class GetrokkenInfo : Page
     {
-        public VoertuigenPage()
+        public GetrokkenInfo(Voertuig voertuig)
         {
             InitializeComponent();
         }

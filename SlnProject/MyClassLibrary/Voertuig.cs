@@ -17,6 +17,7 @@ namespace MyClassLibrary
         public int Bouwjaar { get; set; }
         public string Merk { get; set; }
         public string Model { get; set; }
+        public int Type { get; set; }
         public int Eigenaar { get; set; }
 
         // motorvoertuig
@@ -31,6 +32,11 @@ namespace MyClassLibrary
             Diesel,
             LPG
         }
+
+        public Transmissie? TransmissieType { get; set; }
+        public Brandstof? BrandstofType { get; set; }
+
+
 
         // getrokken voertuig
         public int Gewicht { get; set; }
@@ -60,7 +66,10 @@ namespace MyClassLibrary
                                 Bouwjaar = reader.IsDBNull(reader.GetOrdinal("Bouwjaar")) ? 0 : reader.GetInt32(reader.GetOrdinal("Bouwjaar")),
                                 Merk = reader.IsDBNull(reader.GetOrdinal("Merk")) ? null : reader.GetString(reader.GetOrdinal("Merk")),
                                 Model = reader.IsDBNull(reader.GetOrdinal("Model")) ? null : reader.GetString(reader.GetOrdinal("Model")),
-                                Eigenaar = reader.GetInt32(reader.GetOrdinal("eigenaar_id"))
+                                Type = reader.GetInt32(reader.GetOrdinal("type")),
+                                Eigenaar = reader.GetInt32(reader.GetOrdinal("eigenaar_id")),
+                                TransmissieType = reader.IsDBNull(reader.GetOrdinal("Transmissie")) ? (Transmissie?)null : (Transmissie)reader.GetInt32(reader.GetOrdinal("Transmissie")),
+                                BrandstofType = reader.IsDBNull(reader.GetOrdinal("Brandstof")) ? (Brandstof?)null : (Brandstof)reader.GetInt32(reader.GetOrdinal("Brandstof"))
                             };
 
                             voertuigen.Add(voertuig);
