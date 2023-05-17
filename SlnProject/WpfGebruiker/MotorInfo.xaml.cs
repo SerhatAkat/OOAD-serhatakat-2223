@@ -25,6 +25,7 @@ namespace WpfGebruiker
         public MotorInfo(Voertuig voertuig)
         {
             InitializeComponent();
+            LoadFotosForVoertuig(voertuig.Id);
 
             lblMotorNaam.Content = voertuig.Naam;
             lblMotorBeschrijving.Content = "Beschrijving: " + voertuig.Beschrijving;
@@ -34,23 +35,31 @@ namespace WpfGebruiker
             lblMotorTransmissie.Content = "Transmissie: " + voertuig.TransmissieType?.ToString();
             lblMotorBrandstof.Content = "Brandstof: " + voertuig.BrandstofType?.ToString();
             lblMotorEigenaar.Content = "Eigenaar: " + voertuig.Eigenaar;
+        }
+        private void LoadFotosForVoertuig(int voertuigId)
+        {
+            List<Foto> fotos = Foto.GetFotosForVoertuig(voertuigId); // Dit moet een lijst van Foto objecten teruggeven die overeenkomen met het gegeven voertuig ID
 
-            Foto foto = Foto.GetFotoForVoertuig(voertuig.Id);
-            if (foto != null && foto.Image != null)
+            foreach (Foto foto in fotos)
+            {
+                Image img = new Image();
+                img.Source = ConvertByteArrayToBitmapImage(foto.Image);
+                img.Width = 150;
+                img.Margin = new Thickness(0, 0, 10, 0);
+                stkMotorFotos.Children.Add(img);
+            }
+        }
+
+        private BitmapImage ConvertByteArrayToBitmapImage(byte[] byteArray)
+        {
+            using (MemoryStream stream = new MemoryStream(byteArray))
             {
                 BitmapImage bitmap = new BitmapImage();
-                using (var mem = new MemoryStream(foto.Image))
-                {
-                    mem.Position = 0;
-                    bitmap.BeginInit();
-                    bitmap.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.UriSource = null;
-                    bitmap.StreamSource = mem;
-                    bitmap.EndInit();
-                }
-                bitmap.Freeze();
-                imgMotorFoto.Source = bitmap;
+                bitmap.BeginInit();
+                bitmap.StreamSource = stream;
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+                return bitmap;
             }
         }
     }

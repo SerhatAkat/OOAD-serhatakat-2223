@@ -30,10 +30,8 @@ namespace WpfGebruiker
             List<Voertuig> voertuigen = Voertuig.GetAllVoertuigen();
             foreach (var voertuig in voertuigen)
             {
-                // Haal de bijbehorende foto op
                 Foto foto = Foto.GetFotoForVoertuig(voertuig.Id);
 
-                // Aangenomen dat foto.Image een byte array is
                 BitmapImage bitmap = new BitmapImage();
                 using (var mem = new MemoryStream(foto.Image))
                 {
@@ -99,11 +97,11 @@ namespace WpfGebruiker
 
         private void VoertuigInfoButton_Click(object sender, RoutedEventArgs e)
         {
-            // Haal de Voertuig's ID uit de Tag van de knop
+            // Haal de Voertuig ID uit de Tag van de knop
             Button knop = sender as Button;
             int voertuigId = int.Parse(knop.Tag.ToString());
 
-            // Zoek het Voertuig in je lijst
+            // Zoek het Voertuig in de list
             List<Voertuig> alleVoertuigen = Voertuig.GetAllVoertuigen();
             Voertuig gevondenVoertuig = null;
             foreach (Voertuig voertuig in alleVoertuigen)
@@ -117,16 +115,13 @@ namespace WpfGebruiker
 
             if (gevondenVoertuig != null)
             {
-                // Afhankelijk van het type van het Voertuig, navigeer naar de juiste pagina
                 if (gevondenVoertuig.Type == 1)
                 {
-                    // Vervang MotorInfoPage met de daadwerkelijke naam van je pagina
                     MotorInfo pagina = new MotorInfo(gevondenVoertuig);
                     this.NavigationService.Navigate(pagina);
                 }
                 else if (gevondenVoertuig.Type == 2)
                 {
-                    // Vervang GetrokkenPage met de daadwerkelijke naam van je pagina
                     GetrokkenInfo pagina = new GetrokkenInfo(gevondenVoertuig);
                     this.NavigationService.Navigate(pagina);
                 }

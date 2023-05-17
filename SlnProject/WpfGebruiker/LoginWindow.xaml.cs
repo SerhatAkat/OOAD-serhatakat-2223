@@ -58,10 +58,10 @@ namespace WpfGebruiker
 
             if (gebruiker != null)
             {
-                MainWindow mainWindow = new MainWindow(gebruiker); // Ervan uitgaande dat uw MainWindow een Gebruiker als parameter accepteert
+                MainWindow mainWindow = new MainWindow(gebruiker);
                 mainWindow.Show();
 
-                this.Close(); // Sluit het loginvenster
+                this.Close();
             }
             else if (gebruiker == null)
             {
