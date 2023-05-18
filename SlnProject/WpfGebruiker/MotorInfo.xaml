@@ -8,12 +8,29 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MotorInfo">
 
-    <ScrollViewer>
-        <Grid Background="White">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label x:Name="lblMotorNaam" Grid.Row="0" Margin="0 0 0 30" FontSize="24" FontWeight="Bold" HorizontalAlignment="Left"/>
+            <WrapPanel x:Name="stkMotorFotos" Grid.Row="1" HorizontalAlignment="Left"/>
+            <Label x:Name="lblMotorBeschrijving" Grid.Row="2" HorizontalAlignment="Left"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -26,18 +43,12 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Label x:Name="lblMotorNaam" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="0 0 0 30" FontSize="24" FontWeight="Bold"/>
-            <WrapPanel x:Name="stkMotorFotos" Grid.Row="1" Grid.Column="1">
-                
-            </WrapPanel>
-            <Label x:Name="lblMotorBeschrijving" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch"></Label>
-
-            <Label x:Name="lblMotorMerk" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch"></Label>
-            <Label x:Name="lblMotorBouwjaar" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch"></Label>
-            <Label x:Name="lblMotorModel" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch"></Label>
-            <Label x:Name="lblMotorTransmissie" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch"></Label>
-            <Label x:Name="lblMotorBrandstof" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Stretch"></Label>
-            <Label x:Name="lblMotorEigenaar" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Stretch"></Label>
+            <Label x:Name="lblMotorMerk" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="0 0 30 0"/>
+            <Label x:Name="lblMotorBouwjaar" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"/>
+            <Label x:Name="lblMotorModel" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Margin="0 0 30 0"/>
+            <Label x:Name="lblMotorTransmissie" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"/>
+            <Label x:Name="lblMotorBrandstof" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Margin="0 0 30 0"/>
+            <Label x:Name="lblMotorEigenaar" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"/>
         </Grid>
-    </ScrollViewer>
+    </Grid>
 </Page>

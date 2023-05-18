@@ -39,10 +39,10 @@ namespace MyClassLibrary
 
 
         // getrokken voertuig
-        public int Gewicht { get; set; }
-        public int MaxBelasting { get; set; }
+        public int? Gewicht { get; set; }
+        public int? MaxBelasting { get; set; }
         public string Afmetingen { get; set; }
-        public bool Geremd { get; set; }
+        public bool? Geremd { get; set; }
 
         public static List<Voertuig> GetAllVoertuigen()
         {
@@ -69,7 +69,11 @@ namespace MyClassLibrary
                                 Type = reader.GetInt32(reader.GetOrdinal("type")),
                                 Eigenaar = reader.GetInt32(reader.GetOrdinal("eigenaar_id")),
                                 TransmissieType = reader.IsDBNull(reader.GetOrdinal("Transmissie")) ? (Transmissie?)null : (Transmissie)reader.GetInt32(reader.GetOrdinal("Transmissie")),
-                                BrandstofType = reader.IsDBNull(reader.GetOrdinal("Brandstof")) ? (Brandstof?)null : (Brandstof)reader.GetInt32(reader.GetOrdinal("Brandstof"))
+                                BrandstofType = reader.IsDBNull(reader.GetOrdinal("Brandstof")) ? (Brandstof?)null : (Brandstof)reader.GetInt32(reader.GetOrdinal("Brandstof")),
+                                Gewicht = reader.IsDBNull(reader.GetOrdinal("Gewicht")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Gewicht")),
+                                MaxBelasting = reader.IsDBNull(reader.GetOrdinal("MaxBelasting")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("MaxBelasting")),
+                                Afmetingen = reader.IsDBNull(reader.GetOrdinal("Afmetingen")) ? null : reader.GetString(reader.GetOrdinal("Afmetingen")),
+                                Geremd = reader.IsDBNull(reader.GetOrdinal("Geremd")) ? (bool?)null : reader.GetBoolean(reader.GetOrdinal("Geremd"))
                             };
 
                             voertuigen.Add(voertuig);

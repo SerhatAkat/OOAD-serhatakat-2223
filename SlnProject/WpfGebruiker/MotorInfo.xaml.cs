@@ -34,7 +34,8 @@ namespace WpfGebruiker
             lblMotorModel.Content = "Model: " + voertuig.Model;
             lblMotorTransmissie.Content = "Transmissie: " + voertuig.TransmissieType?.ToString();
             lblMotorBrandstof.Content = "Brandstof: " + voertuig.BrandstofType?.ToString();
-            lblMotorEigenaar.Content = "Eigenaar: " + voertuig.Eigenaar;
+            string eigenaarNaam = Gebruiker.GetGebruikerNaamById(voertuig.Eigenaar);
+            lblMotorEigenaar.Content = "Eigenaar: " + (eigenaarNaam ?? "Onbekend");
         }
         private void LoadFotosForVoertuig(int voertuigId)
         {

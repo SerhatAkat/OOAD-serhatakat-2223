@@ -8,8 +8,21 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="HomePage">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <UniformGrid x:Name="pnlItems" Rows="3">
-        </UniformGrid>
-    </ScrollViewer>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Label Content="Type:" VerticalAlignment="Center" />
+            <CheckBox Name="chkGemotoriseerd" Content="Gemotoriseerd" VerticalAlignment="Center" Margin="5,0,0,0" Checked="CheckBox_Changed" Unchecked="CheckBox_Changed"/>
+            <CheckBox Name="chkGetrokken" Content="Getrokken" VerticalAlignment="Center" Margin="5,0,0,0" Checked="CheckBox_Changed" Unchecked="CheckBox_Changed"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <UniformGrid x:Name="pnlItems" Rows="3">
+            </UniformGrid>
+        </ScrollViewer>
+    </Grid>
 </Page>

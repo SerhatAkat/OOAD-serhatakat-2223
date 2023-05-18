@@ -11,26 +11,45 @@
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
 
-        <Label x:Name="lblMotorNaam" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="0 0 0 30" FontSize="24" FontWeight="Bold"/>
-        <Image x:Name="imgMotorFoto" Grid.Row="1" Grid.Column="1"></Image>
-        <Label x:Name="lblMotorBeschrijving" Grid.Row="2" Grid.Column="1"></Label>
-        
-        <Label x:Name="lblMotorMerk" Grid.Row="3" Grid.Column="1"></Label>
-        <Label x:Name="lblMotorBouwjaar" Grid.Row="3" Grid.Column="2"></Label>
-        <Label x:Name="lblMotorModel" Grid.Row="4" Grid.Column="1"></Label>
-        <Label x:Name="lblMotorTransmissie" Grid.Row="4" Grid.Column="2"></Label>
-        <Label x:Name="lblMotorBrandstof" Grid.Row="5" Grid.Column="1"></Label>
-        <Label x:Name="lblMotorEigenaar" Grid.Row="5" Grid.Column="2"></Label>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label x:Name="lblGetrokkenNaam" Grid.Row="0" Margin="0 0 0 30" FontSize="24" FontWeight="Bold" HorizontalAlignment="Left"/>
+            <WrapPanel x:Name="stkGetrokkenFotos" Grid.Row="1" HorizontalAlignment="Left"/>
+            <Label x:Name="lblGetrokkenBeschrijving" Grid.Row="2" HorizontalAlignment="Left"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label x:Name="lblGetrokkenMerk" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="0 0 30 0"/>
+            <Label x:Name="lblGetrokkenGeremd" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"/>
+            <Label x:Name="lblGetrokkenModel" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Margin="0 0 30 0"/>
+            <Label x:Name="lblGetrokkenAfmetingen" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"/>
+            <Label x:Name="lblGetrokkenGewicht" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Margin="0 0 30 0"/>
+            <Label x:Name="lblGetrokkenBouwjaar" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"/>
+            <Label x:Name="lblGetrokkenBelasting" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" Margin="0 0 30 0"/>
+            <Label x:Name="lblGetrokkenEigenaar" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"/>
+        </Grid>
     </Grid>
 
 </Page>
