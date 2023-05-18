@@ -11,6 +11,7 @@
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -50,7 +51,7 @@
             <Label x:Name="lblGetrokkenBelasting" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" Margin="0 0 30 0"/>
             <Label x:Name="lblGetrokkenEigenaar" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"/>
         </Grid>
-        <Grid Grid.Row="2" Margin="20">
+        <Grid Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
