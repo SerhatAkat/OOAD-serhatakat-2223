@@ -23,15 +23,16 @@ namespace MyClassLibrary
         // motorvoertuig
         public enum Transmissie
         {
-            Manueel,
+            Manueel = 1,
             Automatisch
         }
         public enum Brandstof
         {
-            Benzine,
+            Benzine = 1,
             Diesel,
             LPG
         }
+
 
         public Transmissie? TransmissieType { get; set; }
         public Brandstof? BrandstofType { get; set; }
@@ -62,7 +63,7 @@ namespace MyClassLibrary
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                 Naam = reader.GetString(reader.GetOrdinal("Naam")),
-                                Beschrijving = reader.IsDBNull(reader.GetOrdinal("Beschrijving")) ? null : reader.GetString(reader.GetOrdinal("Beschrijving")),
+                                Beschrijving = reader.GetString(reader.GetOrdinal("Beschrijving")),
                                 Bouwjaar = reader.IsDBNull(reader.GetOrdinal("Bouwjaar")) ? 0 : reader.GetInt32(reader.GetOrdinal("Bouwjaar")),
                                 Merk = reader.IsDBNull(reader.GetOrdinal("Merk")) ? null : reader.GetString(reader.GetOrdinal("Merk")),
                                 Model = reader.IsDBNull(reader.GetOrdinal("Model")) ? null : reader.GetString(reader.GetOrdinal("Model")),

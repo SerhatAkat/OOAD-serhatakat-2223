@@ -29,11 +29,11 @@ namespace WpfGebruiker
 
             lblMotorNaam.Content = voertuig.Naam;
             lblMotorBeschrijving.Content = "Beschrijving: " + voertuig.Beschrijving;
-            lblMotorMerk.Content = "Merk: " + voertuig.Merk;
+            lblMotorMerk.Content = "Merk: " + (string.IsNullOrEmpty(voertuig.Merk) ? "n.v.t." : voertuig.Merk);
             lblMotorBouwjaar.Content = "Bouwjaar: " + voertuig.Bouwjaar;
-            lblMotorModel.Content = "Model: " + voertuig.Model;
-            lblMotorTransmissie.Content = "Transmissie: " + voertuig.TransmissieType?.ToString();
-            lblMotorBrandstof.Content = "Brandstof: " + voertuig.BrandstofType?.ToString();
+            lblMotorModel.Content = "Model: " + (string.IsNullOrEmpty(voertuig.Model) ? "n.v.t." : voertuig.Model);
+            lblMotorTransmissie.Content = "Transmissie: " + (voertuig.TransmissieType == null ? "n.v.t." : voertuig.TransmissieType.ToString());
+            lblMotorBrandstof.Content = "Brandstof: " + (voertuig.BrandstofType == null ? "n.v.t." : voertuig.BrandstofType.ToString());
             string eigenaarNaam = Gebruiker.GetGebruikerNaamById(voertuig.Eigenaar);
             lblMotorEigenaar.Content = "Eigenaar: " + (eigenaarNaam ?? "Onbekend");
         }

@@ -30,7 +30,7 @@ namespace WpfGebruiker
 
             lblGetrokkenNaam.Content = voertuig.Naam;
             lblGetrokkenBeschrijving.Content = "Beschrijving: " + voertuig.Beschrijving;
-            lblGetrokkenMerk.Content = "Merk: " + voertuig.Merk;
+            lblGetrokkenMerk.Content = "Merk: " + (string.IsNullOrEmpty(voertuig.Merk) ? "n.v.t." : voertuig.Merk);
 
             if (voertuig.Geremd.HasValue)
             {
@@ -40,11 +40,11 @@ namespace WpfGebruiker
             {
                 lblGetrokkenGeremd.Content = "Geremd: Geen informatie beschikbaar";
             }
-            lblGetrokkenModel.Content = "Model: " + voertuig.Model;
-            lblGetrokkenAfmetingen.Content = "Afmetingen: " + voertuig.Afmetingen;
-            lblGetrokkenGewicht.Content = "Gewicht: " + voertuig.Gewicht + " kg";
+            lblGetrokkenModel.Content = "Model: " + (string.IsNullOrEmpty(voertuig.Model) ? "n.v.t." : voertuig.Model);
+            lblGetrokkenAfmetingen.Content = "Afmetingen: " + (string.IsNullOrEmpty(voertuig.Afmetingen) ? "n.v.t." : voertuig.Afmetingen);
+            lblGetrokkenGewicht.Content = "Gewicht: " + (voertuig.Gewicht.HasValue ? voertuig.Gewicht.Value.ToString() : "n.v.t.") + " kg";
             lblGetrokkenBouwjaar.Content = "Bouwjaar: " + voertuig.Bouwjaar;
-            lblGetrokkenBelasting.Content = "Max. belasting: " + voertuig.MaxBelasting + " kg";
+            lblGetrokkenBelasting.Content = "Max. belasting: " + (voertuig.MaxBelasting.HasValue ? voertuig.MaxBelasting.Value.ToString() : "n.v.t.") + " kg";
             string eigenaarNaam = Gebruiker.GetGebruikerNaamById(voertuig.Eigenaar);
             lblGetrokkenEigenaar.Content = "Eigenaar: " + (eigenaarNaam ?? "Onbekend");
         }
