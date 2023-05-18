@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfGebruiker"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="450" Width="800" Background="White">
+        Title="LoginWindow" MinHeight="450" MinWidth="800" MaxHeight="450" MaxWidth="800" Background="White">
     <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center">
         <Grid Width="600">
             <Grid.RowDefinitions>

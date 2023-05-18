@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using MyClassLibrary;
 
 namespace WpfGebruiker
 {
@@ -54,7 +55,7 @@ namespace WpfGebruiker
                 return;
             }
 
-            MyClassLibrary.Gebruiker gebruiker = MyClassLibrary.Gebruiker.GetGebruiker(email, paswoord);
+            Gebruiker gebruiker = Gebruiker.GetGebruiker(email, paswoord);
 
             if (gebruiker != null)
             {
@@ -69,6 +70,5 @@ namespace WpfGebruiker
                 txtPaswoord.Password = "";
             }
         }
-
     }
 }

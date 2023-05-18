@@ -29,8 +29,9 @@ namespace WpfGebruiker
 
         private void btnOntleningen_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Content = new OntleningenPage();
+            MainFrame.Content = new OntleningenPage(ingelogdeGebruiker.Id);
         }
+
 
         private void btnVoertuigen_Click(object sender, RoutedEventArgs e)
         {

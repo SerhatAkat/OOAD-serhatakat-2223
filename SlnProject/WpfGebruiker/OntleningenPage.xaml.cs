@@ -21,9 +21,14 @@ namespace WpfGebruiker
     /// </summary>
     public partial class OntleningenPage : Page
     {
-        public OntleningenPage()
+        public OntleningenPage(int gebruikerId)
         {
             InitializeComponent();
+            List<string> mijnOntleningen = Ontlening.GetOntleningen(gebruikerId);
+            foreach (string ontl in mijnOntleningen)
+            {
+                MijnOntleningenListBox.Items.Add(ontl);
+            }
         }
     }
 }

@@ -14,7 +14,6 @@ namespace MyClassLibrary
         public string Email { get; set; }
         public string Paswoord { get; set; }
         public DateTime Aanmaakdatum { get; set; }
-        public string Profielfoto { get; set; }
         public GeslachtType Geslacht { get; set; }
 
         public enum GeslachtType
@@ -41,7 +40,6 @@ namespace MyClassLibrary
 
         public static Gebruiker GetGebruiker(string email, string paswoord)
         {
-            string gehashtPaswoord = ComputeSha256Hash(paswoord);
             string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -63,7 +61,6 @@ namespace MyClassLibrary
                                 Email = reader.GetString(reader.GetOrdinal("Email")),
                                 Paswoord = reader.GetString(reader.GetOrdinal("Paswoord")),
                                 Aanmaakdatum = reader.GetDateTime(reader.GetOrdinal("Aanmaakdatum")),
-                                Profielfoto = reader.IsDBNull(reader.GetOrdinal("Profielfoto")) ? null : reader.GetString(reader.GetOrdinal("Profielfoto")),
                                 Geslacht = (GeslachtType)reader.GetByte(reader.GetOrdinal("Geslacht"))
                             };
 
