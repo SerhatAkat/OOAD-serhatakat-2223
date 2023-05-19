@@ -15,6 +15,8 @@ namespace WpfGebruiker
             InitializeComponent();
             txtEmail.TextChanged += TxtEmail_TextChanged;
             txtPaswoord.PasswordChanged += TxtPaswoord_PasswordChanged;
+            txtEmail.Text = "sam@odisee.be";
+            txtPaswoord.Password = "test123";
         }
 
         private void TxtEmail_TextChanged(object sender, TextChangedEventArgs e)

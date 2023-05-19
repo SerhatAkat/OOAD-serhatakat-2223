@@ -24,11 +24,29 @@ namespace WpfGebruiker
         public OntleningenPage(int gebruikerId)
         {
             InitializeComponent();
-            List<string> mijnOntleningen = Ontlening.GetOntleningen(gebruikerId);
-            foreach (string ontl in mijnOntleningen)
+            List<Ontlening> mijnOntleningen = Ontlening.GetOntleningen(gebruikerId);
+            foreach (Ontlening ontl in mijnOntleningen)
             {
-                MijnOntleningenListBox.Items.Add(ontl);
+                ListBoxItem item = new ListBoxItem();
+                TextBlock tb = new TextBlock();
+                tb.Text = ontl.ToString();
+
+                switch (ontl.OntleningStatus)
+                {
+                    case Ontlening.Status.InAanvraag:
+                        tb.Foreground = Brushes.Orange;
+                        break;
+                    case Ontlening.Status.Goedgekeurd:
+                        tb.Foreground = Brushes.Green;
+                        break;
+                    case Ontlening.Status.Verworpen:
+                        tb.Foreground = Brushes.Red;
+                        break;
+                }
+                item.Content = tb;
+                MijnOntleningenListBox.Items.Add(item);
             }
         }
+
     }
 }
