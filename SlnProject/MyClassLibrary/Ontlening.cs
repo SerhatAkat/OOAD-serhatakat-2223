@@ -11,7 +11,7 @@ namespace MyClassLibrary
         public DateTime Vanaf { get; set; }
         public DateTime Tot { get; set; }
         public string Bericht { get; set; }
-        public string VoertuigNaam { get; set; }  // Nieuwe veld voor de naam van het voertuig
+        public string VoertuigNaam { get; set; }
         public int Aanvrager_Id { get; set; }
         public Status OntleningStatus { get; set; }
 
