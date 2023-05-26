@@ -1,18 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using MyClassLibrary;
 
 namespace WpfGebruiker
@@ -22,12 +13,19 @@ namespace WpfGebruiker
     /// </summary>
     public partial class GetrokkenInfo : Page
     {
-        public GetrokkenInfo(Voertuig voertuig)
+        private int gebruikerId;
+        private string voertuigNaam;
+        private Voertuig huidigeVoertuig;
+
+        public GetrokkenInfo(Voertuig voertuig, int gebruikerID)
         {
             InitializeComponent();
+            huidigeVoertuig = voertuig;
+            gebruikerId = gebruikerID;
 
             LoadFotosForVoertuig(voertuig.Id);
 
+            voertuigNaam = voertuig.Naam;
             lblGetrokkenNaam.Content = voertuig.Naam;
             lblGetrokkenBeschrijving.Content = "Beschrijving: " + voertuig.Beschrijving;
             lblGetrokkenMerk.Content = "Merk: " + (string.IsNullOrEmpty(voertuig.Merk) ? "n.v.t." : voertuig.Merk);
@@ -51,7 +49,7 @@ namespace WpfGebruiker
 
         private void LoadFotosForVoertuig(int voertuigId)
         {
-            List<Foto> fotos = Foto.GetFotosForVoertuig(voertuigId); // Dit moet een lijst van Foto objecten teruggeven die overeenkomen met het gegeven voertuig ID
+            List<Foto> fotos = Foto.GetFotosForVoertuig(voertuigId);
 
             foreach (Foto foto in fotos)
             {
@@ -73,6 +71,39 @@ namespace WpfGebruiker
                 bitmap.CacheOption = BitmapCacheOption.OnLoad;
                 bitmap.EndInit();
                 return bitmap;
+            }
+        }
+
+        private void btnBevestigen_Click(object sender, RoutedEventArgs e)
+        {
+            if (dtmVan.SelectedDate.HasValue && dtmTot.SelectedDate.HasValue)
+            {
+                if (dtmVan.SelectedDate.Value >= dtmVan.SelectedDate.Value)
+                {
+                    Ontlening nieuweOntlening = new Ontlening
+                    {
+                        Id = huidigeVoertuig.Id,
+                        Vanaf = dtmVan.SelectedDate.Value.Date,
+                        Tot = dtmTot.SelectedDate.Value.Date,
+                        Bericht = txtBericht.Text,
+                        OntleningStatus = Ontlening.Status.InAanvraag,
+                        Aanvrager = Gebruiker.GetGebruikerById(gebruikerId)
+                    };
+
+                    Ontlening.VoegOntleningToe(nieuweOntlening);
+
+                    dtmVan.SelectedDate = null;
+                    dtmTot.SelectedDate = null;
+                    txtBericht.Text = string.Empty;
+                }
+                else
+                {
+                    MessageBox.Show("De einddatum moet na de begindatum zijn.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vul de begindatum en einddatum in.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

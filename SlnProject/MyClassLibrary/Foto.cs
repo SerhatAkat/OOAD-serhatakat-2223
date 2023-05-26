@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ namespace MyClassLibrary
         // één foto voor HomePage
         public static Foto GetFotoForVoertuig(int voertuigId)
         {
-            string connectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=BuurlenenDB;Integrated Security=True";
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -49,7 +50,7 @@ namespace MyClassLibrary
         {
             List<Foto> fotos = new List<Foto>();
 
-            string connectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=BuurlenenDB;Integrated Security=True";
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -67,15 +68,12 @@ namespace MyClassLibrary
                                 Image = (byte[])reader["data"],
                                 Voertuig_Id = reader.GetInt32(reader.GetOrdinal("Voertuig_Id"))
                             };
-
                             fotos.Add(foto);
                         }
                     }
                 }
             }
-
             return fotos;
         }
-
     }
 }

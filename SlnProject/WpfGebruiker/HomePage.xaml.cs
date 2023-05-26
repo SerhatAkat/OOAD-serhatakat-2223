@@ -22,8 +22,10 @@ namespace WpfGebruiker
     /// </summary>
     public partial class HomePage : Page
     {
-        public HomePage()
+        private Gebruiker userid;
+        public HomePage(Gebruiker userId)
         {
+            this.userid = userId;
             InitializeComponent();
 
             UpdateVoertuigen();
@@ -42,9 +44,9 @@ namespace WpfGebruiker
             pnlItems.Children.Clear();
 
             // Haal de lijst met voertuigen op
-            List<Voertuig> voertuigen = Voertuig.GetAllVoertuigen();
+            List<Voertuig> voertuigen = Voertuig.GetVoertuigenVanAnderen(userid.Id);
 
-            foreach (var voertuig in voertuigen)
+            foreach (Voertuig voertuig in voertuigen)
             {
                 if ((tonenGemotoriseerd && voertuig.Type == 1) ||
                     (tonenGetrokken && voertuig.Type == 2) ||
@@ -53,7 +55,7 @@ namespace WpfGebruiker
                     Foto foto = Foto.GetFotoForVoertuig(voertuig.Id);
 
                     BitmapImage bitmap = new BitmapImage();
-                    using (var mem = new MemoryStream(foto.Image))
+                    using (MemoryStream mem = new MemoryStream(foto.Image))
                     {
                         mem.Position = 0;
                         bitmap.BeginInit();
@@ -116,7 +118,6 @@ namespace WpfGebruiker
             }
         }
 
-
         private void VoertuigInfoButton_Click(object sender, RoutedEventArgs e)
         {
             // Haal de Voertuig ID uit de Tag van de knop
@@ -139,12 +140,12 @@ namespace WpfGebruiker
             {
                 if (gevondenVoertuig.Type == 1)
                 {
-                    MotorInfo pagina = new MotorInfo(gevondenVoertuig);
+                    MotorInfo pagina = new MotorInfo(gevondenVoertuig, userid.Id);
                     this.NavigationService.Navigate(pagina);
                 }
                 else if (gevondenVoertuig.Type == 2)
                 {
-                    GetrokkenInfo pagina = new GetrokkenInfo(gevondenVoertuig);
+                    GetrokkenInfo pagina = new GetrokkenInfo(gevondenVoertuig, userid.Id);
                     this.NavigationService.Navigate(pagina);
                 }
             }

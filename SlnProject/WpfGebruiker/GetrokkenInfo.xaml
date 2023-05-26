@@ -67,15 +67,15 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Content="Van:" Grid.Row="0" Grid.Column="0" Margin="0 0 10 0"/>
-                <xctk:DateTimePicker x:Name="dtmVan" Grid.Row="0" Grid.Column="1" Format="Custom" FormatString="dd/MM/yyyy HH:mm" />
+                <DatePicker x:Name="dtmVan" Grid.Row="0" Grid.Column="1"/>
 
                 <Label Content="Tot:" Grid.Row="1" Grid.Column="0" Margin="0 0 10 0"/>
-                <xctk:DateTimePicker x:Name="dtmTot" Grid.Row="1" Grid.Column="1" Format="Custom" FormatString="dd/MM/yyyy HH:mm"/>
+                <DatePicker x:Name="dtmTot" Grid.Row="1" Grid.Column="1"/>
 
                 <Label Content="Bericht aan eigenaar:" Grid.Row="2" Grid.Column="0" Margin="0 0 10 0"/>
                 <TextBox x:Name="txtBericht" Grid.Row="2" Grid.Column="1" Height="150"/>
 
-                <Button x:Name="btnBevestigen" Content="Bevestigen" Grid.Row="3" Grid.Column="1" Grid.RowSpan="3" Margin="0 0 10 0" Width="100" Height="30" HorizontalAlignment="Left"/>
+                <Button x:Name="btnBevestigen" Content="Bevestigen" Grid.Row="3" Grid.Column="1" Grid.RowSpan="3" Margin="0 0 10 0" Width="100" Height="30" HorizontalAlignment="Left" Click="btnBevestigen_Click"/>
             </Grid>
         </Grid>
     </ScrollViewer>

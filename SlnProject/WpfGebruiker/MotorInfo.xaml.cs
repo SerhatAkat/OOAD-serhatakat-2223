@@ -22,8 +22,14 @@ namespace WpfGebruiker
     /// </summary>
     public partial class MotorInfo : Page
     {
-        public MotorInfo(Voertuig voertuig)
+        private Voertuig huidigeVoertuig;
+        private int gebruikerId;
+
+        public MotorInfo(Voertuig voertuig, int gebruikerID)
         {
+            huidigeVoertuig = voertuig;
+            gebruikerId = gebruikerID;
+
             InitializeComponent();
             LoadFotosForVoertuig(voertuig.Id);
 
@@ -39,7 +45,7 @@ namespace WpfGebruiker
         }
         private void LoadFotosForVoertuig(int voertuigId)
         {
-            List<Foto> fotos = Foto.GetFotosForVoertuig(voertuigId); // Dit moet een lijst van Foto objecten teruggeven die overeenkomen met het gegeven voertuig ID
+            List<Foto> fotos = Foto.GetFotosForVoertuig(voertuigId);
 
             foreach (Foto foto in fotos)
             {
@@ -61,6 +67,39 @@ namespace WpfGebruiker
                 bitmap.CacheOption = BitmapCacheOption.OnLoad;
                 bitmap.EndInit();
                 return bitmap;
+            }
+        }
+
+        private void btnBevestigen_Click(object sender, RoutedEventArgs e)
+        {
+            if (dtmVan.SelectedDate.HasValue && dtmTot.SelectedDate.HasValue)
+            {
+                if (dtmVan.SelectedDate.Value >= dtmVan.SelectedDate.Value)
+                {
+                    Ontlening nieuweOntlening = new Ontlening
+                    {
+                        Id = huidigeVoertuig.Id,
+                        Vanaf = dtmVan.SelectedDate.Value.Date,
+                        Tot = dtmTot.SelectedDate.Value.Date,
+                        Bericht = txtBericht.Text,
+                        OntleningStatus = Ontlening.Status.InAanvraag,
+                        Aanvrager = Gebruiker.GetGebruikerById(gebruikerId)
+                    };
+
+                    Ontlening.VoegOntleningToe(nieuweOntlening);
+
+                    dtmVan.SelectedDate = null;
+                    dtmTot.SelectedDate = null;
+                    txtBericht.Text = string.Empty;
+                }
+                else
+                {
+                    MessageBox.Show("De einddatum moet na de begindatum zijn.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vul de begindatum en einddatum in.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

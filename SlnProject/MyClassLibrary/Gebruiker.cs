@@ -92,5 +92,34 @@ namespace MyClassLibrary
             }
             return null;
         }
+
+        public static Gebruiker GetGebruikerById(int gebruikerId)
+        {
+            string connString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connString))
+            {
+                connection.Open();
+
+                string query = "SELECT * FROM Gebruiker WHERE Id = @GebruikerId";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@GebruikerId", gebruikerId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        Gebruiker gebruiker = new Gebruiker
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Voornaam = reader.GetString(reader.GetOrdinal("Voornaam")),
+                            Achternaam = reader.GetString(reader.GetOrdinal("Achternaam"))
+                        };
+
+                        return gebruiker;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }
