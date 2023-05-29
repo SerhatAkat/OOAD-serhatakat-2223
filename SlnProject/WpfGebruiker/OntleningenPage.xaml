@@ -43,8 +43,8 @@
                     <Label Grid.Row="0" Grid.Column="0" Content="Inkomende aanvragen:" FontSize="16" FontWeight="Bold" Margin="20 0 0 0"/>
                     <ListBox x:Name="AanvragenListBox" Grid.Row="1" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="20" SelectionChanged="AanvragenListBox_SelectionChanged">
                     </ListBox>
-                    <Button x:Name="btnAccepteren" Grid.Row="1" Grid.Column="1" Content="Accepteren" Margin="0 20 20 0" Height="40" Width="100" VerticalAlignment="Top"/>
-                    <Button x:Name="btnAfwijzen" Grid.Row="1" Grid.Column="1" Content="Afwijzen" Margin="0 70 20 0" Height="40" Width="100" VerticalAlignment="Top"/>
+                    <Button x:Name="btnAccepteren" Grid.Row="1" Grid.Column="1" Content="Accepteren" Margin="0 20 20 0" Height="40" Width="100" VerticalAlignment="Top" Click="btnAccepteren_Click"/>
+                    <Button x:Name="btnAfwijzen" Grid.Row="1" Grid.Column="1" Content="Afwijzen" Margin="0 70 20 0" Height="40" Width="100" VerticalAlignment="Top" Click="btnAfwijzen_Click"/>
                     <Label x:Name="lblDetailsAanvraag" Content="Details van de aanvraag:" Grid.Row="2" Grid.Column="0" FontSize="16" FontWeight="Bold" Margin="20 0 0 0"></Label>
 
                     <StackPanel Grid.Row="3" Grid.Column="0" Margin="20 0 0 0">

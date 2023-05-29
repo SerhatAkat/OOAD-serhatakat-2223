@@ -79,6 +79,12 @@
     <Compile Include="MotorInfo.xaml.cs">
       <DependentUpon>MotorInfo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ToevoegenGetrokken.xaml.cs">
+      <DependentUpon>ToevoegenGetrokken.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToevoegenMotor.xaml.cs">
+      <DependentUpon>ToevoegenMotor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VoertuigenPage.xaml.cs">
       <DependentUpon>VoertuigenPage.xaml</DependentUpon>
     </Compile>
@@ -117,6 +123,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="OntleningenPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToevoegenGetrokken.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToevoegenMotor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

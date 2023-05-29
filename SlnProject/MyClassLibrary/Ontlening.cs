@@ -58,20 +58,18 @@ namespace MyClassLibrary
             return ontleningen;
         }
 
-        public static void WijzigStatus(int ontleningId, Status nieuweStatus)
+        public static void WijzigStatus(Ontlening ontl)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                using (SqlCommand command = new SqlCommand("UPDATE Ontlening SET Status = @Status WHERE Id = @Id", conn))
-                {
-                    command.Parameters.AddWithValue("@Id", ontleningId);
-                    command.Parameters.AddWithValue("@Status", (byte)nieuweStatus);
+                SqlCommand command = new SqlCommand("UPDATE Ontlening SET status = @Status WHERE id = @Id", conn);
+                command.Parameters.AddWithValue("@Status", (int)ontl.OntleningStatus);
+                command.Parameters.AddWithValue("@Id", ontl.Id);
 
-                    command.ExecuteNonQuery();
-                }
+                command.ExecuteNonQuery();
             }
         }
 
@@ -156,12 +154,9 @@ namespace MyClassLibrary
                         }
                     }
                 }
-
             }
             return ontleningen;
         }
-
-        
 
         public static List<Ontlening> GetAlleOntleningByVoertuigId(int id)
         {

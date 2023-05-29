@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,6 +23,10 @@ namespace WpfGebruiker
     public partial class VoertuigenPage : Page
     {
         private int userId;
+
+        // Maak cardPanel en voertuigen als klasse-velden
+        private WrapPanel cardPanel;
+        private List<Voertuig> voertuigen;
 
         public VoertuigenPage(int userId)
         {
@@ -50,11 +55,10 @@ namespace WpfGebruiker
             mainPanel.Children.Add(addButton);
 
             // Maak een nieuwe WrapPanel voor de kaarten
-            WrapPanel cardPanel = new WrapPanel();
+            cardPanel = new WrapPanel();
 
             // Haal de lijst met voertuigen op van de huidige ingelogde gebruiker
-            List<Voertuig> voertuigen = Voertuig.GetAllVoertuigenOwnedByGebruiker(userId);
-
+            voertuigen = Voertuig.GetAllVoertuigenOwnedByGebruiker(userId);
 
             foreach (Voertuig voertuig in voertuigen)
             {
@@ -102,6 +106,8 @@ namespace WpfGebruiker
                     Margin = new Thickness(5)
                 };
                 deleteBtn.Margin = new Thickness(20, 0, 0, 0);
+                deleteBtn.Click += DeleteBtn_Click;
+                deleteBtn.Tag = voertuig.Id;
 
                 Button editBtn = new Button();
                 editBtn.Content = new ImageAwesome
@@ -122,9 +128,11 @@ namespace WpfGebruiker
                     Height = 16,
                     Foreground = Brushes.Black,
                     Margin = new Thickness(5)
-
                 };
+
                 infoBtn.Margin = new Thickness(5, 0, 0, 0);
+                infoBtn.Click += BtnInfo_Click;
+                infoBtn.Tag = voertuig.Id;
 
                 StackPanel infoPanel = new StackPanel();
                 infoPanel.Orientation = Orientation.Horizontal;
@@ -214,5 +222,69 @@ namespace WpfGebruiker
             // Open het venster
             window.ShowDialog();
         }
+        private void BtnInfo_Click(object sender, RoutedEventArgs e)
+        {
+            // Haal de Voertuig ID uit de Tag van de knop
+            Button knop = sender as Button;
+            int voertuigId = int.Parse(knop.Tag.ToString());
+
+            // Zoek het Voertuig in de list
+            List<Voertuig> alleVoertuigen = Voertuig.GetAllVoertuigen();
+            Voertuig gevondenVoertuig = null;
+            foreach (Voertuig voertuig in alleVoertuigen)
+            {
+                if (voertuig.Id == voertuigId)
+                {
+                    gevondenVoertuig = voertuig;
+                    break;
+                }
+            }
+
+            if (gevondenVoertuig != null)
+            {
+                if (gevondenVoertuig.Type == 1)
+                {
+                    MotorInfo pagina = new MotorInfo(gevondenVoertuig, userId);
+                    this.NavigationService.Navigate(pagina);
+                }
+                else if (gevondenVoertuig.Type == 2)
+                {
+                    GetrokkenInfo pagina = new GetrokkenInfo(gevondenVoertuig, userId);
+                    this.NavigationService.Navigate(pagina);
+                }
+            }
+        }
+        private void DeleteBtn_Click(object sender, RoutedEventArgs e)
+        {
+            // Haal de Voertuig ID uit de Tag van de knop
+            Button deleteBtn = sender as Button;
+            int voertuigId = int.Parse(deleteBtn.Tag.ToString());
+
+            // Zoek het Voertuig in de list
+            Voertuig voertuigToRemove = voertuigen.FirstOrDefault(v => v.Id == voertuigId);
+
+            // Controleer of het Voertuig gevonden is
+            if (voertuigToRemove != null)
+            {
+                // Verwijder het Voertuig uit de list
+                voertuigen.Remove(voertuigToRemove);
+
+                // Verwijder het Voertuig uit de databank
+                bool success = Voertuig.DeleteVoertuig(voertuigId);
+                if (success)
+                {
+                    MessageBox.Show("Voertuig succesvol verwijderd.", "Verwijderd", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Er is iets misgegaan tijdens het verwijderen van het voertuig.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+                // Update de UI
+                UpdateVoertuigen();
+            }
+        }
+
+
     }
 }

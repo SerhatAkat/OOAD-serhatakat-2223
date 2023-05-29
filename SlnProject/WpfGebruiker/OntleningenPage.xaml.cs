@@ -114,7 +114,7 @@ namespace WpfGebruiker
 
             foreach (Ontlening ontl in mijnOntleningen)
             {
-                if (ontl.Aanvrager_Id != gebruikerId)
+                if (ontl.Aanvrager_Id != gebruikerId && ontl.OntleningStatus == Ontlening.Status.InAanvraag)
                 {
                     ListBoxItem item = new ListBoxItem();
                     TextBlock tb = new TextBlock();
@@ -163,6 +163,30 @@ namespace WpfGebruiker
                 lblPeriode.Content = "Periode:";
                 lblAanvrager.Content = "Aanvrager:";
                 lblBericht.Content = "Bericht:";
+            }
+        }
+
+        private void btnAccepteren_Click(object sender, RoutedEventArgs e)
+        {
+            if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontlening)
+            {
+                ontlening.OntleningStatus = Ontlening.Status.Goedgekeurd;
+                Ontlening.WijzigStatus(ontlening);
+
+                AanvragenListBox.Items.Remove(item);
+                LoadAanvragen();
+            }
+        }
+
+        private void btnAfwijzen_Click(object sender, RoutedEventArgs e)
+        {
+            if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontlening)
+            {
+                ontlening.OntleningStatus = Ontlening.Status.Verworpen;
+                Ontlening.WijzigStatus(ontlening);
+
+                AanvragenListBox.Items.Remove(item);
+                LaadOntleningen();
             }
         }
     }
