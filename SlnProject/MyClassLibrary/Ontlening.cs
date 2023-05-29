@@ -58,6 +58,39 @@ namespace MyClassLibrary
             return ontleningen;
         }
 
+        public static void WijzigStatus(int ontleningId, Status nieuweStatus)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand("UPDATE Ontlening SET Status = @Status WHERE Id = @Id", conn))
+                {
+                    command.Parameters.AddWithValue("@Id", ontleningId);
+                    command.Parameters.AddWithValue("@Status", (byte)nieuweStatus);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void UpdateOntleningStatus(int ontleningId, Status nieuweStatus)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                using (SqlCommand command = new SqlCommand("UPDATE Ontlening SET Status = @nieuweStatus WHERE Id = @Id", conn))
+                {
+                    command.Parameters.AddWithValue("@Id", ontleningId);
+                    command.Parameters.AddWithValue("@nieuweStatus", nieuweStatus);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
         public static void VerwijderOntlening(int ontleningId)
         {
             string connString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
@@ -128,21 +161,7 @@ namespace MyClassLibrary
             return ontleningen;
         }
 
-        public static void UpdateOntleningStatus(Ontlening ontlening)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                using (SqlCommand command = new SqlCommand("UPDATE Ontlening SET Status = @Status WHERE Id = @Id", conn))
-                {
-                    command.Parameters.AddWithValue("@Status", (byte)ontlening.OntleningStatus);
-                    command.Parameters.AddWithValue("@Id", ontlening.Id);
-
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
+        
 
         public static List<Ontlening> GetAlleOntleningByVoertuigId(int id)
         {

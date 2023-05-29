@@ -35,7 +35,7 @@ namespace WpfGebruiker
 
         private void btnVoertuigen_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Content = new VoertuigenPage();
+            MainFrame.Content = new VoertuigenPage(ingelogdeGebruiker.Id);
         }
     }
 }

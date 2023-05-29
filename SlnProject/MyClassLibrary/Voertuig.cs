@@ -165,5 +165,43 @@ namespace MyClassLibrary
             }
             return voertuigen;
         }
+
+        public static List<Voertuig> GetAllVoertuigenOwnedByGebruiker(int userId)
+        {
+            List<Voertuig> voertuigen = new List<Voertuig>();
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                string query = "SELECT * FROM [Voertuig] WHERE eigenaar_id = @UserId";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Voertuig voertuig = new Voertuig();
+                    voertuig.Id = Convert.ToInt32(reader["id"]);
+                    voertuig.Naam = Convert.ToString(reader["naam"]);
+                    voertuig.Beschrijving = Convert.ToString(reader["beschrijving"]);
+                    voertuig.Bouwjaar = Convert.ToInt32(reader["bouwjaar"]);
+                    voertuig.Merk = Convert.ToString(reader["merk"]);
+                    voertuig.Model = Convert.ToString(reader["model"]);
+                    voertuig.Type = Convert.ToInt32(reader["type"]);
+                    voertuig.Eigenaar = Convert.ToInt32(reader["eigenaar_id"]);
+                    voertuig.TransmissieType = reader["transmissie"] == DBNull.Value ? null : (Transmissie?)(int)reader["transmissie"];
+                    voertuig.BrandstofType = reader["brandstof"] == DBNull.Value ? null : (Brandstof?)(int)reader["brandstof"];
+                    voertuig.Gewicht = reader["gewicht"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["gewicht"]);
+                    voertuig.MaxBelasting = reader["maxbelasting"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["maxbelasting"]);
+                    voertuig.Afmetingen = Convert.ToString(reader["afmetingen"]);
+                    voertuig.Geremd = reader["geremd"] == DBNull.Value ? null : (bool?)Convert.ToBoolean(reader["geremd"]);
+
+                    voertuigen.Add(voertuig);
+                }
+            }
+            return voertuigen;
+        }
+
     }
 }

@@ -21,6 +21,7 @@ namespace WpfGebruiker
     /// </summary>
     public partial class OntleningenPage : Page
     {
+        private List<Ontlening> aanvragen;
         private int gebruikerId;
 
         public OntleningenPage(int gebruikerId)
@@ -141,30 +142,6 @@ namespace WpfGebruiker
                 {
                     btnAnnuleren.IsEnabled = false;
                 }
-            }
-        }
-
-        private void BtnAccepteren_Click(object sender, RoutedEventArgs e)
-        {
-            if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontlening)
-            {
-                ontlening.OntleningStatus = Ontlening.Status.Goedgekeurd;
-                Ontlening.UpdateOntleningStatus(ontlening);
-
-                AanvragenListBox.Items.Remove(item);
-                LaadOntleningen();
-            }
-        }
-
-        private void BtnAfwijzen_Click(object sender, RoutedEventArgs e)
-        {
-            if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontlening)
-            {
-                ontlening.OntleningStatus = Ontlening.Status.Verworpen;
-                Ontlening.UpdateOntleningStatus(ontlening);
-
-                AanvragenListBox.Items.Remove(item);
-                LaadOntleningen();
             }
         }
 
