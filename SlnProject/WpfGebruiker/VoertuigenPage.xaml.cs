@@ -34,8 +34,27 @@ namespace WpfGebruiker
         {
             pnlItems.Children.Clear();
 
+            // Maak een nieuwe StackPanel voor de button en de cards
+            StackPanel mainPanel = new StackPanel();
+            mainPanel.Orientation = Orientation.Vertical;
+
+            Button addButton = new Button();
+            addButton.Content = "Toevoegen +";
+            addButton.FontSize = 16;
+            addButton.Width = 150;
+            addButton.Height = 40;
+            addButton.Margin = new Thickness(5, 10, 0, 0);
+            addButton.HorizontalAlignment = HorizontalAlignment.Left;
+            addButton.Click += AddButton_Click;
+
+            mainPanel.Children.Add(addButton);
+
+            // Maak een nieuwe WrapPanel voor de kaarten
+            WrapPanel cardPanel = new WrapPanel();
+
             // Haal de lijst met voertuigen op van de huidige ingelogde gebruiker
             List<Voertuig> voertuigen = Voertuig.GetAllVoertuigenOwnedByGebruiker(userId);
+
 
             foreach (Voertuig voertuig in voertuigen)
             {
@@ -92,7 +111,6 @@ namespace WpfGebruiker
                     Height = 16,
                     Foreground = Brushes.Black,
                     Margin = new Thickness(5)
-
                 };
                 editBtn.Margin = new Thickness(5, 0, 0, 0);
 
@@ -143,9 +161,58 @@ namespace WpfGebruiker
                 border.VerticalAlignment = VerticalAlignment.Center;
                 border.Child = grid;
 
-                pnlItems.Children.Add(border);
+                cardPanel.Children.Add(border);
             }
+
+            // Toevoegen cardPanel aan mainPanel
+            mainPanel.Children.Add(cardPanel);
+
+            // Toevoegen mainPanel aan pnlItems
+            pnlItems.Children.Add(mainPanel);
         }
 
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            Window window = new Window
+            {
+                Title = "Voertuig type",
+                Width = 350,
+                Height = 350,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+
+            StackPanel stackPanel = new StackPanel
+            {
+                Orientation = Orientation.Vertical,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            Button motorizedButton = new Button
+            {
+                Content = "Gemotoriseerd",
+                Margin = new Thickness(0, 10, 0, 0),
+                Width = 150,
+                Height = 40
+            };
+
+            Button towedButton = new Button
+            {
+                Content = "Getrokken",
+                Margin = new Thickness(0, 10, 0, 0),
+                Width = 150,
+                Height = 40
+            };
+
+            // Voeg buttons toe aan StackPanel
+            stackPanel.Children.Add(motorizedButton);
+            stackPanel.Children.Add(towedButton);
+
+            // Stel de StackPanel in als de Content van het venster
+            window.Content = stackPanel;
+
+            // Open het venster
+            window.ShowDialog();
+        }
     }
 }
