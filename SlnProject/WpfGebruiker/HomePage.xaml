@@ -21,8 +21,9 @@
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <UniformGrid x:Name="pnlItems" Rows="3">
-            </UniformGrid>
+            <WrapPanel x:Name="pnlItems">
+            </WrapPanel>
         </ScrollViewer>
+
     </Grid>
 </Page>

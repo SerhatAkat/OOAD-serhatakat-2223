@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MyClassLibrary.Voertuig;
 
 namespace MyClassLibrary
 {
@@ -125,6 +126,43 @@ namespace MyClassLibrary
                 }
             }
 
+            return voertuigen;
+        }
+
+        public static List<Voertuig> GetVoertuigenByGebruikerId(int id)
+        {
+            List<Voertuig> voertuigen = new List<Voertuig>();
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                using (SqlCommand comm = new SqlCommand("SELECT * FROM Voertuig WHERE eigenaar_id = @id", conn))
+                {
+                    comm.Parameters.AddWithValue("@id", id);
+                    using (SqlDataReader reader = comm.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Voertuig voertuig = new Voertuig();
+                            voertuig.Id = Convert.ToInt32(reader["id"]);
+                            voertuig.Naam = Convert.ToString(reader["naam"]);
+                            voertuig.Beschrijving = Convert.ToString(reader["beschrijving"]);
+                            voertuig.Bouwjaar = Convert.ToInt32(reader["bouwjaar"]);
+                            voertuig.Merk = reader["merk"] == DBNull.Value ? null : Convert.ToString(reader["merk"]);
+                            voertuig.Model = reader["model"] == DBNull.Value ? null : Convert.ToString(reader["model"]);
+                            voertuig.Type = Convert.ToInt32(reader["type"]);
+                            voertuig.TransmissieType = reader["transmissie"] == DBNull.Value ? null : (Transmissie?)Convert.ToInt32(reader["transmissie"]);
+                            voertuig.BrandstofType = reader["brandstof"] == DBNull.Value ? null : (Brandstof?)Convert.ToInt32(reader["brandstof"]);
+                            voertuig.Gewicht = reader["gewicht"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["gewicht"]);
+                            voertuig.MaxBelasting = reader["maxbelasting"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["maxbelasting"]);
+                            voertuig.Afmetingen = Convert.ToString(reader["afmetingen"]);
+                            voertuig.Geremd = reader["geremd"] == DBNull.Value ? null : (bool?)Convert.ToBoolean(reader["geremd"]);
+                            voertuig.Eigenaar = Convert.ToInt32(reader["eigenaar_id"]);
+                            voertuigen.Add(voertuig);
+                        }
+                    }
+                }
+            }
             return voertuigen;
         }
     }

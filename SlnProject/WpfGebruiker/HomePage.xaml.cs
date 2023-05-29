@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FontAwesome.WPF;
 using MyClassLibrary;
 
 namespace WpfGebruiker
@@ -68,43 +69,71 @@ namespace WpfGebruiker
                     bitmap.Freeze();
 
                     Image img = new Image();
-                    img.Width = 80;
+                    img.Width = 120;
                     img.Source = bitmap;
 
-                    Label lblNaam = new Label();
-                    lblNaam.Content = voertuig.Naam;
-                    lblNaam.FontWeight = FontWeights.Bold;
+                    TextBlock txtNaam = new TextBlock();
+                    txtNaam.Text = voertuig.Naam;
+                    txtNaam.TextWrapping = TextWrapping.Wrap;
+                    txtNaam.FontWeight = FontWeights.Bold;
+                    txtNaam.VerticalAlignment = VerticalAlignment.Center;
+                    txtNaam.Margin = new Thickness(10, 10, 0, 0);
 
-                    Label lblMerk = new Label();
-                    lblMerk.Content = voertuig.Merk;
+                    TextBlock txtMerk = new TextBlock();
+                    txtMerk.Text = "Merk: " + voertuig.Merk;
+                    txtMerk.TextWrapping = TextWrapping.Wrap;
+                    txtMerk.VerticalAlignment = VerticalAlignment.Center;
+                    txtMerk.Margin = new Thickness(10, 10, 0, 0);
 
-                    Label lblModel = new Label();
-                    lblModel.Content = voertuig.Model;
+                    TextBlock txtModel = new TextBlock();
+                    txtModel.Text = "Model: " + voertuig.Model;
+                    txtModel.Margin = new Thickness(10, 10, 0, 0);
+                    txtModel.TextWrapping = TextWrapping.Wrap;
 
+                    // Maak een knop voor voertuig info
                     Button btn = new Button();
                     btn.Tag = voertuig.Id;
-                    btn.Content = "Info";
+                    btn.Width = 30;
+                    btn.Height = 30;
+                    btn.HorizontalAlignment = HorizontalAlignment.Right;
+
                     btn.Click += VoertuigInfoButton_Click;
 
-                    // Maak een StackPanel om de afbeelding en de labels te groeperen
+                    // Voeg een FontAwesome icoon toe aan de knop
+                    ImageAwesome infoIcon = new ImageAwesome();
+                    infoIcon.Icon = FontAwesomeIcon.InfoCircle;
+                    infoIcon.Width = 16;
+                    infoIcon.Height = 16;
+                    infoIcon.Foreground = Brushes.Black;
+
+                    // Maak een StackPanel om de labels te groeperen
                     StackPanel pnl = new StackPanel();
                     pnl.Orientation = Orientation.Vertical;
-                    pnl.Children.Add(lblNaam);
-                    pnl.Children.Add(lblMerk);
-                    pnl.Children.Add(lblModel);
-                    pnl.Children.Add(btn);
+                    pnl.Children.Add(txtNaam);
+                    pnl.Children.Add(txtMerk);
+                    pnl.Children.Add(txtModel);
 
-                    // Maak een Grid om de afbeelding en het StackPanel te groeperen
+                    // Maak de inhoud van de knop het icoon
+                    btn.Content = infoIcon;
+
+                    // Maak een Grid om de afbeelding, button en het StackPanel te groeperen
                     Grid grid = new Grid();
+                    grid.Width = 300;
+                    grid.Height = 150;
                     grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                     grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(30, GridUnitType.Pixel) });
                     img.SetValue(Grid.ColumnProperty, 0);
                     pnl.SetValue(Grid.ColumnProperty, 1);
+                    btn.SetValue(Grid.ColumnProperty, 2);
                     grid.Children.Add(img);
                     grid.Children.Add(pnl);
+                    grid.Children.Add(btn);
 
                     // Voeg een Border toe
                     Border border = new Border();
+                    border.Width = 300;
+                    border.Height = 150;
                     border.BorderBrush = Brushes.Black;
                     border.BorderThickness = new Thickness(1);
                     border.Margin = new Thickness(5);

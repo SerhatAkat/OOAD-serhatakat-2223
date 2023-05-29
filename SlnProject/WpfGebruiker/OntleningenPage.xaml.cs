@@ -31,7 +31,7 @@ namespace WpfGebruiker
             LoadAanvragen();
         }
 
-        private void BtnAnnuleren_Click(object sender, RoutedEventArgs e)
+        private void btnAnnuleren_Click(object sender, RoutedEventArgs e)
         {
             if (MijnOntleningenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontl)
             {
@@ -91,7 +91,11 @@ namespace WpfGebruiker
         private void LoadAanvragen()
         {
             AanvragenListBox.Items.Clear();
-            List<Ontlening> mijnOntleningen = Ontlening.GetAanvraagdeOntleningen(gebruikerId);
+            List<Ontlening> mijnOntleningen = new List<Ontlening>();
+            foreach (Voertuig voertuig in Voertuig.GetVoertuigenByGebruikerId(gebruikerId))
+            {
+                mijnOntleningen.AddRange(Ontlening.GetAlleOntleningByVoertuigId(voertuig.Id));
+            }
 
             // Sorteer de ontleningen op de Vanaf eigenschap, van meest recent naar oudst
             for (int i = 0; i < mijnOntleningen.Count; i++)
@@ -109,17 +113,19 @@ namespace WpfGebruiker
 
             foreach (Ontlening ontl in mijnOntleningen)
             {
-                ListBoxItem item = new ListBoxItem();
-                TextBlock tb = new TextBlock();
-                tb.Text = ontl.ToString();
-                item.Content = tb;
-                item.Tag = ontl;
-                AanvragenListBox.Items.Add(item);
-                tb.Foreground = Brushes.Orange;
-                Gebruiker ontleningAanvrager = Gebruiker.GetGebruikerById(gebruikerId);
-                string gebruikerNaam = $"{ontleningAanvrager.Voornaam.Substring(0, 1)}.{ontleningAanvrager.Achternaam}";
-                string displayText = $"{ontl.VoertuigNaam} - {ontl.Vanaf.ToString("yyyy-MM-dd 00:00")} - {ontl.Tot.ToString("yyyy-MM-dd 00:00")} door {gebruikerNaam}";
-                tb.Text = displayText.ToString();
+                if (ontl.Aanvrager_Id != gebruikerId)
+                {
+                    ListBoxItem item = new ListBoxItem();
+                    TextBlock tb = new TextBlock();
+                    item.Content = tb;
+                    item.Tag = ontl;
+                    AanvragenListBox.Items.Add(item);
+                    tb.Foreground = Brushes.Orange;
+                    Gebruiker ontleningAanvrager = Gebruiker.GetGebruikerById(ontl.Aanvrager_Id);
+                    string gebruikerNaam = $"{ontleningAanvrager.Voornaam.Substring(0, 1)}.{ontleningAanvrager.Achternaam}";
+                    string displayText = $"{ontl.VoertuigNaam} - {ontl.Vanaf.ToString("yyyy-MM-dd 00:00")} - {ontl.Tot.ToString("yyyy-MM-dd 00:00")} door {gebruikerNaam}";
+                    tb.Text = displayText.ToString();
+                }
             }
         }
 
@@ -140,36 +146,47 @@ namespace WpfGebruiker
 
         private void BtnAccepteren_Click(object sender, RoutedEventArgs e)
         {
-            if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontl)
+            if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontlening)
             {
-                if (ontl.OntleningStatus == Ontlening.Status.InAanvraag)
-                {
-                    ontl.OntleningStatus = Ontlening.Status.Goedgekeurd;
-                    Ontlening.UpdateOntleningStatus(ontl.Id, ontl.OntleningStatus);
+                ontlening.OntleningStatus = Ontlening.Status.Goedgekeurd;
+                Ontlening.UpdateOntleningStatus(ontlening);
 
-                    AanvragenListBox.Items.Remove(AanvragenListBox.SelectedItem);
-                    LaadOntleningen();
-                    LoadAanvragen();
-                }
+                AanvragenListBox.Items.Remove(item);
+                LaadOntleningen();
             }
         }
 
         private void BtnAfwijzen_Click(object sender, RoutedEventArgs e)
         {
-            if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontl)
+            if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontlening)
             {
-                if (ontl.OntleningStatus == Ontlening.Status.InAanvraag)
-                {
-                    ontl.OntleningStatus = Ontlening.Status.Verworpen;
-                    Ontlening.UpdateOntleningStatus(ontl.Id, ontl.OntleningStatus);
+                ontlening.OntleningStatus = Ontlening.Status.Verworpen;
+                Ontlening.UpdateOntleningStatus(ontlening);
 
-                    // Verwijder het geselecteerde item uit de ListBox
-                    AanvragenListBox.Items.Remove(AanvragenListBox.SelectedItem);
-
-                    LaadOntleningen();
-                }
+                AanvragenListBox.Items.Remove(item);
+                LaadOntleningen();
             }
         }
 
+        private void AanvragenListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontlening)
+            {
+                // Gebruik ontlening.Aanvrager_Id in plaats van gebruikerId
+                Gebruiker aanvraag = Gebruiker.GetGebruikerById(ontlening.Aanvrager_Id);
+                string gebruikerNaam = $"{aanvraag.Voornaam} {aanvraag.Achternaam}";
+                lblVoertuig.Content = $"Voertuig: {ontlening.VoertuigNaam}";
+                lblPeriode.Content = $"Periode: {ontlening.Vanaf.ToString("yyyy-MM-dd 00:00")} - {ontlening.Tot.ToString("yyyy-MM-dd 00:00")}";
+                lblAanvrager.Content = $"Aanvrager: {gebruikerNaam}";
+                lblBericht.Content = $"Bericht: {ontlening.Bericht}";
+            }
+            else
+            {
+                lblVoertuig.Content = "Voertuig:";
+                lblPeriode.Content = "Periode:";
+                lblAanvrager.Content = "Aanvrager:";
+                lblBericht.Content = "Bericht:";
+            }
+        }
     }
 }

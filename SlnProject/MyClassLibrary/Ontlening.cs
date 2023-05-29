@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using static MyClassLibrary.Ontlening;
 
 namespace MyClassLibrary
 {
@@ -59,17 +60,15 @@ namespace MyClassLibrary
 
         public static void VerwijderOntlening(int ontleningId)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            string connString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
 
-                using (SqlCommand command = new SqlCommand("DELETE FROM Ontlening WHERE Id = @Id", conn))
-                {
-                    command.Parameters.AddWithValue("@Id", ontleningId);
+                SqlCommand command = new SqlCommand("DELETE FROM Ontlening WHERE Id = @Id", conn);
+                command.Parameters.AddWithValue("@Id", ontleningId);
 
-                    command.ExecuteNonQuery();
-                }
+                command.ExecuteNonQuery();
             }
         }
 
@@ -97,55 +96,85 @@ namespace MyClassLibrary
             }
         }
 
-        public static List<Ontlening> GetAanvraagdeOntleningen(int aanvragingId)
+        public static List<Ontlening> GetAllOntleningenByAanvragerId(int id)
         {
-            List<Ontlening> aanvraagOntleningen = new List<Ontlening>();
-            List<Ontlening> ontleningen = GetOntleningen(aanvragingId);
+            List<Ontlening> ontleningen = new List<Ontlening>();
 
-            foreach (Ontlening ontlening in ontleningen)
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                if (ontlening.OntleningStatus == Status.InAanvraag)
+                conn.Open();
+                using (SqlCommand comm = new SqlCommand("SELECT * FROM Ontlening WHERE aanvrager_id = @Id", conn))
                 {
-                    aanvraagOntleningen.Add(ontlening);
+                    comm.Parameters.AddWithValue("@Id", id);
+                    using (SqlDataReader reader = comm.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Ontlening ontlening = new Ontlening();
+                            ontlening.Id = Convert.ToInt32(reader["id"]);
+                            ontlening.Vanaf = Convert.ToDateTime(reader["vanaf"]);
+                            ontlening.Tot = Convert.ToDateTime(reader["tot"]);
+                            ontlening.Bericht = Convert.ToString(reader["bericht"]);
+                            ontlening.OntleningStatus = (Status)Convert.ToInt32(reader["status"]);
+                            ontlening.Voertuig_Id = Convert.ToInt32(reader["voertuig_id"]);
+                            ontlening.Aanvrager_Id = Convert.ToInt32(reader["aanvrager_id"]);
+                            ontleningen.Add(ontlening);
+                        }
+                    }
                 }
-            }
 
-            return aanvraagOntleningen;
+            }
+            return ontleningen;
         }
 
-        public static void WijzigStatus(int ontleningId, Status nieuweStatus)
+        public static void UpdateOntleningStatus(Ontlening ontlening)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-
                 using (SqlCommand command = new SqlCommand("UPDATE Ontlening SET Status = @Status WHERE Id = @Id", conn))
                 {
-                    command.Parameters.AddWithValue("@Id", ontleningId);
-                    command.Parameters.AddWithValue("@Status", (byte)nieuweStatus);
+                    command.Parameters.AddWithValue("@Status", (byte)ontlening.OntleningStatus);
+                    command.Parameters.AddWithValue("@Id", ontlening.Id);
 
                     command.ExecuteNonQuery();
                 }
             }
         }
 
-        public static void UpdateOntleningStatus(int ontleningId, Status nieuweStatus)
+        public static List<Ontlening> GetAlleOntleningByVoertuigId(int id)
         {
+            List<Ontlening> ontleningen = new List<Ontlening>();
+
             string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                using (SqlCommand command = new SqlCommand("UPDATE Ontlening SET Status = @nieuweStatus WHERE Id = @Id", conn))
+                using (SqlCommand comm = new SqlCommand("SELECT Ontlening.*, Voertuig.naam FROM Ontlening INNER JOIN Voertuig ON Ontlening.Voertuig_Id = Voertuig.Id WHERE Ontlening.voertuig_id = @Id", conn))
                 {
-                    command.Parameters.AddWithValue("@Id", ontleningId);
-                    command.Parameters.AddWithValue("@nieuweStatus", nieuweStatus);
-
-                    command.ExecuteNonQuery();
+                    comm.Parameters.AddWithValue("@Id", id);
+                    using (SqlDataReader reader = comm.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Ontlening ontlening = new Ontlening();
+                            ontlening.Id = Convert.ToInt32(reader["id"]);
+                            ontlening.Vanaf = Convert.ToDateTime(reader["vanaf"]);
+                            ontlening.Tot = Convert.ToDateTime(reader["tot"]);
+                            ontlening.Bericht = Convert.ToString(reader["bericht"]);
+                            ontlening.OntleningStatus = (Status)Convert.ToInt32(reader["status"]);
+                            ontlening.Voertuig_Id = Convert.ToInt32(reader["voertuig_id"]);
+                            ontlening.Aanvrager_Id = Convert.ToInt32(reader["aanvrager_id"]);
+                            ontlening.VoertuigNaam = Convert.ToString(reader["naam"]);
+                            ontleningen.Add(ontlening);
+                        }
+                    }
                 }
             }
+            return ontleningen;
         }
-
 
         public override string ToString()
         {
