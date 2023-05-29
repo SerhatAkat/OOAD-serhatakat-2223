@@ -196,30 +196,46 @@ namespace WpfGebruiker
                 VerticalAlignment = VerticalAlignment.Center
             };
 
-            Button motorizedButton = new Button
+            Button motorButton = new Button
             {
                 Content = "Gemotoriseerd",
                 Margin = new Thickness(0, 10, 0, 0),
                 Width = 150,
                 Height = 40
             };
+            motorButton.Click += MotorButton_Click;
 
-            Button towedButton = new Button
+            Button getrokkenButton = new Button
             {
                 Content = "Getrokken",
                 Margin = new Thickness(0, 10, 0, 0),
                 Width = 150,
                 Height = 40
             };
+            getrokkenButton.Click += GetrokkenButton_Click;
 
             // Voeg buttons toe aan StackPanel
-            stackPanel.Children.Add(motorizedButton);
-            stackPanel.Children.Add(towedButton);
+            stackPanel.Children.Add(motorButton);
+            stackPanel.Children.Add(getrokkenButton);
 
             // Stel de StackPanel in als de Content van het venster
             window.Content = stackPanel;
 
             // Open het venster
+            window.ShowDialog();
+        }
+
+        private void MotorButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Open het ToevoegenMotor.xaml venster
+            ToevoegenMotor window = new ToevoegenMotor();
+            window.ShowDialog();
+        }
+
+        private void GetrokkenButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Open het ToevoegenGetrokken.xaml venster
+            ToevoegenGetrokken window = new ToevoegenGetrokken();
             window.ShowDialog();
         }
         private void BtnInfo_Click(object sender, RoutedEventArgs e)
@@ -257,34 +273,15 @@ namespace WpfGebruiker
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
         {
             // Haal de Voertuig ID uit de Tag van de knop
-            Button deleteBtn = sender as Button;
-            int voertuigId = int.Parse(deleteBtn.Tag.ToString());
+            Button knop = sender as Button;
+            int voertuigId = int.Parse(knop.Tag.ToString());
 
-            // Zoek het Voertuig in de list
-            Voertuig voertuigToRemove = voertuigen.FirstOrDefault(v => v.Id == voertuigId);
+            // Roep de DeleteVoertuig methode aan
+            Voertuig.DeleteVoertuig(voertuigId); // Note: Update this if DeleteVoertuig is not a static method
 
-            // Controleer of het Voertuig gevonden is
-            if (voertuigToRemove != null)
-            {
-                // Verwijder het Voertuig uit de list
-                voertuigen.Remove(voertuigToRemove);
-
-                // Verwijder het Voertuig uit de databank
-                bool success = Voertuig.DeleteVoertuig(voertuigId);
-                if (success)
-                {
-                    MessageBox.Show("Voertuig succesvol verwijderd.", "Verwijderd", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
-                {
-                    MessageBox.Show("Er is iets misgegaan tijdens het verwijderen van het voertuig.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-
-                // Update de UI
-                UpdateVoertuigen();
-            }
+            // Update de UI
+            UpdateVoertuigen();
         }
-
 
     }
 }

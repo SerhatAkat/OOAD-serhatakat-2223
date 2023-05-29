@@ -19,13 +19,24 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.ColumnSpan="2">
-            <Label Content="Voertuig toevoegen" FontSize="18" HorizontalAlignment="Center"></Label>
+            <Label Content="Gemotoriseerd Voertuig Toevoegen" FontSize="18" HorizontalAlignment="Center"></Label>
             <Label Content="Afbeeldingen:" FontSize="14" HorizontalAlignment="Left" Margin="5,5,0,0" />
             <Button x:Name="btnUploaden" Content="Uploaden" Width="100" Margin="5,0,0,0" HorizontalAlignment="Left"></Button>
             <WrapPanel Width="800">
-                <Image Width="250" Height="200" Source="{Binding Photo}" Margin="5"/>
-                <Image Width="250" Height="200" Source="{Binding Photo}" Margin="5"/>
-                <Image Width="250" Height="200" Source="{Binding Photo}" Margin="5"/>
+                <Grid Width="250" Height="200">
+                    <Image x:Name="img1" Width="250" Height="200" Source="{Binding Photo}" Margin="5"/>
+                    <Button x:Name="btnVerwijder1" Content="X" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" Click="VerwijderAfbeelding_Click"/>
+                </Grid>
+
+                <Grid Width="250" Height="200">
+                    <Image x:Name="img2" Width="250" Height="200" Source="{Binding Photo}" Margin="5"/>
+                    <Button x:Name="btnVerwijder2" Content="X" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" Click="VerwijderAfbeelding_Click"/>
+                </Grid>
+
+                <Grid Width="250" Height="200">
+                    <Image x:Name="img3" Width="250" Height="200" Source="{Binding Photo}" Margin="5"/>
+                    <Button x:Name="btnVerwijder3" Content="X" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" Click="VerwijderAfbeelding_Click"/>
+                </Grid>
             </WrapPanel>
         </StackPanel >
 

@@ -202,19 +202,48 @@ namespace MyClassLibrary
             }
             return voertuigen;
         }
-        public static bool DeleteVoertuig(int id)
+        public static void DeleteVoertuig(int id)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("DELETE FROM Voertuig WHERE id = @id", conn))
+
+                // Start een nieuwe transactie
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
                 {
-                    cmd.Parameters.AddWithValue("@id", id);
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    return rowsAffected > 0;
+                    string deleteFoto = "DELETE FROM [Foto] WHERE voertuig_id = @Id";
+                    SqlCommand deleteFotoCmd = new SqlCommand(deleteFoto, conn);
+                    deleteFotoCmd.Transaction = transaction;
+                    deleteFotoCmd.Parameters.AddWithValue("@Id", id);
+                    deleteFotoCmd.ExecuteNonQuery();
+
+                    string deleteOntlening = "DELETE FROM [Ontlening] WHERE voertuig_id = @Id";
+                    SqlCommand deleteOntleningCmd = new SqlCommand(deleteOntlening, conn);
+                    deleteOntleningCmd.Transaction = transaction;
+                    deleteOntleningCmd.Parameters.AddWithValue("@Id", id);
+                    deleteOntleningCmd.ExecuteNonQuery();
+
+                    // Delete the record from the Voertuig table
+                    string deleteVoertuig = "DELETE FROM [Voertuig] WHERE id = @Id";
+                    SqlCommand deleteVoertuigCmd = new SqlCommand(deleteVoertuig, conn);
+                    deleteVoertuigCmd.Transaction = transaction;
+                    deleteVoertuigCmd.Parameters.AddWithValue("@Id", id);
+                    deleteVoertuigCmd.ExecuteNonQuery();
+
+                    // Als alles succesvol is, commit de transactie
+                    transaction.Commit();
+                }
+                catch
+                {
+                    // Als er iets misgaat, rol dan de transactie terug
+                    transaction.Rollback();
+                    throw;  // Herstel de originele uitzondering zodat deze kan worden afgehandeld door de oproepende code
                 }
             }
         }
+
     }
 }

@@ -130,21 +130,6 @@ namespace WpfGebruiker
             }
         }
 
-        private void MijnOntleningenListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (MijnOntleningenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontl)
-            {
-                if (ontl.Tot > DateTime.Now)
-                {
-                    btnAnnuleren.IsEnabled = true;
-                }
-                else
-                {
-                    btnAnnuleren.IsEnabled = false;
-                }
-            }
-        }
-
         private void AanvragenListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontlening)
@@ -187,6 +172,21 @@ namespace WpfGebruiker
 
                 AanvragenListBox.Items.Remove(item);
                 LaadOntleningen();
+            }
+        }
+
+        private void MijnOntleningenListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (MijnOntleningenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontl)
+            {
+                if (ontl.Tot > DateTime.Now)
+                {
+                    btnAnnuleren.IsEnabled = true;
+                }
+                else
+                {
+                    btnAnnuleren.IsEnabled = false;
+                }
             }
         }
     }

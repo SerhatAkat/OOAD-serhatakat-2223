@@ -23,7 +23,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Label Grid.Row="0" Grid.Column="0" Content="Door mij ontleend:" FontSize="16" FontWeight="Bold" Margin="20 0 0 0"/>
-                    <ListBox x:Name="MijnOntleningenListBox" Grid.Row="1" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="20"/>
+                    <ListBox x:Name="MijnOntleningenListBox" Grid.Row="1" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="20" SelectionChanged="MijnOntleningenListBox_SelectionChanged"/>
                     <Button x:Name="btnAnnuleren" Grid.Row="1" Grid.Column="1" Content="Annuleren" Margin="0 0 5 20" Height="40" Width="100" VerticalAlignment="Bottom" Click="btnAnnuleren_Click"/>
                 </Grid>
             </TabItem>
