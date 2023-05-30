@@ -256,8 +256,8 @@ namespace MyClassLibrary
                 {
                     command.Parameters.AddWithValue("@Naam", voertuig.Naam);
                     command.Parameters.AddWithValue("@EigenaarId", userId);
-                    command.Parameters.AddWithValue("@Merk", voertuig.Merk);
-                    command.Parameters.AddWithValue("@Model", voertuig.Model);
+                    command.Parameters.AddWithValue("@Merk", voertuig.Merk ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Model", voertuig.Model ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Bouwjaar", voertuig.Bouwjaar);
                     command.Parameters.AddWithValue("@Beschrijving", voertuig.Beschrijving);
                     command.Parameters.AddWithValue("@Type", 1);
@@ -285,8 +285,8 @@ namespace MyClassLibrary
                 {
                     command.Parameters.AddWithValue("@EigenaarId", userId);
                     command.Parameters.AddWithValue("@Type", 2);
-                    command.Parameters.AddWithValue("@Geremd", voertuig.Geremd);
-                    command.Parameters.AddWithValue("@Afmetingen", voertuig.Afmetingen);
+                    command.Parameters.AddWithValue("@Geremd", voertuig.Geremd ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Afmetingen", voertuig.Afmetingen ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@MaxBelasting", voertuig.MaxBelasting ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Gewicht", voertuig.Gewicht ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Model", voertuig.Model);

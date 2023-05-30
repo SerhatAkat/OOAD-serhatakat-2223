@@ -96,48 +96,86 @@ namespace WpfGebruiker
 
         private void btnOpslaan_Click(object sender, RoutedEventArgs e)
         {
-            Voertuig nieuwVoertuig = new Voertuig
-            {
-                Naam = txtNaam.Text,
-                Merk = txtMerk.Text,
-                Model = txtModel.Text,
-                Beschrijving = txtBeschrijving.Text,
-                Afmetingen = txtAfmetingen.Text,
-                Geremd = rbnJa.IsChecked == true,
-            };
+            // Reset error labels
+            lblNaamError.Content = "";
+            lblBeschrijvingError.Content = "";
+            lblBouwjaarError.Content = "";
 
-            if (nieuwVoertuig.Gewicht != null) nieuwVoertuig.Gewicht = (int?)Convert.ToInt32(txtGewicht.Text);
-            nieuwVoertuig.Gewicht = null;
-            if (nieuwVoertuig.MaxBelasting != null) nieuwVoertuig.MaxBelasting = (int?)Convert.ToInt32(txtMax.Text);
-            nieuwVoertuig.MaxBelasting = null;
-            if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))
+            bool isValid = true;
+
+            // Validatie
+            if (string.IsNullOrEmpty(txtNaam.Text))
             {
-                MessageBox.Show("Gelieve een geldig bouwjaar in te vullen.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                lblNaamError.Content = "Gelieve een naam te geven.";
+                isValid = false;
+            }
+            if (string.IsNullOrEmpty(txtBeschrijving.Text))
+            {
+                lblBeschrijvingError.Content = "Gelieve een beschrijving te geven.";
+                isValid = false;
+            }
+            if (string.IsNullOrEmpty(txtBouwjaar.Text))
+            {
+                lblBouwjaarError.Content = "Gelieve een bouwjaar in te vullen.";
+                isValid = false;
             }
 
-            int voertuigId = nieuwVoertuig.ToevoegenGetrokkenVoertuig(nieuwVoertuig, currentId.Id);
-
-            // Controleer of voertuig succesvol is toegevoegd
-            if (voertuigId > 0)
+            if (img1.Source == null && img2.Source == null && img3.Source == null)
             {
-                Foto foto = new Foto();
+                lblImageError.Content = "Kies ten minste 1 afbeelding";
+                isValid = false;
+            }
 
-                // Converteer elke afbeelding naar een byte array en voeg ze toe aan de database
-                foreach (Image img in new[] { img1, img2, img3 })
+            // Voer de rest van de methode alleen uit als alle velden zijn gevalideerd
+            if (isValid)
+            {
+                Voertuig nieuwVoertuig = new Voertuig
                 {
-                    var encoder = new PngBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create((BitmapSource)img.Source));
+                    Naam = txtNaam.Text,
+                    Merk = txtMerk.Text,
+                    Model = txtModel.Text,
+                    Beschrijving = txtBeschrijving.Text,
+                    Afmetingen = txtAfmetingen.Text,
+                    Geremd = rbnJa.IsChecked == true,
+                };
 
-                    using (var stream = new MemoryStream())
+                if (nieuwVoertuig.Gewicht != null) nieuwVoertuig.Gewicht = (int?)Convert.ToInt32(txtGewicht.Text);
+                nieuwVoertuig.Gewicht = null;
+                if (nieuwVoertuig.MaxBelasting != null) nieuwVoertuig.MaxBelasting = (int?)Convert.ToInt32(txtMax.Text);
+                nieuwVoertuig.MaxBelasting = null;
+                if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))
+                {
+                    MessageBox.Show("Gelieve een geldig bouwjaar in te vullen.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                int voertuigId = nieuwVoertuig.ToevoegenGetrokkenVoertuig(nieuwVoertuig, currentId.Id);
+
+                // Controleer of voertuig succesvol is toegevoegd
+                if (voertuigId > 0)
+                {
+                    Foto foto = new Foto();
+
+                    // Converteer elke afbeelding naar een byte array en voeg ze toe aan de database
+                    foreach (Image img in new[] { img1, img2, img3 })
                     {
-                        encoder.Save(stream);
-                        byte[] imgData = stream.ToArray();
-                        foto.AddFoto(imgData, voertuigId);
+                        if (img.Source != null)
+                        {
+                            var encoder = new PngBitmapEncoder();
+                            encoder.Frames.Add(BitmapFrame.Create((BitmapSource)img.Source));
+
+                            using (var stream = new MemoryStream())
+                            {
+                                encoder.Save(stream);
+                                byte[] imgData = stream.ToArray();
+                                foto.AddFoto(imgData, voertuigId);
+                            }
+                        }
                     }
                 }
+                VoertuigenPage.Instance.UpdateVoertuigen();
+                Close();
             }
-            Close();
         }
     }
 }

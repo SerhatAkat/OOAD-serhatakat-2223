@@ -22,6 +22,7 @@ namespace WpfGebruiker
     /// </summary>
     public partial class VoertuigenPage : Page
     {
+        public static VoertuigenPage Instance;
         private int userId;
 
         // Maak cardPanel en voertuigen als klasse-velden
@@ -33,9 +34,10 @@ namespace WpfGebruiker
             InitializeComponent();
             this.userId = userId;
             UpdateVoertuigen();
+            Instance = this;
         }
 
-        private void UpdateVoertuigen()
+        public void UpdateVoertuigen()
         {
             pnlItems.Children.Clear();
 

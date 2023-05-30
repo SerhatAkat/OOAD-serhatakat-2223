@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfGebruiker"
         mc:Ignorable="d"
-        Title="ToevoegenGetrokken" Height="800" Width="850">
+        Title="ToevoegenGetrokken" MinHeight="950" MinWidth="900" MaxHeight="950" MaxWidth="900">
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -21,6 +21,7 @@
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.ColumnSpan="2">
             <Label Content="Getrokken Voertuig Toevoegen" FontSize="18" HorizontalAlignment="Center"></Label>
             <Label Content="Afbeeldingen:" FontSize="14" HorizontalAlignment="Left" Margin="5,5,0,0" />
+            <Label x:Name="lblImageError" Content="" Foreground="Red" Margin="10" />
             <Button x:Name="btnUploaden" Content="Uploaden" Width="100" Margin="5,0,0,0" HorizontalAlignment="Left" Click="BtnUploaden_Click"></Button>
             <WrapPanel Width="800">
                 <Grid Width="250" Height="200">
@@ -44,8 +45,11 @@
         <StackPanel Grid.Row="1" Grid.Column="0">
             <Label Content="Naam:" Margin="10" />
             <TextBox x:Name="txtNaam" Margin="10" Width="350" Height="30"/>
+            <Label x:Name="lblNaamError" Content="" Foreground="Red" Margin="10" Width="350" Height="30"/>
+
             <Label Content="Beschrijving:" Margin="10" />
             <TextBox x:Name="txtBeschrijving" Margin="10" Width="350" Height="100"/>
+            <Label x:Name="lblBeschrijvingError" Content="" Foreground="Red" Margin="10" Width="350"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="1">
@@ -69,6 +73,7 @@
             <StackPanel Orientation="Horizontal"  Grid.Row="0" Grid.Column="0">
                 <Label Content="Bouwjaar:" Margin="10" />
                 <TextBox x:Name="txtBouwjaar" Width="150" Height="30" Margin="10" />
+                <Label x:Name="lblBouwjaarError" Content="" Foreground="Red" Margin="10" VerticalAlignment="Center"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal"  Grid.Row="0" Grid.Column="1">
                 <Label Content="Afmetingen:" Margin="10" />
