@@ -65,15 +65,21 @@ namespace WpfGebruiker
                 Foto foto = Foto.GetFotoForVoertuig(voertuig.Id);
 
                 BitmapImage bitmap = new BitmapImage();
-                using (MemoryStream mem = new MemoryStream(foto.Image))
+                if (foto != null)
                 {
-                    mem.Position = 0;
-                    bitmap.BeginInit();
-                    bitmap.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.UriSource = null;
-                    bitmap.StreamSource = mem;
-                    bitmap.EndInit();
+                    using (MemoryStream mem = new MemoryStream(foto.Image))
+                    {
+                        mem.Position = 0;
+                        bitmap.BeginInit();
+                        bitmap.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.UriSource = null;
+                        bitmap.StreamSource = mem;
+                        bitmap.EndInit();
+                    }
+                }
+                else
+                {
                 }
                 bitmap.Freeze();
 
@@ -227,17 +233,18 @@ namespace WpfGebruiker
 
         private void MotorButton_Click(object sender, RoutedEventArgs e)
         {
-            // Open het ToevoegenMotor.xaml venster
-            ToevoegenMotor window = new ToevoegenMotor();
+            Gebruiker gebruiker = Gebruiker.GetGebruikerById(this.userId);
+            ToevoegenMotor window = new ToevoegenMotor(gebruiker);
             window.ShowDialog();
         }
 
         private void GetrokkenButton_Click(object sender, RoutedEventArgs e)
         {
-            // Open het ToevoegenGetrokken.xaml venster
-            ToevoegenGetrokken window = new ToevoegenGetrokken();
+            Gebruiker gebruiker = Gebruiker.GetGebruikerById(this.userId);
+            ToevoegenGetrokken window = new ToevoegenGetrokken(gebruiker);
             window.ShowDialog();
         }
+
         private void BtnInfo_Click(object sender, RoutedEventArgs e)
         {
             // Haal de Voertuig ID uit de Tag van de knop

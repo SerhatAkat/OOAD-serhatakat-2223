@@ -34,11 +34,8 @@ namespace MyClassLibrary
             LPG
         }
 
-
         public Transmissie? TransmissieType { get; set; }
         public Brandstof? BrandstofType { get; set; }
-
-
 
         // getrokken voertuig
         public int? Gewicht { get; set; }
@@ -243,6 +240,65 @@ namespace MyClassLibrary
                     throw;  // Herstel de originele uitzondering zodat deze kan worden afgehandeld door de oproepende code
                 }
             }
+        }
+
+        public void ToevoegenGemotoriseerdVoertuig(Voertuig voertuig, int userId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string sql = "INSERT INTO Voertuig (naam, eigenaar_id, merk, model, bouwjaar, beschrijving, type, transmissie, brandstof) " +
+                             "VALUES (@Naam, @EigenaarId, @Merk, @Model, @Bouwjaar, @Beschrijving, @Type, @Transmissie, @Brandstof)";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@Naam", voertuig.Naam);
+                    command.Parameters.AddWithValue("@EigenaarId", userId);
+                    command.Parameters.AddWithValue("@Merk", voertuig.Merk);
+                    command.Parameters.AddWithValue("@Model", voertuig.Model);
+                    command.Parameters.AddWithValue("@Bouwjaar", voertuig.Bouwjaar);
+                    command.Parameters.AddWithValue("@Beschrijving", voertuig.Beschrijving);
+                    command.Parameters.AddWithValue("@Type", 1);
+                    command.Parameters.AddWithValue("@Transmissie", voertuig.TransmissieType ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Brandstof", voertuig.BrandstofType ?? (object)DBNull.Value);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public int ToevoegenGetrokkenVoertuig(Voertuig voertuig, int userId)
+        {
+            int voertuigId = 0;
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string sql = "INSERT INTO Voertuig (eigenaar_id, type, geremd, afmetingen, maxbelasting, gewicht, model, merk, bouwjaar, beschrijving, naam) " +
+                             "OUTPUT inserted.id " +
+                             "VALUES (@EigenaarId, @Type, @Geremd, @Afmetingen, @MaxBelasting, @Gewicht, @Model, @Merk, @Bouwjaar, @Beschrijving, @Naam)";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@EigenaarId", userId);
+                    command.Parameters.AddWithValue("@Type", 2);
+                    command.Parameters.AddWithValue("@Geremd", voertuig.Geremd);
+                    command.Parameters.AddWithValue("@Afmetingen", voertuig.Afmetingen);
+                    command.Parameters.AddWithValue("@MaxBelasting", voertuig.MaxBelasting ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Gewicht", voertuig.Gewicht ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Model", voertuig.Model);
+                    command.Parameters.AddWithValue("@Merk", voertuig.Merk);
+                    command.Parameters.AddWithValue("@Bouwjaar", voertuig.Bouwjaar);
+                    command.Parameters.AddWithValue("@Beschrijving", voertuig.Beschrijving);
+                    command.Parameters.AddWithValue("@Naam", voertuig.Naam);
+                    voertuigId = (int)command.ExecuteScalar();
+                }
+            }
+
+            return voertuigId;
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using MyClassLibrary;
 
 namespace WpfGebruiker
 {
@@ -20,10 +22,13 @@ namespace WpfGebruiker
     /// </summary>
     public partial class ToevoegenMotor : Window
     {
-        public ToevoegenMotor()
+        private Gebruiker currentId;
+
+        public ToevoegenMotor(Gebruiker userId)
         {
             InitializeComponent();
             btnUploaden.Click += BtnUploaden_Click;
+            currentId = userId;
         }
         private void BtnUploaden_Click(object sender, RoutedEventArgs e)
         {
@@ -86,6 +91,51 @@ namespace WpfGebruiker
                     if (img3.Source != null) img3.Source = null;  // Check if an image exists before trying to remove it
                     break;
             }
+        }
+
+        private void btnOpslaan_Click(object sender, RoutedEventArgs e)
+        {
+            Voertuig nieuwVoertuig = new Voertuig
+            {
+                Naam = txtNaam.Text,
+                Merk = txtMerk.Text,
+                Model = txtModel.Text,
+                Beschrijving = txtBeschrijving.Text,
+            };
+            if (cbxBrandstof.SelectedIndex != 0) nieuwVoertuig.BrandstofType = (Voertuig.Brandstof) cbxBrandstof.SelectedIndex;
+            else nieuwVoertuig.BrandstofType = null;
+
+            if (cbxTransmissie.SelectedIndex != 0) nieuwVoertuig.TransmissieType = (Voertuig.Transmissie) cbxTransmissie.SelectedIndex;
+            else nieuwVoertuig.TransmissieType = null;
+
+            if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))
+            {
+                MessageBox.Show("Vul een geldig bouwjaar in.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            nieuwVoertuig.Bouwjaar = bouwjaar;
+            int voertuigId = nieuwVoertuig.ToevoegenGetrokkenVoertuig(nieuwVoertuig, currentId.Id);
+
+            // Controleer of voertuig succesvol is toegevoegd
+            if (voertuigId > 0)
+            {
+                Foto foto = new Foto();
+
+                // Converteer elke afbeelding naar een byte array en voeg ze toe aan de database
+                foreach (Image img in new[] { img1, img2, img3 })
+                {
+                    var encoder = new PngBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create((BitmapSource)img.Source));
+
+                    using (var stream = new MemoryStream())
+                    {
+                        encoder.Save(stream);
+                        byte[] imgData = stream.ToArray();
+                        foto.AddFoto(imgData, voertuigId);
+                    }
+                }
+            }
+            Close();
         }
     }
 }

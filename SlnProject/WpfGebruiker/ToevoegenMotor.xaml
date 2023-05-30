@@ -88,7 +88,7 @@
         </Grid>
         <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
             <Button x:Name="btnAnnuleren" Content="Annuleren" Width="90" Margin="5" />
-            <Button x:Name="btnOpslaan" Content="Opslaan" Width="90" Margin="5" />
+            <Button x:Name="btnOpslaan" Content="Opslaan" Width="90" Margin="5" Click="btnOpslaan_Click" />
         </StackPanel>
     </Grid>
 </Window>

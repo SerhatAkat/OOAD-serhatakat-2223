@@ -75,5 +75,18 @@ namespace MyClassLibrary
             }
             return fotos;
         }
+
+        public void AddFoto(byte[] dataImage, int voertuigId)
+        {
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connStr"].ConnectionString))
+            {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand("INSERT INTO [Foto] (data, voertuig_id) VALUES (@ImageData, @VoertuigId)", conn);
+                cmd.Parameters.AddWithValue("@ImageData", dataImage);
+                cmd.Parameters.AddWithValue("@VoertuigId", voertuigId);
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }
