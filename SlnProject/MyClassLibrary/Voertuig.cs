@@ -301,5 +301,57 @@ namespace MyClassLibrary
             return voertuigId;
         }
 
+        public void UpdateGemotoriseerd()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                string query = "UPDATE Voertuigen SET Naam = @Naam, Merk = @Merk, Model = @Model, Beschrijving = @Beschrijving, Bouwjaar = @Bouwjaar, TransmissieType = @TransmissieType, BrandstofType = @BrandstofType WHERE ID = @ID";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Naam", this.Naam);
+                    cmd.Parameters.AddWithValue("@Merk", this.Merk);
+                    cmd.Parameters.AddWithValue("@Model", this.Model);
+                    cmd.Parameters.AddWithValue("@Beschrijving", this.Beschrijving);
+                    cmd.Parameters.AddWithValue("@Bouwjaar", this.Bouwjaar);
+                    cmd.Parameters.AddWithValue("@TransmissieType", this.TransmissieType);
+                    cmd.Parameters.AddWithValue("@BrandstofType", this.BrandstofType);
+                    cmd.Parameters.AddWithValue("@ID", this.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void UpdateGetrokken()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                string query = "UPDATE Voertuigen SET Naam = @Naam, Beschrijving = @Beschrijving, Bouwjaar = @Bouwjaar, Merk = @Merk, Model = @Model, Gewicht = @Gewicht, MaxBelasting = @MaxBelasting, Afmetingen = @Afmetingen, Geremd = @Geremd WHERE ID = @ID";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Naam", this.Naam);
+                    cmd.Parameters.AddWithValue("@Beschrijving", this.Beschrijving);
+                    cmd.Parameters.AddWithValue("@Bouwjaar", this.Bouwjaar);
+                    cmd.Parameters.AddWithValue("@Merk", this.Merk);
+                    cmd.Parameters.AddWithValue("@Model", this.Model);
+                    cmd.Parameters.AddWithValue("@Gewicht", this.Gewicht);
+                    cmd.Parameters.AddWithValue("@MaxBelasting", this.MaxBelasting);
+                    cmd.Parameters.AddWithValue("@Afmetingen", this.Afmetingen);
+                    cmd.Parameters.AddWithValue("@Geremd", this.Geremd);
+                    cmd.Parameters.AddWithValue("@ID", this.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
     }
 }

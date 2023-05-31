@@ -30,6 +30,58 @@ namespace WpfGebruiker
             btnUploaden.Click += BtnUploaden_Click;
             currentId = userId;
         }
+
+        // Voeg deze constructor toe aan je ToevoegenMotor klasse
+        public ToevoegenMotor(Voertuig voertuig)
+        {
+            InitializeComponent();
+            btnUploaden.Click += BtnUploaden_Click;
+
+            // Stel hier de velden in op basis van het voertuig-object
+            txtNaam.Text = voertuig.Naam;
+            txtMerk.Text = voertuig.Merk;
+            txtModel.Text = voertuig.Model;
+            txtBeschrijving.Text = voertuig.Beschrijving;
+            cbxBrandstof.SelectedIndex = (int)voertuig.BrandstofType;
+            cbxTransmissie.SelectedIndex = (int)voertuig.TransmissieType;
+            txtBouwjaar.Text = voertuig.Bouwjaar.ToString();
+
+            // Haal de afbeeldingen op voor dit voertuig
+            List<Foto> fotos = Foto.GetFotosForVoertuig(voertuig.Id);
+
+            // Zet de byte-arrays om in afbeeldingen en stel de bron van de afbeeldingscontrols in
+            for (int i = 0; i < fotos.Count; i++)
+            {
+                byte[] afbeeldingData = fotos[i].Image;
+                BitmapImage bitmap = new BitmapImage();
+
+                using (var stream = new MemoryStream(afbeeldingData))
+                {
+                    bitmap.BeginInit();
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.StreamSource = stream;
+                    bitmap.EndInit();
+                }
+
+                // Afhankelijk van de index stel je de bron van de juiste afbeeldingscontrol in
+                switch (i)
+                {
+                    case 0:
+                        img1.Source = bitmap;
+                        break;
+                    case 1:
+                        img2.Source = bitmap;
+                        break;
+                    case 2:
+                        img3.Source = bitmap;
+                        break;
+                }
+            }
+
+            // Hier kun je eventueel de huidige ID instellen, bijvoorbeeld:
+            currentId = new Gebruiker { Id = voertuig.Id };
+        }
+
         private void BtnUploaden_Click(object sender, RoutedEventArgs e)
         {
             int loadedImagesCount = 0;
@@ -82,13 +134,13 @@ namespace WpfGebruiker
             switch (button.Name)
             {
                 case "btnVerwijder1":
-                    if (img1.Source != null) img1.Source = null;  // Check if an image exists before trying to remove it
+                    if (img1.Source != null) img1.Source = null;
                     break;
                 case "btnVerwijder2":
-                    if (img2.Source != null) img2.Source = null;  // Check if an image exists before trying to remove it
+                    if (img2.Source != null) img2.Source = null;
                     break;
                 case "btnVerwijder3":
-                    if (img3.Source != null) img3.Source = null;  // Check if an image exists before trying to remove it
+                    if (img3.Source != null) img3.Source = null;
                     break;
             }
         }

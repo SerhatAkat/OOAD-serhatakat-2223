@@ -127,6 +127,8 @@ namespace WpfGebruiker
                     Margin = new Thickness(5)
                 };
                 editBtn.Margin = new Thickness(5, 0, 0, 0);
+                editBtn.Click += EditBtn_Click;
+                editBtn.Tag = voertuig;
 
                 Button infoBtn = new Button();
                 infoBtn.Content = new ImageAwesome
@@ -289,6 +291,36 @@ namespace WpfGebruiker
             Voertuig.DeleteVoertuig(voertuigId); // Note: Update this if DeleteVoertuig is not a static method
 
             // Update de UI
+            UpdateVoertuigen();
+        }
+        private void EditBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            // Identificeer het te bewerken voertuig
+            Button knop = sender as Button;
+            Voertuig teBewerkenVoertuig = (Voertuig)knop.Tag;
+
+            // Maak een nieuw ToevoegenMotor of ToevoegenGetrokken venster aan, afhankelijk van het type voertuig
+            if (teBewerkenVoertuig.Type == 1)
+            {
+                ToevoegenMotor editWindow = new ToevoegenMotor(teBewerkenVoertuig);
+                editWindow.ShowDialog();
+                if (editWindow.DialogResult == true)
+                {
+                    teBewerkenVoertuig.UpdateGemotoriseerd();
+                }
+            }
+            else if (teBewerkenVoertuig.Type == 2)
+            {
+                ToevoegenGetrokken editWindow = new ToevoegenGetrokken(teBewerkenVoertuig);
+                editWindow.ShowDialog();
+                if (editWindow.DialogResult == true)
+                {
+                    teBewerkenVoertuig.UpdateGetrokken();
+                }
+            }
+
+            // Vernieuw de weergave van de voertuigen
             UpdateVoertuigen();
         }
 
