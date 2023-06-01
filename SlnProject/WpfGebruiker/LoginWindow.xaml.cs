@@ -71,6 +71,8 @@ namespace WpfGebruiker
                 MessageBox.Show("Ongeldige inloggegevens. Probeer het opnieuw.");
                 txtPaswoord.Password = "";
             }
+            Gebruiker.StoreHashedPaswoord(Gebruiker.ToSha256(txtPaswoord.Password), gebruiker.Id);
+
         }
     }
 }

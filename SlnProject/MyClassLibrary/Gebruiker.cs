@@ -37,41 +37,81 @@ namespace MyClassLibrary
                 return builder.ToString();
             }
         }
-
-        public static Gebruiker GetGebruiker(string email, string paswoord)
+        public static Gebruiker GetGebruiker(string login, string password)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM [dbo].[Gebruiker] WHERE Email = @email AND Paswoord = @paswoord", conn))
-                {
-                    cmd.Parameters.AddWithValue("@email", email);
-                    cmd.Parameters.AddWithValue("@paswoord", paswoord);
+            string connString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
 
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+            using (SqlConnection connection = new SqlConnection(connString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("SELECT * FROM [GEBRUIKER] WHERE email = @Email", connection);
+                command.Parameters.AddWithValue("@Email", login);
+
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    Gebruiker gebruiker = new Gebruiker();
+                    gebruiker.Id = (int)reader["Id"];
+                    gebruiker.Voornaam = (string)reader["voornaam"];
+                    gebruiker.Achternaam = (string)reader["achternaam"];
+                    string storedPassword = (string)reader["paswoord"];
+
+                    bool isPasswordCorrect = CheckPaswoord(password, storedPassword);
+                    if (isPasswordCorrect)
                     {
-                        if (reader.Read())
+                        return gebruiker;
+                    }
+                    else
+                    {
+                        string hashedStoredPassword = ToSha256(storedPassword);
+                        string hashedInputPassword = ToSha256(password);
+                        if (hashedInputPassword == hashedStoredPassword)
                         {
-                            Gebruiker gebruiker = new Gebruiker
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Voornaam = reader.GetString(reader.GetOrdinal("Voornaam")),
-                                Achternaam = reader.GetString(reader.GetOrdinal("Achternaam")),
-                                Email = reader.GetString(reader.GetOrdinal("Email")),
-                                Paswoord = reader.GetString(reader.GetOrdinal("Paswoord")),
-                                Aanmaakdatum = reader.GetDateTime(reader.GetOrdinal("Aanmaakdatum")),
-                                Geslacht = (GeslachtType)reader.GetByte(reader.GetOrdinal("Geslacht"))
-                            };
 
                             return gebruiker;
                         }
                     }
-                }
-            }
 
-            return null;
+                }
+                return null;
+            }
         }
+
+        //public static Gebruiker GetGebruiker(string email, string paswoord)
+        //{
+        //    string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
+        //        conn.Open();
+        //        using (SqlCommand cmd = new SqlCommand("SELECT * FROM [dbo].[Gebruiker] WHERE Email = @email AND Paswoord = @paswoord", conn))
+        //        {
+        //            cmd.Parameters.AddWithValue("@email", email);
+        //            cmd.Parameters.AddWithValue("@paswoord", paswoord);
+
+        //            using (SqlDataReader reader = cmd.ExecuteReader())
+        //            {
+        //                if (reader.Read())
+        //                {
+        //                    Gebruiker gebruiker = new Gebruiker
+        //                    {
+        //                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+        //                        Voornaam = reader.GetString(reader.GetOrdinal("Voornaam")),
+        //                        Achternaam = reader.GetString(reader.GetOrdinal("Achternaam")),
+        //                        Email = reader.GetString(reader.GetOrdinal("Email")),
+        //                        Paswoord = reader.GetString(reader.GetOrdinal("Paswoord")),
+        //                        Aanmaakdatum = reader.GetDateTime(reader.GetOrdinal("Aanmaakdatum")),
+        //                        Geslacht = (GeslachtType)reader.GetByte(reader.GetOrdinal("Geslacht"))
+        //                    };
+
+        //                    return gebruiker;
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    return null;
+        //}
         public static string GetGebruikerNaamById(int id)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
@@ -120,6 +160,40 @@ namespace MyClassLibrary
                 }
             }
             return null;
+        }
+
+        private static bool CheckPaswoord(string inputPassword, string hashedPassword)
+        {
+            string hashedInputPassword = ToSha256(inputPassword);
+            return hashedInputPassword == hashedPassword;
+        }
+
+        public static string ToSha256(string text)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] inpBytes = Encoding.UTF8.GetBytes(text);
+                byte[] hashedPaswoordBytes = sha256.ComputeHash(inpBytes);
+                string hashedPassword = BitConverter.ToString(hashedPaswoordBytes).Replace("-", "");
+                return Convert.ToBase64String(hashedPaswoordBytes);
+            }
+        }
+        public static void StoreHashedPaswoord(string hashedPaswoord, int userId)
+        {
+            string connString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connString))
+            {
+                connection.Open();
+
+                string query = "UPDATE [Gebruiker] SET paswoord = @HashedPassword Where id = @ID";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@HashedPassword", hashedPaswoord);
+                command.Parameters.AddWithValue("@ID", userId);
+
+                command.ExecuteNonQuery();
+            }
         }
     }
 }
