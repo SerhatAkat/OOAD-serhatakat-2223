@@ -31,19 +31,25 @@ namespace WpfGebruiker
             currentId = userId;
         }
 
-        // Voeg deze constructor toe aan je ToevoegenMotor klasse
         public ToevoegenMotor(Voertuig voertuig)
         {
             InitializeComponent();
             btnUploaden.Click += BtnUploaden_Click;
 
-            // Stel hier de velden in op basis van het voertuig-object
             txtNaam.Text = voertuig.Naam;
             txtMerk.Text = voertuig.Merk;
             txtModel.Text = voertuig.Model;
             txtBeschrijving.Text = voertuig.Beschrijving;
-            cbxBrandstof.SelectedIndex = (int)voertuig.BrandstofType;
-            cbxTransmissie.SelectedIndex = (int)voertuig.TransmissieType;
+            if (voertuig.BrandstofType.HasValue)
+                cbxBrandstof.SelectedIndex = (int)voertuig.BrandstofType;
+            else
+                cbxBrandstof.SelectedIndex = -1;
+
+            if (voertuig.TransmissieType.HasValue)
+                cbxTransmissie.SelectedIndex = (int)voertuig.TransmissieType;
+            else
+                cbxTransmissie.SelectedIndex = -1;
+
             txtBouwjaar.Text = voertuig.Bouwjaar.ToString();
 
             // Haal de afbeeldingen op voor dit voertuig
@@ -63,7 +69,6 @@ namespace WpfGebruiker
                     bitmap.EndInit();
                 }
 
-                // Afhankelijk van de index stel je de bron van de juiste afbeeldingscontrol in
                 switch (i)
                 {
                     case 0:
@@ -78,7 +83,6 @@ namespace WpfGebruiker
                 }
             }
 
-            // Hier kun je eventueel de huidige ID instellen, bijvoorbeeld:
             currentId = new Gebruiker { Id = voertuig.Id };
         }
 
@@ -112,7 +116,6 @@ namespace WpfGebruiker
                     images.Add(bitmap);
                 }
 
-                // Code zoals voorheen
                 if (images.Count > 0)
                 {
                     img1.Source = images[0];
@@ -187,11 +190,15 @@ namespace WpfGebruiker
                     Model = txtModel.Text,
                     Beschrijving = txtBeschrijving.Text,
                 };
-                if (cbxBrandstof.SelectedIndex != 0) nieuwVoertuig.BrandstofType = (Voertuig.Brandstof)cbxBrandstof.SelectedIndex;
-                else nieuwVoertuig.BrandstofType = null;
+                if (nieuwVoertuig.BrandstofType.HasValue)
+                    cbxBrandstof.SelectedIndex = (int)nieuwVoertuig.BrandstofType;
+                else
+                    cbxBrandstof.SelectedIndex = -1; // Of een andere standaardwaarde
 
-                if (cbxTransmissie.SelectedIndex != 0) nieuwVoertuig.TransmissieType = (Voertuig.Transmissie)cbxTransmissie.SelectedIndex;
-                else nieuwVoertuig.TransmissieType = null;
+                if (nieuwVoertuig.TransmissieType.HasValue)
+                    cbxTransmissie.SelectedIndex = (int)nieuwVoertuig.TransmissieType;
+                else
+                    cbxTransmissie.SelectedIndex = -1; // Of een andere standaardwaarde
 
                 if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))
                 {
@@ -199,7 +206,7 @@ namespace WpfGebruiker
                     return;
                 }
                 nieuwVoertuig.Bouwjaar = bouwjaar;
-                int voertuigId = nieuwVoertuig.ToevoegenGetrokkenVoertuig(nieuwVoertuig, currentId.Id);
+                int voertuigId = nieuwVoertuig.ToevoegenGemotoriseerdVoertuig(nieuwVoertuig, currentId.Id);
 
                 // Controleer of voertuig succesvol is toegevoegd
                 if (voertuigId > 0)
@@ -218,7 +225,7 @@ namespace WpfGebruiker
                             {
                                 encoder.Save(stream);
                                 byte[] imgData = stream.ToArray();
-                                foto.AddFoto(imgData, voertuigId);
+                                Foto.AddFoto(imgData, voertuigId);
                             }
                         }
                     }
@@ -226,6 +233,11 @@ namespace WpfGebruiker
                 VoertuigenPage.Instance.UpdateVoertuigen();
                 Close();
             }
+        }
+
+        private void btnAnnuleren_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

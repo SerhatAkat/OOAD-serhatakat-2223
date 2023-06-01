@@ -73,6 +73,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EditGetrokken.xaml.cs">
+      <DependentUpon>EditGetrokken.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditMotor.xaml.cs">
+      <DependentUpon>EditMotor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GetrokkenInfo.xaml.cs">
       <DependentUpon>GetrokkenInfo.xaml</DependentUpon>
     </Compile>
@@ -88,6 +94,14 @@
     <Compile Include="VoertuigenPage.xaml.cs">
       <DependentUpon>VoertuigenPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="EditGetrokken.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditMotor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GetrokkenInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

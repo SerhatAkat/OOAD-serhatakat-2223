@@ -295,7 +295,6 @@ namespace WpfGebruiker
         }
         private void EditBtn_Click(object sender, RoutedEventArgs e)
         {
-
             // Identificeer het te bewerken voertuig
             Button knop = sender as Button;
             Voertuig teBewerkenVoertuig = (Voertuig)knop.Tag;
@@ -303,16 +302,16 @@ namespace WpfGebruiker
             // Maak een nieuw ToevoegenMotor of ToevoegenGetrokken venster aan, afhankelijk van het type voertuig
             if (teBewerkenVoertuig.Type == 1)
             {
-                ToevoegenMotor editWindow = new ToevoegenMotor(teBewerkenVoertuig);
+                EditMotor editWindow = new EditMotor(teBewerkenVoertuig);
                 editWindow.ShowDialog();
                 if (editWindow.DialogResult == true)
                 {
-                    teBewerkenVoertuig.UpdateGemotoriseerd();
+                    teBewerkenVoertuig.UpdateGemotoriseerd(teBewerkenVoertuig.Id);
                 }
             }
             else if (teBewerkenVoertuig.Type == 2)
             {
-                ToevoegenGetrokken editWindow = new ToevoegenGetrokken(teBewerkenVoertuig);
+                EditGetrokken editWindow = new EditGetrokken(teBewerkenVoertuig);
                 editWindow.ShowDialog();
                 if (editWindow.DialogResult == true)
                 {
@@ -323,6 +322,5 @@ namespace WpfGebruiker
             // Vernieuw de weergave van de voertuigen
             UpdateVoertuigen();
         }
-
     }
 }

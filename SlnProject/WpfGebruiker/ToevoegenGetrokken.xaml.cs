@@ -30,13 +30,11 @@ namespace WpfGebruiker
             btnUploaden.Click += BtnUploaden_Click;
             currentId = userId;
         }
-        // Voeg deze constructor toe aan je ToevoegenGetrokken klasse
         public ToevoegenGetrokken(Voertuig voertuig)
         {
             InitializeComponent();
             btnUploaden.Click += BtnUploaden_Click;
 
-            // Stel hier de velden in op basis van het voertuig-object
             txtNaam.Text = voertuig.Naam;
             txtMerk.Text = voertuig.Merk;
             txtModel.Text = voertuig.Model;
@@ -65,7 +63,6 @@ namespace WpfGebruiker
                     bitmap.EndInit();
                 }
 
-                // Afhankelijk van de index stel je de bron van de juiste afbeeldingscontrol in
                 switch (i)
                 {
                     case 0:
@@ -80,7 +77,6 @@ namespace WpfGebruiker
                 }
             }
 
-            // Hier kun je eventueel de huidige ID instellen, bijvoorbeeld:
             currentId = new Gebruiker { Id = voertuig.Id };
         }
 
@@ -193,10 +189,8 @@ namespace WpfGebruiker
                     Geremd = rbnJa.IsChecked == true,
                 };
 
-                if (nieuwVoertuig.Gewicht != null) nieuwVoertuig.Gewicht = (int?)Convert.ToInt32(txtGewicht.Text);
-                nieuwVoertuig.Gewicht = null;
-                if (nieuwVoertuig.MaxBelasting != null) nieuwVoertuig.MaxBelasting = (int?)Convert.ToInt32(txtMax.Text);
-                nieuwVoertuig.MaxBelasting = null;
+                if (!string.IsNullOrEmpty(txtGewicht.Text)) nieuwVoertuig.Gewicht = (int?)Convert.ToInt32(txtGewicht.Text);
+                if (!string.IsNullOrEmpty(txtMax.Text)) nieuwVoertuig.MaxBelasting = (int?)Convert.ToInt32(txtMax.Text);
                 if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))
                 {
                     MessageBox.Show("Gelieve een geldig bouwjaar in te vullen.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -222,7 +216,7 @@ namespace WpfGebruiker
                             {
                                 encoder.Save(stream);
                                 byte[] imgData = stream.ToArray();
-                                foto.AddFoto(imgData, voertuigId);
+                                Foto.AddFoto(imgData, voertuigId);
                             }
                         }
                     }
@@ -230,6 +224,11 @@ namespace WpfGebruiker
                 VoertuigenPage.Instance.UpdateVoertuigen();
                 Close();
             }
+        }
+
+        private void btnAnnuleren_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

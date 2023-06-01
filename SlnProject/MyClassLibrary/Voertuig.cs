@@ -11,6 +11,11 @@ namespace MyClassLibrary
 {
     public class Voertuig
     {
+        public List<Foto> GetFotos()
+        {
+            return Foto.GetFotosForVoertuig(Id);
+        }
+
         // gemeenschappelijk
         public int Id { get; set; }
         public string Naam { get; set; }
@@ -242,20 +247,22 @@ namespace MyClassLibrary
             }
         }
 
-        public void ToevoegenGemotoriseerdVoertuig(Voertuig voertuig, int userId)
+        public int ToevoegenGemotoriseerdVoertuig(Voertuig voertuig, int userId)
         {
+            int voertuigId = 0;
             string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
                 string sql = "INSERT INTO Voertuig (naam, eigenaar_id, merk, model, bouwjaar, beschrijving, type, transmissie, brandstof) " +
-                             "VALUES (@Naam, @EigenaarId, @Merk, @Model, @Bouwjaar, @Beschrijving, @Type, @Transmissie, @Brandstof)";
+                             "OUTPUT inserted.id " +
+                             "VALUES (@Naam, @Eigenaar_Id, @Merk, @Model, @Bouwjaar, @Beschrijving, @Type, @Transmissie, @Brandstof)";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@Naam", voertuig.Naam);
-                    command.Parameters.AddWithValue("@EigenaarId", userId);
+                    command.Parameters.AddWithValue("@Eigenaar_Id", userId);
                     command.Parameters.AddWithValue("@Merk", voertuig.Merk ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Model", voertuig.Model ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Bouwjaar", voertuig.Bouwjaar);
@@ -264,9 +271,10 @@ namespace MyClassLibrary
                     command.Parameters.AddWithValue("@Transmissie", voertuig.TransmissieType ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Brandstof", voertuig.BrandstofType ?? (object)DBNull.Value);
 
-                    command.ExecuteNonQuery();
+                    voertuigId = (int)command.ExecuteScalar();
                 }
             }
+            return voertuigId;
         }
 
         public int ToevoegenGetrokkenVoertuig(Voertuig voertuig, int userId)
@@ -279,11 +287,11 @@ namespace MyClassLibrary
 
                 string sql = "INSERT INTO Voertuig (eigenaar_id, type, geremd, afmetingen, maxbelasting, gewicht, model, merk, bouwjaar, beschrijving, naam) " +
                              "OUTPUT inserted.id " +
-                             "VALUES (@EigenaarId, @Type, @Geremd, @Afmetingen, @MaxBelasting, @Gewicht, @Model, @Merk, @Bouwjaar, @Beschrijving, @Naam)";
+                             "VALUES (@Eigenaar_Id, @Type, @Geremd, @Afmetingen, @MaxBelasting, @Gewicht, @Model, @Merk, @Bouwjaar, @Beschrijving, @Naam)";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    command.Parameters.AddWithValue("@EigenaarId", userId);
+                    command.Parameters.AddWithValue("@Eigenaar_Id", userId);
                     command.Parameters.AddWithValue("@Type", 2);
                     command.Parameters.AddWithValue("@Geremd", voertuig.Geremd ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Afmetingen", voertuig.Afmetingen ?? (object)DBNull.Value);
@@ -297,34 +305,38 @@ namespace MyClassLibrary
                     voertuigId = (int)command.ExecuteScalar();
                 }
             }
-
             return voertuigId;
         }
 
-        public void UpdateGemotoriseerd()
+        public void UpdateGemotoriseerd(int id)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                conn.Open();
+                connection.Open();
 
-                string query = "UPDATE Voertuigen SET Naam = @Naam, Merk = @Merk, Model = @Model, Beschrijving = @Beschrijving, Bouwjaar = @Bouwjaar, TransmissieType = @TransmissieType, BrandstofType = @BrandstofType WHERE ID = @ID";
+                string query = "UPDATE [Voertuig] SET naam = @Naam, merk = @Merk, model = @Model, beschrijving = @Beschrijving, bouwjaar = @Bouwjaar, transmissie = @Transmissie, brandstof = @Brandstof WHERE id = @ID";
 
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
-                    cmd.Parameters.AddWithValue("@Naam", this.Naam);
-                    cmd.Parameters.AddWithValue("@Merk", this.Merk);
-                    cmd.Parameters.AddWithValue("@Model", this.Model);
-                    cmd.Parameters.AddWithValue("@Beschrijving", this.Beschrijving);
-                    cmd.Parameters.AddWithValue("@Bouwjaar", this.Bouwjaar);
-                    cmd.Parameters.AddWithValue("@TransmissieType", this.TransmissieType);
-                    cmd.Parameters.AddWithValue("@BrandstofType", this.BrandstofType);
-                    cmd.Parameters.AddWithValue("@ID", this.Id);
+                    cmd.Parameters.AddWithValue("@Naam", Naam ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Merk", this.Merk ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Model", this.Model ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Beschrijving", this.Beschrijving ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Bouwjaar", this.Bouwjaar != 0 ? (object)this.Bouwjaar : (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Transmissie", this.TransmissieType.HasValue ? (object)this.TransmissieType.Value : (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Brandstof", this.BrandstofType.HasValue ? (object)this.BrandstofType.Value : (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ID", id);
 
-                    cmd.ExecuteNonQuery();
+                    int rowsAffected = cmd.ExecuteNonQuery();
                 }
             }
         }
+
+
+
+
+
         public void UpdateGetrokken()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
@@ -332,7 +344,7 @@ namespace MyClassLibrary
             {
                 conn.Open();
 
-                string query = "UPDATE Voertuigen SET Naam = @Naam, Beschrijving = @Beschrijving, Bouwjaar = @Bouwjaar, Merk = @Merk, Model = @Model, Gewicht = @Gewicht, MaxBelasting = @MaxBelasting, Afmetingen = @Afmetingen, Geremd = @Geremd WHERE ID = @ID";
+                string query = "UPDATE Voertuig SET Naam = @Naam, Beschrijving = @Beschrijving, Bouwjaar = @Bouwjaar, Merk = @Merk, Model = @Model, Gewicht = @Gewicht, MaxBelasting = @MaxBelasting, Afmetingen = @Afmetingen, Geremd = @Geremd WHERE ID = @ID";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -351,7 +363,44 @@ namespace MyClassLibrary
                 }
             }
         }
+        public static Voertuig GetVoertuigById(int voertuigId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM [dbo].[Voertuig] WHERE Id = @voertuigId", conn))
+                {
+                    cmd.Parameters.AddWithValue("@voertuigId", voertuigId);
 
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Voertuig voertuig = new Voertuig
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Naam = reader.GetString(reader.GetOrdinal("Naam")),
+                                Beschrijving = reader.GetString(reader.GetOrdinal("Beschrijving")),
+                                Bouwjaar = reader.IsDBNull(reader.GetOrdinal("Bouwjaar")) ? 0 : reader.GetInt32(reader.GetOrdinal("Bouwjaar")),
+                                Merk = reader.IsDBNull(reader.GetOrdinal("Merk")) ? null : reader.GetString(reader.GetOrdinal("Merk")),
+                                Model = reader.IsDBNull(reader.GetOrdinal("Model")) ? null : reader.GetString(reader.GetOrdinal("Model")),
+                                Type = reader.GetInt32(reader.GetOrdinal("type")),
+                                Eigenaar = reader.GetInt32(reader.GetOrdinal("eigenaar_id")),
+                                TransmissieType = reader.IsDBNull(reader.GetOrdinal("Transmissie")) ? (Transmissie?)null : (Transmissie)reader.GetInt32(reader.GetOrdinal("Transmissie")),
+                                BrandstofType = reader.IsDBNull(reader.GetOrdinal("Brandstof")) ? (Brandstof?)null : (Brandstof)reader.GetInt32(reader.GetOrdinal("Brandstof")),
+                                Gewicht = reader.IsDBNull(reader.GetOrdinal("Gewicht")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Gewicht")),
+                                MaxBelasting = reader.IsDBNull(reader.GetOrdinal("MaxBelasting")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("MaxBelasting")),
+                                Afmetingen = reader.IsDBNull(reader.GetOrdinal("Afmetingen")) ? null : reader.GetString(reader.GetOrdinal("Afmetingen")),
+                                Geremd = reader.IsDBNull(reader.GetOrdinal("Geremd")) ? (bool?)null : reader.GetBoolean(reader.GetOrdinal("Geremd"))
+                            };
 
+                            return voertuig;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
     }
 }
