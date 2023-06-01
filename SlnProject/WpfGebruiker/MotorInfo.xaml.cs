@@ -25,12 +25,22 @@ namespace WpfGebruiker
         private Voertuig huidigeVoertuig;
         private int gebruikerId;
 
-        public MotorInfo(Voertuig voertuig, int gebruikerID)
+        public MotorInfo(Voertuig voertuig, int gebruikerID, bool isReadOnly = false)
         {
             huidigeVoertuig = voertuig;
             gebruikerId = gebruikerID;
 
             InitializeComponent();
+            if (isReadOnly)
+            {
+                dtmTot.Visibility = Visibility.Collapsed;
+                dtmVan.Visibility = Visibility.Collapsed;
+                btnBevestigen.Visibility = Visibility.Collapsed;
+                txtBericht.Visibility = Visibility.Collapsed;
+                lblTot.Visibility = Visibility.Collapsed;
+                lblVan.Visibility = Visibility.Collapsed;
+                lblBericht.Visibility = Visibility.Collapsed;
+            }
             LoadFotosForVoertuig(voertuig.Id);
 
             lblMotorNaam.Content = voertuig.Naam;

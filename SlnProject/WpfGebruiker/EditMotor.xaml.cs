@@ -28,8 +28,6 @@ namespace WpfGebruiker
         private Voertuig teBewerkenVoertuig;
         private Gebruiker currentId;
 
-
-
         public EditMotor(Gebruiker userId)
         {
             InitializeComponent();
@@ -38,10 +36,9 @@ namespace WpfGebruiker
         }
         public EditMotor(Voertuig voertuig)
         {
-            teBewerkenVoertuig = voertuig;
-
             InitializeComponent();
-
+            teBewerkenVoertuig = voertuig;
+            btnUploaden.Click += BtnUploaden_Click;
             txtNaam.Text = voertuig.Naam;
             txtMerk.Text = voertuig.Merk;
             txtModel.Text = voertuig.Model;
@@ -362,10 +359,8 @@ namespace WpfGebruiker
                 }
 
                 VoertuigenPage.instance.UpdateVoertuigen();
-
                 Close();
             }
-
         }
     }
 }

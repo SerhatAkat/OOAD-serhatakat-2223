@@ -17,9 +17,19 @@ namespace WpfGebruiker
         private string voertuigNaam;
         private Voertuig huidigeVoertuig;
 
-        public GetrokkenInfo(Voertuig voertuig, int gebruikerID)
+        public GetrokkenInfo(Voertuig voertuig, int gebruikerID, bool isReadOnly = false)
         {
             InitializeComponent();
+            if (isReadOnly)
+            {
+                dtmTot.Visibility = Visibility.Collapsed;
+                dtmVan.Visibility = Visibility.Collapsed;
+                btnBevestigen.Visibility = Visibility.Collapsed;
+                txtBericht.Visibility = Visibility.Collapsed;
+                lblTot.Visibility = Visibility.Collapsed;
+                lblVan.Visibility = Visibility.Collapsed;
+                lblBericht.Visibility = Visibility.Collapsed;
+            }
             huidigeVoertuig = voertuig;
             gebruikerId = gebruikerID;
 

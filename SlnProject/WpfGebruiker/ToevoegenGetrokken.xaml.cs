@@ -82,16 +82,10 @@ namespace WpfGebruiker
 
         private void BtnUploaden_Click(object sender, RoutedEventArgs e)
         {
-            int loadedImagesCount = 0;
-
-            if (img1.Source != null) loadedImagesCount++;
-            if (img2.Source != null) loadedImagesCount++;
-            if (img3.Source != null) loadedImagesCount++;
-
-            // Als er al 1, 2 of 3 afbeeldingen zijn, hoef je het dialoogvenster niet te openen
-            if (loadedImagesCount > 0)
+            // Controleer of minstens één afbeelding al een bron heeft
+            if (img1.Source != null || img2.Source != null || img3.Source != null)
             {
-                return;
+                return; // Als dat zo is, doe niets
             }
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -110,21 +104,22 @@ namespace WpfGebruiker
                     images.Add(bitmap);
                 }
 
-                // Code zoals voorheen
-                if (images.Count > 0)
+                // Alleen de afbeeldingsbron instellen als deze nog niet is ingesteld
+                if (images.Count > 0 && img1.Source == null)
                 {
                     img1.Source = images[0];
                 }
-                if (images.Count > 1)
+                if (images.Count > 1 && img2.Source == null)
                 {
                     img2.Source = images[1];
                 }
-                if (images.Count > 2)
+                if (images.Count > 2 && img3.Source == null)
                 {
                     img3.Source = images[2];
                 }
             }
         }
+
 
         private void VerwijderAfbeelding_Click(object sender, RoutedEventArgs e)
         {

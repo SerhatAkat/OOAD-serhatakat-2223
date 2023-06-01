@@ -351,7 +351,7 @@ namespace MyClassLibrary
         }
 
 
-        public void UpdateGetrokken()
+        public void UpdateGetrokken(int id)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -373,7 +373,7 @@ namespace MyClassLibrary
                     cmd.Parameters.AddWithValue("@Geremd", this.Geremd);
                     cmd.Parameters.AddWithValue("@ID", this.Id);
 
-                    cmd.ExecuteNonQuery();
+                    int rowsAffected = cmd.ExecuteNonQuery();
                 }
             }
         }

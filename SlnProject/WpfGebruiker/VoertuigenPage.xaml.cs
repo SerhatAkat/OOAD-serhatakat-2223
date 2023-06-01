@@ -271,15 +271,16 @@ namespace WpfGebruiker
             {
                 if (gevondenVoertuig.Type == 1)
                 {
-                    MotorInfo pagina = new MotorInfo(gevondenVoertuig, userId);
+                    MotorInfo pagina = new MotorInfo(gevondenVoertuig, userId, true); // passing true as isReadOnly
                     this.NavigationService.Navigate(pagina);
                 }
                 else if (gevondenVoertuig.Type == 2)
                 {
-                    GetrokkenInfo pagina = new GetrokkenInfo(gevondenVoertuig, userId);
+                    GetrokkenInfo pagina = new GetrokkenInfo(gevondenVoertuig, userId, true); // passing true as isReadOnly
                     this.NavigationService.Navigate(pagina);
                 }
             }
+
         }
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -315,7 +316,7 @@ namespace WpfGebruiker
                 editWindow.ShowDialog();
                 if (editWindow.DialogResult == true)
                 {
-                    teBewerkenVoertuig.UpdateGetrokken();
+                    teBewerkenVoertuig.UpdateGetrokken(teBewerkenVoertuig.Id);
                 }
             }
 

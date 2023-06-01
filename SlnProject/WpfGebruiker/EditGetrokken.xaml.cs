@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using MyClassLibrary;
+using static MyClassLibrary.Voertuig;
 
 namespace WpfGebruiker
 {
@@ -30,6 +31,7 @@ namespace WpfGebruiker
         {
             InitializeComponent();
             currentId = userId;
+            btnUploaden.Click += BtnUploaden_Click;
         }
         public EditGetrokken(Voertuig voertuig)
         {
@@ -52,59 +54,76 @@ namespace WpfGebruiker
             // Haal de afbeeldingen op voor dit voertuig
             List<Foto> fotos = Foto.GetFotosForVoertuig(voertuig.Id);
 
-            // Zet de byte-arrays om in afbeeldingen en stel de bron van de afbeeldingscontrols in
-            for (int i = 0; i < fotos.Count; i++)
+            List<BitmapImage> images2 = new List<BitmapImage>();
+
+            foreach (Foto foto in fotos)
             {
-                byte[] afbeeldingData = fotos[i].Image;
-                BitmapImage bitmap = new BitmapImage();
+                images2.Add(ConvertToBitmapImage(foto.Image));
+            }
 
-                using (var stream = new MemoryStream(afbeeldingData))
-                {
-                    bitmap.BeginInit();
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.StreamSource = stream;
-                    bitmap.EndInit();
-                }
+            if (images2.Count >= 1) { img1.Source = images2[0]; }
+            if (images2.Count >= 2)
+            {
 
-                switch (i)
-                {
-                    case 0:
-                        img1.Source = bitmap;
-                        break;
-                    case 1:
-                        img2.Source = bitmap;
-                        break;
-                    case 2:
-                        img3.Source = bitmap;
-                        break;
-                }
+                img1.Source = images2[0];
+
+                img2.Source = images2[1];
+            }
+            if (images2.Count >= 3)
+            {
+                img1.Source = images2[0];
+
+                img2.Source = images2[1];
+
+                img3.Source = images2[2];
+            }
+
+            if (fotos.Count >= 1)
+            {
+                Foto afb1 = fotos[0];
+                btnVerwijder1.Tag = afb1;
+            }
+            if (fotos.Count >= 2)
+            {
+                Foto afb2 = fotos[1];
+                btnVerwijder2.Tag = afb2;
+            }
+            if (fotos.Count >= 3)
+            {
+                Foto afb3 = fotos[2];
+                btnVerwijder3.Tag = afb3;
             }
 
             currentId = new Gebruiker { Id = voertuig.Id };
         }
-        private byte[] ImageToByteArray(BitmapImage image)
+        private BitmapImage ConvertToBitmapImage(byte[] imageBytes)
         {
-            using (MemoryStream stream = new MemoryStream())
+            if (imageBytes != null)
             {
-                PngBitmapEncoder encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(image));
-                encoder.Save(stream);
-                return stream.ToArray();
+                BitmapImage bitmapImage = new BitmapImage();
+                using (MemoryStream memoryStream = new MemoryStream(imageBytes))
+                {
+                    memoryStream.Position = 0;
+                    bitmapImage.BeginInit();
+                    bitmapImage.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.StreamSource = memoryStream;
+                    bitmapImage.EndInit();
+                }
+                bitmapImage.Freeze(); // Freeze the BitmapImage to improve performance and allow cross-thread access if needed
+                return bitmapImage;
+
             }
+            else return null;
+
         }
 
         private void BtnUploaden_Click(object sender, RoutedEventArgs e)
         {
-            int loadedImagesCount = 0;
-
-            if (img1.Source != null) loadedImagesCount++;
-            if (img2.Source != null) loadedImagesCount++;
-            if (img3.Source != null) loadedImagesCount++;
-
-            // Als er al 1, 2 of 3 afbeeldingen zijn, hoef je het dialoogvenster niet te openen
-            if (loadedImagesCount > 0)
+            // Controleer of minstens één afbeelding al een bron heeft
+            if (img1.Source != null || img2.Source != null || img3.Source != null)
             {
-                return;
+                return; // Als dat zo is, doe niets
             }
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -122,44 +141,64 @@ namespace WpfGebruiker
                     bitmap.EndInit();
                     images.Add(bitmap);
                 }
-                if (images.Count > 0)
+
+                // Alleen de afbeeldingsbron instellen als deze nog niet is ingesteld
+                if (images.Count > 0 && img1.Source == null)
                 {
                     img1.Source = images[0];
-                    List<Foto> fotos = teBewerkenVoertuig.GetFotos();
-
-                    if (fotos.Count >= loadedImagesCount + 1)
-                    {
-                        Foto foto = fotos[loadedImagesCount];
-                        Foto.EditFoto(foto.Id, ImageToByteArray(images[0]));
-                    }
-                    else
-                    {
-                        Foto foto = new Foto();
-                        Foto.AddFoto(ImageToByteArray(images[0]), teBewerkenVoertuig.Id);
-                    }
+                }
+                if (images.Count > 1 && img2.Source == null)
+                {
+                    img2.Source = images[1];
+                }
+                if (images.Count > 2 && img3.Source == null)
+                {
+                    img3.Source = images[2];
                 }
             }
         }
 
-
         private void VerwijderAfbeelding_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
+            Foto foto = button.Tag as Foto;
 
             switch (button.Name)
             {
                 case "btnVerwijder1":
-                    if (img1.Source != null) img1.Source = null;
+                    img1.Source = null;
+                    if (foto != null) ;
                     break;
                 case "btnVerwijder2":
-                    if (img2.Source != null) img2.Source = null;
+                    img2.Source = null;
+                    if (foto != null) ;
                     break;
                 case "btnVerwijder3":
-                    if (img3.Source != null) img3.Source = null;
+                    img3.Source = null;
+                    if (foto != null) ;
                     break;
             }
         }
 
+        private byte[] ImageToByte(Image img)
+        {
+            if (img.Source == null)
+            {
+                return null;
+            }
+            else
+            {
+                BitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create((BitmapSource)img.Source));
+                byte[] imageData;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    encoder.Save(ms);
+                    imageData = ms.ToArray();
+                }
+                return imageData;
+            }
+        }
         private void btnAnnuleren_Click(object sender, RoutedEventArgs e)
         {
             Close();
@@ -167,6 +206,8 @@ namespace WpfGebruiker
 
         private void btnOpslaan_Click(object sender, RoutedEventArgs e)
         {
+            Voertuig huidigVoertuig = teBewerkenVoertuig;
+            List<Foto> bestaandeFotos = Foto.GetFotosForVoertuig(teBewerkenVoertuig.Id);
             // Reset error labels
             lblNaamError.Content = "";
             lblBeschrijvingError.Content = "";
@@ -193,67 +234,109 @@ namespace WpfGebruiker
 
             if (img1.Source == null && img2.Source == null && img3.Source == null)
             {
-                lblImageError.Content = "Kies ten minste 1 afbeelding";
+                lblImageError.Content = "Gelieve ten minste 1 afbeelding te kiezen";
                 isValid = false;
             }
 
             // Voer de rest van de methode alleen uit als alle velden zijn gevalideerd
             if (isValid)
             {
-                // Maak een nieuw Voertuig object aan en vul de eigenschappen in
-                Voertuig teBewerkenVoertuig = new Voertuig
-                {
-                    Id = currentId.Id, // Huidig voertuig ID
-                    Naam = txtNaam.Text,
-                    Merk = txtMerk.Text,
-                    Model = txtModel.Text,
-                    Beschrijving = txtBeschrijving.Text,
-                    Afmetingen = txtAfmetingen.Text,
-                    Geremd = rbnJa.IsChecked == true
-                };
+                huidigVoertuig.Id = currentId.Id;
+                huidigVoertuig.Naam = txtNaam.Text;
+                huidigVoertuig.Merk = txtMerk.Text;
+                huidigVoertuig.Model = txtModel.Text;
+                huidigVoertuig.Beschrijving = txtBeschrijving.Text;
+                huidigVoertuig.Afmetingen = txtAfmetingen.Text;
+                huidigVoertuig.Geremd = rbnJa.IsChecked == true;
 
                 if (!string.IsNullOrEmpty(txtGewicht.Text))
-                    teBewerkenVoertuig.Gewicht = Convert.ToInt32(txtGewicht.Text);
+                    huidigVoertuig.Gewicht = Convert.ToInt32(txtGewicht.Text);
                 if (!string.IsNullOrEmpty(txtMax.Text))
-                    teBewerkenVoertuig.MaxBelasting = Convert.ToInt32(txtMax.Text);
+                    huidigVoertuig.MaxBelasting = Convert.ToInt32(txtMax.Text);
                 if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))
                 {
                     MessageBox.Show("Gelieve een geldig bouwjaar in te vullen.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                teBewerkenVoertuig.Bouwjaar = bouwjaar;
+                huidigVoertuig.Bouwjaar = bouwjaar;
 
                 // Update het voertuig in de database
-                teBewerkenVoertuig.UpdateGetrokken();
+                huidigVoertuig.UpdateGetrokken(teBewerkenVoertuig.Id);
 
-                // Voeg de afbeeldingen toe aan de database
-                Foto foto = new Foto();
-                int voertuigId = teBewerkenVoertuig.Id;
-
-                foreach (Image img in new[] { img1, img2, img3 })
+                if (img1.Source != null)
                 {
-                    if (img.Source != null)
-                    {
-                        var encoder = new PngBitmapEncoder();
-                        encoder.Frames.Add(BitmapFrame.Create((BitmapSource)img.Source));
+                    byte[] foto1 = ImageToByte(img1);
 
-                        using (var stream = new MemoryStream())
-                        {
-                            encoder.Save(stream);
-                            byte[] imgData = stream.ToArray();
-                            Foto.AddFoto(imgData, voertuigId);
-                        }
+                    if (btnVerwijder1.Tag != null)
+                    {
+                        Foto.EditFoto(((Foto)btnVerwijder1.Tag).Id, foto1);
+                    }
+                    else
+                    {
+                        Foto.AddFoto(foto1, teBewerkenVoertuig.Id);
+                    }
+                }
+                else
+                {
+                    if (((Foto)btnVerwijder1.Tag) != null)
+                    {
+                        Foto.VerwijderFotoByFotoId(((Foto)btnVerwijder1.Tag).Id);
                     }
                 }
 
-                // Vernieuw de weergave van de voertuigen
-                VoertuigenPage.instance.UpdateVoertuigen();
+                if (img2.Source != null)
+                {
+                    byte[] foto2 = ImageToByte(img2);
 
-                // Sluit het venster
+                    if (btnVerwijder2.Tag != null)
+                    {
+                        Foto.EditFoto(((Foto)btnVerwijder2.Tag).Id, foto2);
+                    }
+                    else
+                    {
+
+                        Foto.AddFoto(foto2, teBewerkenVoertuig.Id);
+                    }
+
+                }
+                else
+                {
+                    if (((Foto)btnVerwijder2.Tag) != null)
+                    {
+
+                        Foto.VerwijderFotoByFotoId(((Foto)btnVerwijder2.Tag).Id);
+
+                    }
+                }
+
+                if (img3.Source != null)
+                {
+                    byte[] foto3 = ImageToByte(img3);
+
+                    if (btnVerwijder3.Tag != null)
+                    {
+                        Foto.EditFoto(((Foto)btnVerwijder3.Tag).Id, foto3);
+                    }
+                    else
+                    {
+
+                        Foto.AddFoto(foto3, teBewerkenVoertuig.Id);
+                    }
+
+                }
+                else
+                {
+                    if (((Foto)btnVerwijder3.Tag) != null)
+                    {
+                        Foto.VerwijderFotoByFotoId(((Foto)btnVerwijder3.Tag).Id);
+
+                    }
+
+                }
+
+                VoertuigenPage.instance.UpdateVoertuigen();
                 Close();
             }
         }
-
-
     }
 }
