@@ -180,6 +180,7 @@ namespace WpfGebruiker
                 lblImageError.Content = "Gelieve ten minste 1 afbeelding te kiezen";
                 isValid = false;
             }
+            
 
             // Voer de rest van de methode alleen uit als alle velden zijn gevalideerd
             if (isValid)

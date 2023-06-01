@@ -49,19 +49,17 @@ namespace WpfGebruiker
             if (voertuig.BrandstofType.HasValue)
                 cbxBrandstof.SelectedIndex = (int)voertuig.BrandstofType;
             else
-                cbxBrandstof.SelectedIndex = -1;
+                cbxBrandstof.SelectedIndex = 0;
 
             if (voertuig.TransmissieType.HasValue)
                 cbxTransmissie.SelectedIndex = (int)voertuig.TransmissieType;
             else
-                cbxTransmissie.SelectedIndex = -1;
+                cbxTransmissie.SelectedIndex = 0;
 
             txtBouwjaar.Text = voertuig.Bouwjaar.ToString();
 
             // Haal de afbeeldingen op voor dit voertuig
-
             List<Foto> fotos = Foto.GetFotosForVoertuig(voertuig.Id);
-
 
             List<BitmapImage> images2 = new List<BitmapImage>();
 
