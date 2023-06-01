@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using MyClassLibrary;
+using static MyClassLibrary.Voertuig;
 
 namespace WpfGebruiker
 {
@@ -190,15 +191,22 @@ namespace WpfGebruiker
                     Model = txtModel.Text,
                     Beschrijving = txtBeschrijving.Text,
                 };
-                if (nieuwVoertuig.BrandstofType.HasValue)
-                    cbxBrandstof.SelectedIndex = (int)nieuwVoertuig.BrandstofType;
+                if (cbxBrandstof.SelectedIndex != 0)
+                {
+                    nieuwVoertuig.BrandstofType = (Brandstof)cbxBrandstof.SelectedIndex;
+                }
                 else
-                    cbxBrandstof.SelectedIndex = -1; // Of een andere standaardwaarde
-
-                if (nieuwVoertuig.TransmissieType.HasValue)
-                    cbxTransmissie.SelectedIndex = (int)nieuwVoertuig.TransmissieType;
+                {
+                    nieuwVoertuig.BrandstofType = null;
+                }
+                if (cbxTransmissie.SelectedIndex != 0)
+                {
+                    nieuwVoertuig.TransmissieType = (Transmissie)cbxBrandstof.SelectedIndex;
+                }
                 else
-                    cbxTransmissie.SelectedIndex = -1; // Of een andere standaardwaarde
+                {
+                    nieuwVoertuig.BrandstofType = null;
+                }
 
                 if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))
                 {
@@ -230,7 +238,7 @@ namespace WpfGebruiker
                         }
                     }
                 }
-                VoertuigenPage.Instance.UpdateVoertuigen();
+                VoertuigenPage.instance.UpdateVoertuigen();
                 Close();
             }
         }

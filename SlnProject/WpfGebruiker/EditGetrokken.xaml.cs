@@ -247,7 +247,7 @@ namespace WpfGebruiker
                 }
 
                 // Vernieuw de weergave van de voertuigen
-                VoertuigenPage.Instance.UpdateVoertuigen();
+                VoertuigenPage.instance.UpdateVoertuigen();
 
                 // Sluit het venster
                 Close();

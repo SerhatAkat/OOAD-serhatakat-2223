@@ -103,14 +103,6 @@ namespace WpfGebruiker
                 btnVerwijder3.Tag = afb3;
             }
 
-
-
-
-
-
-
-
-
             currentId = new Gebruiker { Id = voertuig.Id };
         }
 
@@ -235,15 +227,14 @@ namespace WpfGebruiker
 
         private void btnOpslaan_Click(object sender, RoutedEventArgs e)
         {
+            Voertuig huidigVoertuig = teBewerkenVoertuig;
             List<Foto> bestaandeFotos = Foto.GetFotosForVoertuig(teBewerkenVoertuig.Id);
-            int index = 0;
+
             // Reset error labels
             lblNaamError.Content = "";
             lblBeschrijvingError.Content = "";
             lblBouwjaarError.Content = "";
-
             bool isValid = true;
-
 
             // Validatie
             if (string.IsNullOrEmpty(txtNaam.Text))
@@ -271,26 +262,35 @@ namespace WpfGebruiker
             // Voer de rest van de methode alleen uit als alle velden zijn gevalideerd
             if (isValid)
             {
-                Voertuig nieuwVoertuig = new Voertuig
-                {
-                    Naam = txtNaam.Text.ToString(),
-                    Merk = txtMerk.Text.ToString(),
-                    Model = txtModel.Text.ToString(),
-                    Beschrijving = txtBeschrijving.Text.ToString(),
-                    TransmissieType = Transmissie.Manueel,
-                    BrandstofType = Brandstof.Benzine
-                };
+                huidigVoertuig.Naam = txtNaam.Text;
+                huidigVoertuig.Merk = txtMerk.Text;
+                huidigVoertuig.Model = txtModel.Text;
+                huidigVoertuig.Beschrijving = txtBeschrijving.Text;
 
+                if (cbxBrandstof.SelectedIndex != 0)
+                {
+                    huidigVoertuig.BrandstofType = (Brandstof)cbxBrandstof.SelectedIndex;
+                }
+                else
+                {
+                    huidigVoertuig.BrandstofType = null;
+                }
+                if (cbxTransmissie.SelectedIndex != 0)
+                {
+                    huidigVoertuig.TransmissieType = (Transmissie)cbxTransmissie.SelectedIndex;
+                }
+                else
+                {
+                    huidigVoertuig.TransmissieType = null;
+                }
                 if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))
                 {
                     MessageBox.Show("Vul een geldig bouwjaar in.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                nieuwVoertuig.Bouwjaar = bouwjaar;
-
-
-                nieuwVoertuig.UpdateGemotoriseerd(teBewerkenVoertuig.Id);
+                huidigVoertuig.Bouwjaar = bouwjaar;
+                huidigVoertuig.UpdateGemotoriseerd(teBewerkenVoertuig.Id);
 
                 if (img1.Source != null)
                 {
@@ -302,22 +302,16 @@ namespace WpfGebruiker
                     }
                     else
                     {
-
                         Foto.AddFoto(foto1, teBewerkenVoertuig.Id);
                     }
-
                 }
                 else
                 {
                     if (((Foto)btnVerwijder1.Tag) != null)
                     {
                         Foto.VerwijderFotoByFotoId(((Foto)btnVerwijder1.Tag).Id);
-
                     }
-
                 }
-
-
 
                 if (img2.Source != null)
                 {
@@ -369,7 +363,7 @@ namespace WpfGebruiker
 
                 }
 
-                VoertuigenPage.Instance.UpdateVoertuigen();
+                VoertuigenPage.instance.UpdateVoertuigen();
 
                 Close();
             }

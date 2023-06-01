@@ -80,6 +80,7 @@
             <StackPanel Orientation="Horizontal"  Grid.Row="0" Grid.Column="1">
                 <Label Content="Transmissie:" Margin="10" />
                 <ComboBox x:Name="cbxTransmissie" Margin="10"  Width="150" Height="30">
+                    <ComboBoxItem>None</ComboBoxItem>
                     <ComboBoxItem>Manueel</ComboBoxItem>
                     <ComboBoxItem>Automatisch</ComboBoxItem>
                 </ComboBox>
@@ -87,7 +88,8 @@
             <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
                 <Label Content="Brandstof:" Margin="10" HorizontalAlignment="Center" />
                 <ComboBox x:Name="cbxBrandstof" Margin="10" Width="150" Height="30" HorizontalAlignment="Center">
-                    <ComboBoxItem>Bezine</ComboBoxItem>
+                    <ComboBoxItem>None</ComboBoxItem>
+                    <ComboBoxItem>Benzine</ComboBoxItem>
                     <ComboBoxItem>Diesel</ComboBoxItem>
                     <ComboBoxItem>LPG</ComboBoxItem>
                 </ComboBox>

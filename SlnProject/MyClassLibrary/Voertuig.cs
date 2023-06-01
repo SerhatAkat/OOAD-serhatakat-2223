@@ -30,13 +30,13 @@ namespace MyClassLibrary
         public enum Transmissie
         {
             Manueel = 1,
-            Automatisch
+            Automatisch = 2
         }
         public enum Brandstof
         {
             Benzine = 1,
-            Diesel,
-            LPG
+            Diesel = 2,
+            LPG = 3
         }
 
         public Transmissie? TransmissieType { get; set; }
@@ -320,21 +320,35 @@ namespace MyClassLibrary
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@Naam", Naam ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Merk", this.Merk ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Model", this.Model ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Beschrijving", this.Beschrijving ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Bouwjaar", this.Bouwjaar != 0 ? (object)this.Bouwjaar : (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Transmissie", this.TransmissieType.HasValue ? (object)this.TransmissieType.Value : (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Brandstof", this.BrandstofType.HasValue ? (object)this.BrandstofType.Value : (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Merk", Merk ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Model", Model ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Beschrijving", Beschrijving ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Bouwjaar", Bouwjaar != 0 ? (object)Bouwjaar : (object)DBNull.Value);
+
+                    if (TransmissieType.HasValue)
+                    {
+                        cmd.Parameters.AddWithValue("@Transmissie", (int)TransmissieType);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Transmissie", DBNull.Value);
+                    }
+
+                    if (BrandstofType.HasValue)
+                    {
+                        cmd.Parameters.AddWithValue("@Brandstof", (int)BrandstofType);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Brandstof", DBNull.Value);
+                    }
+
                     cmd.Parameters.AddWithValue("@ID", id);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
                 }
             }
         }
-
-
-
 
 
         public void UpdateGetrokken()

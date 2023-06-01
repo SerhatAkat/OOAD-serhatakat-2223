@@ -221,7 +221,7 @@ namespace WpfGebruiker
                         }
                     }
                 }
-                VoertuigenPage.Instance.UpdateVoertuigen();
+                VoertuigenPage.instance.UpdateVoertuigen();
                 Close();
             }
         }

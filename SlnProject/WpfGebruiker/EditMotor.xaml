@@ -87,9 +87,9 @@
             <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
                 <Label Content="Brandstof:" Margin="10" HorizontalAlignment="Center" />
                 <ComboBox x:Name="cbxBrandstof" Margin="10" Width="150" Height="30" HorizontalAlignment="Center">
-                    <ComboBoxItem>Bezine</ComboBoxItem>
-                    <ComboBoxItem>Diesel</ComboBoxItem>
-                    <ComboBoxItem>LPG</ComboBoxItem>
+                    <ComboBoxItem>benzine</ComboBoxItem>
+                    <ComboBoxItem>diesel</ComboBoxItem>
+                    <ComboBoxItem>lpg</ComboBoxItem>
                 </ComboBox>
             </StackPanel>
         </Grid>
