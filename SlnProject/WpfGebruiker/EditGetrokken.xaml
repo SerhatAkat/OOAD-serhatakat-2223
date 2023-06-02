@@ -48,7 +48,7 @@
             <Label x:Name="lblNaamError" Content="" Foreground="Red" Margin="10" Width="350" Height="30"/>
 
             <Label Content="Beschrijving:" Margin="10" />
-            <TextBox x:Name="txtBeschrijving" Margin="10" Width="350" Height="100"/>
+            <TextBox x:Name="txtBeschrijving" Margin="10" Width="350" Height="100" TextWrapping="Wrap"/>
             <Label x:Name="lblBeschrijvingError" Content="" Foreground="Red" Margin="10" Width="350"/>
         </StackPanel>
 

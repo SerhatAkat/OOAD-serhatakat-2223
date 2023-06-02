@@ -210,7 +210,7 @@ namespace WpfGebruiker
         {
             if (MijnOntleningenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontl)
             {
-                if (ontl.Tot > DateTime.Now)
+                if (ontl.Tot > DateTime.Now && ontl.OntleningStatus == Ontlening.Status.InAanvraag)
                 {
                     btnAnnuleren.IsEnabled = true;
                 }
