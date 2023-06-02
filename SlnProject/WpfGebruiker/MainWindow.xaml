@@ -20,6 +20,7 @@
             <Button Name="btnHome" Content="Home" Margin="10" Click="BtnHome_Click" />
             <Button Name="btnOntleningen" Content="Ontleningen" Margin="10" Click="BtnOntleningen_Click" />
             <Button Name="btnVoertuigen" Content="Voertuigen" Margin="10" Click="BtnVoertuigen_Click" />
+            <Image Name="imgProfiel" Width="100" Height="100"></Image>
         </StackPanel>
 
         <Frame Name="MainFrame" Grid.Column="1" Grid.Row="1"/>

@@ -15,6 +15,7 @@ namespace MyClassLibrary
         public string Paswoord { get; set; }
         public DateTime Aanmaakdatum { get; set; }
         public GeslachtType Geslacht { get; set; }
+        public byte[] Profielfoto { get; set; }
 
         public enum GeslachtType
         {
@@ -55,6 +56,7 @@ namespace MyClassLibrary
                     gebruiker.Id = (int)reader["Id"];
                     gebruiker.Voornaam = (string)reader["voornaam"];
                     gebruiker.Achternaam = (string)reader["achternaam"];
+                    gebruiker.Profielfoto = (byte[])reader["profielfoto"];
                     string storedPassword = (string)reader["paswoord"];
 
                     string hashedInputPassword = ToSha256(password);

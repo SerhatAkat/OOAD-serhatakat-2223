@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Windows;
+using System.Windows.Media.Imaging;
 using MyClassLibrary;
 
 namespace WpfGebruiker
@@ -15,6 +18,7 @@ namespace WpfGebruiker
             InitializeComponent();
             ingelogdeGebruiker = gebruiker;
             MainFrame.Navigate(new HomePage(ingelogdeGebruiker));
+            ToonProfielFoto();
         }
 
         private void BtnHome_Click(object sender, RoutedEventArgs e)
@@ -30,6 +34,22 @@ namespace WpfGebruiker
         private void BtnVoertuigen_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.Content = new VoertuigenPage(ingelogdeGebruiker.Id);
+        }
+        private void ToonProfielFoto()
+        {
+            byte[] imageData = ingelogdeGebruiker.Profielfoto;
+            if (imageData != null && imageData.Length > 0)
+            {
+                BitmapImage imageSource = new BitmapImage();
+                using (MemoryStream stream = new MemoryStream(imageData))
+                {
+                    imageSource.BeginInit();
+                    imageSource.CacheOption = BitmapCacheOption.OnLoad;
+                    imageSource.StreamSource = stream;
+                    imageSource.EndInit();
+                }
+                imgProfiel.Source = imageSource;
+            }
         }
     }
 }
