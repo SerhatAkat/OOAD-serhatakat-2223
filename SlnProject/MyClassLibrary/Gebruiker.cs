@@ -60,10 +60,8 @@ namespace MyClassLibrary
                     string hashedInputPassword = ToSha256(password);
                     if (hashedInputPassword == storedPassword)
                     {
-
                         return gebruiker;
                     }
-
                 }
                 return null;
             }
