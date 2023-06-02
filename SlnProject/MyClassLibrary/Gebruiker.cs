@@ -56,7 +56,14 @@ namespace MyClassLibrary
                     gebruiker.Id = (int)reader["Id"];
                     gebruiker.Voornaam = (string)reader["voornaam"];
                     gebruiker.Achternaam = (string)reader["achternaam"];
-                    gebruiker.Profielfoto = (byte[])reader["profielfoto"];
+                    if (reader["profielfoto"] != DBNull.Value)
+                    {
+                        gebruiker.Profielfoto = (byte[])reader["profielfoto"];
+                    }
+                    else
+                    {
+                        gebruiker.Profielfoto = null;
+                    }
                     string storedPassword = (string)reader["paswoord"];
 
                     string hashedInputPassword = ToSha256(password);
