@@ -77,41 +77,6 @@ namespace MyClassLibrary
                 return null;
             }
         }
-
-        //public static Gebruiker GetGebruiker(string email, string paswoord)
-        //{
-        //    string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
-        //    using (SqlConnection conn = new SqlConnection(connectionString))
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = new SqlCommand("SELECT * FROM [dbo].[Gebruiker] WHERE Email = @email AND Paswoord = @paswoord", conn))
-        //        {
-        //            cmd.Parameters.AddWithValue("@email", email);
-        //            cmd.Parameters.AddWithValue("@paswoord", paswoord);
-
-        //            using (SqlDataReader reader = cmd.ExecuteReader())
-        //            {
-        //                if (reader.Read())
-        //                {
-        //                    Gebruiker gebruiker = new Gebruiker
-        //                    {
-        //                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
-        //                        Voornaam = reader.GetString(reader.GetOrdinal("Voornaam")),
-        //                        Achternaam = reader.GetString(reader.GetOrdinal("Achternaam")),
-        //                        Email = reader.GetString(reader.GetOrdinal("Email")),
-        //                        Paswoord = reader.GetString(reader.GetOrdinal("Paswoord")),
-        //                        Aanmaakdatum = reader.GetDateTime(reader.GetOrdinal("Aanmaakdatum")),
-        //                        Geslacht = (GeslachtType)reader.GetByte(reader.GetOrdinal("Geslacht"))
-        //                    };
-
-        //                    return gebruiker;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return null;
-        //}
         public static string GetGebruikerNaamById(int id)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;

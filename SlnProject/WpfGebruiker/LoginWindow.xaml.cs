@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using MyClassLibrary;
@@ -57,22 +58,34 @@ namespace WpfGebruiker
                 return;
             }
 
-            Gebruiker gebruiker = Gebruiker.GetGebruiker(email, paswoord);
-
-            if (gebruiker != null)
+            try
             {
-                MainWindow mainWindow = new MainWindow(gebruiker);
-                mainWindow.Show();
+                Gebruiker gebruiker = Gebruiker.GetGebruiker(email, paswoord);
 
-                this.Close();
+                if (gebruiker != null)
+                {
+                    MainWindow mainWindow = new MainWindow(gebruiker);
+                    mainWindow.Show();
+
+                    Gebruiker.StoreHashedPaswoord(Gebruiker.ToSha256(txtPaswoord.Password), gebruiker.Id);
+
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Ongeldige inloggegevens. Probeer het opnieuw.");
+                    txtPaswoord.Password = "";
+                }
             }
-            else if (gebruiker == null)
+            catch (SqlException ex)
             {
-                MessageBox.Show("Ongeldige inloggegevens. Probeer het opnieuw.");
-                txtPaswoord.Password = "";
+                MessageBox.Show("Er is een fout opgetreden tijdens het verbinden met de database: " + ex.Message);
             }
-            Gebruiker.StoreHashedPaswoord(Gebruiker.ToSha256(txtPaswoord.Password), gebruiker.Id);
-
+            catch (Exception ex)
+            {
+                MessageBox.Show("Er is een onverwachte fout opgetreden: " + ex.Message);
+            }
         }
+
     }
 }

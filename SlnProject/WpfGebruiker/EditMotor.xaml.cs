@@ -123,7 +123,6 @@ namespace WpfGebruiker
 
         }
 
-
         private void BtnUploaden_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -222,144 +221,145 @@ namespace WpfGebruiker
 
         private void btnOpslaan_Click(object sender, RoutedEventArgs e)
         {
-            Voertuig huidigVoertuig = teBewerkenVoertuig;
-            List<Foto> bestaandeFotos = Foto.GetFotosForVoertuig(teBewerkenVoertuig.Id);
-
-            // Reset error labels
-            lblNaamError.Content = "";
-            lblBeschrijvingError.Content = "";
-            lblBouwjaarError.Content = "";
-            bool isValid = true;
-
-            // Validatie
-            if (string.IsNullOrEmpty(txtNaam.Text))
+            try
             {
-                lblNaamError.Content = "Gelieve een naam te geven.";
-                isValid = false;
-            }
-            if (string.IsNullOrEmpty(txtBeschrijving.Text))
-            {
-                lblBeschrijvingError.Content = "Gelieve een beschrijving te geven.";
-                isValid = false;
-            }
-            if (string.IsNullOrEmpty(txtBouwjaar.Text))
-            {
-                lblBouwjaarError.Content = "Gelieve een bouwjaar in te vullen.";
-                isValid = false;
-            }
+                Voertuig huidigVoertuig = teBewerkenVoertuig;
+                List<Foto> bestaandeFotos = Foto.GetFotosForVoertuig(teBewerkenVoertuig.Id);
 
-            if (img1.Source == null && img2.Source == null && img3.Source == null)
-            {
-                lblImageError.Content = "Gelieve ten minste 1 afbeelding te kiezen";
-                isValid = false;
-            }
+                // Reset error labels
+                lblNaamError.Content = "";
+                lblBeschrijvingError.Content = "";
+                lblBouwjaarError.Content = "";
+                bool isValid = true;
 
-            // Voer de rest van de methode alleen uit als alle velden zijn gevalideerd
-            if (isValid)
-            {
-                huidigVoertuig.Naam = txtNaam.Text;
-                huidigVoertuig.Merk = txtMerk.Text;
-                huidigVoertuig.Model = txtModel.Text;
-                huidigVoertuig.Beschrijving = txtBeschrijving.Text;
-
-                if (cbxBrandstof.SelectedIndex != 0)
+                // Validatie
+                if (string.IsNullOrEmpty(txtNaam.Text))
                 {
-                    huidigVoertuig.BrandstofType = (Brandstof)cbxBrandstof.SelectedIndex;
+                    lblNaamError.Content = "Gelieve een naam te geven.";
+                    isValid = false;
                 }
-                else
+                if (string.IsNullOrEmpty(txtBeschrijving.Text))
                 {
-                    huidigVoertuig.BrandstofType = null;
+                    lblBeschrijvingError.Content = "Gelieve een beschrijving te geven.";
+                    isValid = false;
                 }
-                if (cbxTransmissie.SelectedIndex != 0)
+                if (string.IsNullOrEmpty(txtBouwjaar.Text))
                 {
-                    huidigVoertuig.TransmissieType = (Transmissie)cbxTransmissie.SelectedIndex;
-                }
-                else
-                {
-                    huidigVoertuig.TransmissieType = null;
-                }
-                if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))
-                {
-                    MessageBox.Show("Vul een geldig bouwjaar in.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    lblBouwjaarError.Content = "Gelieve een bouwjaar in te vullen.";
+                    isValid = false;
                 }
 
-                huidigVoertuig.Bouwjaar = bouwjaar;
-                huidigVoertuig.UpdateGemotoriseerd(teBewerkenVoertuig.Id);
-
-                if (img1.Source != null)
+                if (img1.Source == null && img2.Source == null && img3.Source == null)
                 {
-                    byte[] foto1 = ImageToByte(img1);
+                    lblImageError.Content = "Gelieve ten minste 1 afbeelding te kiezen";
+                    isValid = false;
+                }
 
-                    if (btnVerwijder1.Tag != null)
+                // Voer de rest van de methode alleen uit als alle velden zijn gevalideerd
+                if (isValid)
+                {
+                    huidigVoertuig.Naam = txtNaam.Text;
+                    huidigVoertuig.Merk = txtMerk.Text;
+                    huidigVoertuig.Model = txtModel.Text;
+                    huidigVoertuig.Beschrijving = txtBeschrijving.Text;
+
+                    if (cbxBrandstof.SelectedIndex != 0)
                     {
-                        Foto.EditFoto(((Foto)btnVerwijder1.Tag).Id, foto1);
+                        huidigVoertuig.BrandstofType = (Brandstof)cbxBrandstof.SelectedIndex;
                     }
                     else
                     {
-                        Foto.AddFoto(foto1, teBewerkenVoertuig.Id);
+                        huidigVoertuig.BrandstofType = null;
                     }
-                }
-                else
-                {
-                    if (((Foto)btnVerwijder1.Tag) != null)
+                    if (cbxTransmissie.SelectedIndex != 0)
                     {
-                        Foto.VerwijderFotoByFotoId(((Foto)btnVerwijder1.Tag).Id);
-                    }
-                }
-
-                if (img2.Source != null)
-                {
-                    byte[] foto2 = ImageToByte(img2);
-
-                    if (btnVerwijder2.Tag != null)
-                    {
-                        Foto.EditFoto(((Foto)btnVerwijder2.Tag).Id, foto2);
+                        huidigVoertuig.TransmissieType = (Transmissie)cbxTransmissie.SelectedIndex;
                     }
                     else
                     {
-
-                        Foto.AddFoto(foto2, teBewerkenVoertuig.Id);
+                        huidigVoertuig.TransmissieType = null;
+                    }
+                    if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))
+                    {
+                        MessageBox.Show("Vul een geldig bouwjaar in.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
                     }
 
-                }
-                else
-                {
-                    if (((Foto)btnVerwijder2.Tag) != null)
+                    huidigVoertuig.Bouwjaar = bouwjaar;
+                    huidigVoertuig.UpdateGemotoriseerd(teBewerkenVoertuig.Id);
+
+                    if (img1.Source != null)
                     {
+                        byte[] foto1 = ImageToByte(img1);
 
-                        Foto.VerwijderFotoByFotoId(((Foto)btnVerwijder2.Tag).Id);
-
-                    }
-                }
-
-                if (img3.Source != null)
-                {
-                    byte[] foto3 = ImageToByte(img3);
-
-                    if (btnVerwijder3.Tag != null)
-                    {
-                        Foto.EditFoto(((Foto)btnVerwijder3.Tag).Id, foto3);
+                        if (btnVerwijder1.Tag != null)
+                        {
+                            Foto.EditFoto(((Foto)btnVerwijder1.Tag).Id, foto1);
+                        }
+                        else
+                        {
+                            Foto.AddFoto(foto1, teBewerkenVoertuig.Id);
+                        }
                     }
                     else
                     {
-
-                        Foto.AddFoto(foto3, teBewerkenVoertuig.Id);
+                        if (((Foto)btnVerwijder1.Tag) != null)
+                        {
+                            Foto.VerwijderFotoByFotoId(((Foto)btnVerwijder1.Tag).Id);
+                        }
                     }
 
-                }
-                else
-                {
-                    if (((Foto)btnVerwijder3.Tag) != null)
+                    if (img2.Source != null)
                     {
-                        Foto.VerwijderFotoByFotoId(((Foto)btnVerwijder3.Tag).Id);
+                        byte[] foto2 = ImageToByte(img2);
+
+                        if (btnVerwijder2.Tag != null)
+                        {
+                            Foto.EditFoto(((Foto)btnVerwijder2.Tag).Id, foto2);
+                        }
+                        else
+                        {
+                            Foto.AddFoto(foto2, teBewerkenVoertuig.Id);
+                        }
 
                     }
+                    else
+                    {
+                        if (((Foto)btnVerwijder2.Tag) != null)
+                        {
 
+                            Foto.VerwijderFotoByFotoId(((Foto)btnVerwijder2.Tag).Id);
+                        }
+                    }
+
+                    if (img3.Source != null)
+                    {
+                        byte[] foto3 = ImageToByte(img3);
+
+                        if (btnVerwijder3.Tag != null)
+                        {
+                            Foto.EditFoto(((Foto)btnVerwijder3.Tag).Id, foto3);
+                        }
+                        else
+                        {
+                            Foto.AddFoto(foto3, teBewerkenVoertuig.Id);
+                        }
+                    }
+                    else
+                    {
+                        if (((Foto)btnVerwijder3.Tag) != null)
+                        {
+                            Foto.VerwijderFotoByFotoId(((Foto)btnVerwijder3.Tag).Id);
+                        }
+
+                    }
+                    VoertuigenPage.instance.UpdateVoertuigen();
+                    Close();
                 }
-
-                VoertuigenPage.instance.UpdateVoertuigen();
-                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Er is een fout opgetreden: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

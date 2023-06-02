@@ -82,35 +82,51 @@ namespace WpfGebruiker
 
         private void btnBevestigen_Click(object sender, RoutedEventArgs e)
         {
-            if (dtmVan.SelectedDate.HasValue && dtmTot.SelectedDate.HasValue)
+            try
             {
-                if (dtmVan.SelectedDate.Value >= dtmVan.SelectedDate.Value)
+                DateTime currentDate = DateTime.Today;
+                if (dtmVan.SelectedDate.HasValue && dtmTot.SelectedDate.HasValue)
                 {
-                    Ontlening nieuweOntlening = new Ontlening
+                    if (dtmVan.SelectedDate.Value.Date < dtmTot.SelectedDate.Value.Date && dtmVan.SelectedDate.Value.Date >= currentDate)
                     {
-                        Id = huidigeVoertuig.Id,
-                        Vanaf = dtmVan.SelectedDate.Value.Date,
-                        Tot = dtmTot.SelectedDate.Value.Date,
-                        Bericht = txtBericht.Text,
-                        OntleningStatus = Ontlening.Status.InAanvraag,
-                        Aanvrager = Gebruiker.GetGebruikerById(gebruikerId)
-                    };
+                        Ontlening nieuweOntlening = new Ontlening
+                        {
+                            Id = huidigeVoertuig.Id,
+                            Vanaf = dtmVan.SelectedDate.Value.Date,
+                            Tot = dtmTot.SelectedDate.Value.Date,
+                            Bericht = txtBericht.Text,
+                            OntleningStatus = Ontlening.Status.InAanvraag,
+                            Aanvrager = Gebruiker.GetGebruikerById(gebruikerId)
+                        };
 
-                    Ontlening.VoegOntleningToe(nieuweOntlening);
+                        Ontlening.VoegOntleningToe(nieuweOntlening);
 
-                    dtmVan.SelectedDate = null;
-                    dtmTot.SelectedDate = null;
-                    txtBericht.Text = string.Empty;
+                        dtmVan.SelectedDate = null;
+                        dtmTot.SelectedDate = null;
+                        txtBericht.Text = string.Empty;
+                    }
+                    else
+                    {
+                        if (dtmVan.SelectedDate.Value.Date < currentDate)
+                        {
+                            MessageBox.Show("De begindatum mag niet in het verleden zijn.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                        else
+                        {
+                            MessageBox.Show("De einddatum moet na de begindatum zijn.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("De einddatum moet na de begindatum zijn.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Vul de begindatum en einddatum in.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Vul de begindatum en einddatum in.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Er is een fout opgetreden: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
     }
 }
