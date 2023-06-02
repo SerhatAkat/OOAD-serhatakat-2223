@@ -74,7 +74,7 @@
             <Label x:Name="lblBericht" Content="Bericht aan eigenaar:" Grid.Row="2" Grid.Column="0" Margin="0 0 10 0"/>
             <TextBox x:Name="txtBericht" Grid.Row="2" Grid.Column="1" Height="150" Width="500" HorizontalAlignment="Left"/>
 
-            <Button x:Name="btnBevestigen" Content="Bevestigen" Grid.Row="3" Grid.Column="1" Grid.RowSpan="3" Margin="0 0 10 0" Width="100" Height="30" HorizontalAlignment="Left" Click="btnBevestigen_Click"/>
+            <Button x:Name="btnBevestigen" Content="Bevestigen" Grid.Row="3" Grid.Column="1" Grid.RowSpan="3" Margin="0 0 10 0" Width="100" Height="30" HorizontalAlignment="Left" Click="BtnBevestigen_Click"/>
         </Grid>
     </Grid>
 </Page>

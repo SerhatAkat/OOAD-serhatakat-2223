@@ -1,21 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Microsoft.Win32;
 using MyClassLibrary;
-using static System.Net.Mime.MediaTypeNames;
 using static MyClassLibrary.Voertuig;
 
 namespace WpfGebruiker
@@ -65,10 +55,12 @@ namespace WpfGebruiker
                 images2.Add(ConvertToBitmapImage(foto.Image));
             }
 
-            if (images2.Count >= 1) { img1.Source = images2[0]; }
+            if (images2.Count >= 1)
+            {
+                img1.Source = images2[0];
+            }
             if (images2.Count >= 2)
             {
-
                 img1.Source = images2[0];
 
                 img2.Source = images2[1];
@@ -117,10 +109,11 @@ namespace WpfGebruiker
                 }
                 bitmapImage.Freeze(); // Freeze the BitmapImage to improve performance and allow cross-thread access if needed
                 return bitmapImage;
-
             }
-            else return null;
-
+            else
+            {
+                return null;
+            }
         }
 
         private void BtnUploaden_Click(object sender, RoutedEventArgs e)
@@ -159,9 +152,6 @@ namespace WpfGebruiker
                                 MessageBox.Show("Er kunnen maximaal 3 foto's worden geupload", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
                                 return;
                         }
-
-                        // Maak een nieuwe Foto-object en voeg het toe aan de database
-
                     }
 
                     // Opnieuw ophalen van de teBewerkenVoertuig-instantie
@@ -170,7 +160,7 @@ namespace WpfGebruiker
             }
         }
 
-        private byte[] ImageToByte(System.Windows.Controls.Image img)
+        private byte[] ImageToByte(Image img)
         {
             if (img.Source == null)
             {
@@ -190,7 +180,6 @@ namespace WpfGebruiker
             }
         }
 
-
         private void VerwijderAfbeelding_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -200,26 +189,25 @@ namespace WpfGebruiker
             {
                 case "btnVerwijder1":
                     img1.Source = null;
-                    if (foto != null) ;
+                    if (foto != null);
                     break;
                 case "btnVerwijder2":
                     img2.Source = null;
-                    if (foto != null) ;
+                    if (foto != null);
                     break;
                 case "btnVerwijder3":
                     img3.Source = null;
-                    if (foto != null) ;
+                    if (foto != null);
                     break;
             }
         }
 
-        private void btnAnnuleren_Click(object sender, RoutedEventArgs e)
+        private void BtnAnnuleren_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
 
-
-        private void btnOpslaan_Click(object sender, RoutedEventArgs e)
+        private void BtnOpslaan_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -321,13 +309,11 @@ namespace WpfGebruiker
                         {
                             Foto.AddFoto(foto2, teBewerkenVoertuig.Id);
                         }
-
                     }
                     else
                     {
                         if (((Foto)btnVerwijder2.Tag) != null)
                         {
-
                             Foto.VerwijderFotoByFotoId(((Foto)btnVerwijder2.Tag).Id);
                         }
                     }
@@ -351,7 +337,6 @@ namespace WpfGebruiker
                         {
                             Foto.VerwijderFotoByFotoId(((Foto)btnVerwijder3.Tag).Id);
                         }
-
                     }
                     VoertuigenPage.instance.UpdateVoertuigen();
                     Close();

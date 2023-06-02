@@ -22,18 +22,17 @@ namespace WpfGebruiker
             MainFrame.Navigate(new HomePage(ingelogdeGebruiker));
         }
 
-        private void btnHome_Click(object sender, RoutedEventArgs e)
+        private void BtnHome_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.Content = new HomePage(ingelogdeGebruiker);
         }
 
-        private void btnOntleningen_Click(object sender, RoutedEventArgs e)
+        private void BtnOntleningen_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.Content = new OntleningenPage(ingelogdeGebruiker.Id);
         }
 
-
-        private void btnVoertuigen_Click(object sender, RoutedEventArgs e)
+        private void BtnVoertuigen_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.Content = new VoertuigenPage(ingelogdeGebruiker.Id);
         }

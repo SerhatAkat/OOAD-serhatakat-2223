@@ -96,8 +96,8 @@
             </StackPanel>
         </Grid>
         <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button x:Name="btnAnnuleren" Content="Annuleren" Width="90" Margin="5" Click="btnAnnuleren_Click" />
-            <Button x:Name="btnOpslaan" Content="Opslaan" Width="90" Margin="5" Click="btnOpslaan_Click" />
+            <Button x:Name="BtnAnnuleren" Content="Annuleren" Width="90" Margin="5" Click="BtnAnnuleren_Click" />
+            <Button x:Name="BtnOpslaan" Content="Opslaan" Width="90" Margin="5" Click="BtnOpslaan_Click" />
         </StackPanel>
     </Grid>
 </Window>

@@ -156,7 +156,7 @@ namespace WpfGebruiker
             }
         }
 
-        private void btnOpslaan_Click(object sender, RoutedEventArgs e)
+        private void BtnOpslaan_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -189,7 +189,6 @@ namespace WpfGebruiker
                     lblImageError.Content = "Gelieve ten minste 1 afbeelding te kiezen";
                     isValid = false;
                 }
-
 
                 // Voer de rest van de methode alleen uit als alle velden zijn gevalideerd
                 if (isValid)
@@ -258,7 +257,7 @@ namespace WpfGebruiker
             }
         }
 
-        private void btnAnnuleren_Click(object sender, RoutedEventArgs e)
+        private void BtnAnnuleren_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }

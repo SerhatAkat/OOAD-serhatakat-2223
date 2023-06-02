@@ -221,8 +221,6 @@ namespace WpfGebruiker
 
             // Stel de StackPanel in als de Content van het venster
             window.Content = stackPanel;
-
-            // Open het venster
             window.ShowDialog();
         }
 
@@ -262,27 +260,23 @@ namespace WpfGebruiker
             {
                 if (gevondenVoertuig.Type == 1)
                 {
-                    MotorInfo pagina = new MotorInfo(gevondenVoertuig, userId, true); // passing true as isReadOnly
+                    MotorInfo pagina = new MotorInfo(gevondenVoertuig, userId, true);
                     this.NavigationService.Navigate(pagina);
                 }
                 else if (gevondenVoertuig.Type == 2)
                 {
-                    GetrokkenInfo pagina = new GetrokkenInfo(gevondenVoertuig, userId, true); // passing true as isReadOnly
+                    GetrokkenInfo pagina = new GetrokkenInfo(gevondenVoertuig, userId, true);
                     this.NavigationService.Navigate(pagina);
                 }
             }
-
         }
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
         {
-            // Haal de Voertuig ID uit de Tag van de knop
+            // Haal de Voertuig ID uit de tag van de knop
             Button knop = sender as Button;
             int voertuigId = int.Parse(knop.Tag.ToString());
 
-            // Roep de DeleteVoertuig methode aan
-            Voertuig.DeleteVoertuig(voertuigId); // Note: Update this if DeleteVoertuig is not a static method
-
-            // Update de UI
+            Voertuig.DeleteVoertuig(voertuigId);
             UpdateVoertuigen();
         }
         private void EditBtn_Click(object sender, RoutedEventArgs e)
@@ -311,7 +305,6 @@ namespace WpfGebruiker
                 }
             }
 
-            // Vernieuw de weergave van de voertuigen
             UpdateVoertuigen();
         }
     }

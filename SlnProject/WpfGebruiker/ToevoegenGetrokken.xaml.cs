@@ -145,7 +145,7 @@ namespace WpfGebruiker
             }
         }
 
-        private void btnOpslaan_Click(object sender, RoutedEventArgs e)
+        private void BtnOpslaan_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -234,7 +234,7 @@ namespace WpfGebruiker
             }
         }
 
-        private void btnAnnuleren_Click(object sender, RoutedEventArgs e)
+        private void BtnAnnuleren_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }

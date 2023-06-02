@@ -84,6 +84,5 @@ namespace WpfGebruiker
                 MessageBox.Show("Er is een onverwachte fout opgetreden: " + ex.Message);
             }
         }
-
     }
 }

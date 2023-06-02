@@ -32,7 +32,7 @@ namespace WpfGebruiker
             LoadAanvragen();
         }
 
-        private void btnAnnuleren_Click(object sender, RoutedEventArgs e)
+        private void BtnAnnuleren_Click(object sender, RoutedEventArgs e)
         {
             if (MijnOntleningenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontl)
             {
@@ -151,7 +151,7 @@ namespace WpfGebruiker
             }
         }
 
-        private void btnAccepteren_Click(object sender, RoutedEventArgs e)
+        private void BtnAccepteren_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -170,7 +170,7 @@ namespace WpfGebruiker
             }
         }
 
-        private void btnAfwijzen_Click(object sender, RoutedEventArgs e)
+        private void BtnAfwijzen_Click(object sender, RoutedEventArgs e)
         {
             try
             {

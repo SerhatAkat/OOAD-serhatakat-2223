@@ -84,7 +84,7 @@ namespace WpfGebruiker
             }
         }
 
-        private void btnBevestigen_Click(object sender, RoutedEventArgs e)
+        private void BtnBevestigen_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -131,6 +131,5 @@ namespace WpfGebruiker
                 MessageBox.Show("Er is een fout opgetreden: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
     }
 }
