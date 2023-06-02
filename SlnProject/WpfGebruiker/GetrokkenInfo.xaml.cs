@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -59,7 +60,19 @@ namespace WpfGebruiker
 
         private void LoadFotosForVoertuig(int voertuigId)
         {
-            List<Foto> fotos = Foto.GetFotosForVoertuig(voertuigId);
+            List<Foto> fotos = null;
+            try
+            {
+                fotos = Foto.GetFotosForVoertuig(voertuigId);
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show("Databasefout bij het ophalen van foto's: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Er is een fout opgetreden bij het ophalen van foto's: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
             foreach (Foto foto in fotos)
             {

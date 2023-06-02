@@ -46,7 +46,21 @@ namespace WpfGebruiker
             txtBouwjaar.Text = voertuig.Bouwjaar.ToString();
 
             // Haal de afbeeldingen op voor dit voertuig
-            List<Foto> fotos = Foto.GetFotosForVoertuig(voertuig.Id);
+            List<Foto> fotos;
+            try
+            {
+                fotos = Foto.GetFotosForVoertuig(voertuig.Id);
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                MessageBox.Show("Er is een fout opgetreden bij het ophalen van de foto's uit de database: " + ex.Message, "Databasefout", MessageBoxButton.OK, MessageBoxImage.Error);
+                fotos = new List<Foto>(); // Lege lijst in geval van fout
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Er is een algemene fout opgetreden: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                fotos = new List<Foto>(); // Lege lijst in geval van fout
+            }
 
             List<BitmapImage> images2 = new List<BitmapImage>();
 
@@ -118,48 +132,58 @@ namespace WpfGebruiker
 
         private void BtnUploaden_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true;
-            openFileDialog.Filter = "Image files (*.jpg, *.png) | *.jpg; *.png";
-
-            if (openFileDialog.ShowDialog() == true)
+            try
             {
-                List<BitmapImage> images = new List<BitmapImage>();
-                foreach (string filename in openFileDialog.FileNames)
+                // Controleer of minstens één afbeelding al een bron heeft
+                if (img1.Source != null || img2.Source != null || img3.Source != null)
                 {
-                    BitmapImage bitmap = new BitmapImage();
-                    bitmap.BeginInit();
-                    bitmap.UriSource = new Uri(filename);
-                    bitmap.EndInit();
-                    images.Add(bitmap);
+                    return; // Als dat zo is, doe niets
                 }
-                if (images.Count > 0)
+
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Multiselect = true;
+                openFileDialog.Filter = "Image files (*.jpg, *.png) | *.jpg; *.png";
+
+                if (openFileDialog.ShowDialog() == true)
                 {
-                    for (int i = 0; i < images.Count; i++)
+                    List<BitmapImage> images = new List<BitmapImage>();
+                    foreach (string filename in openFileDialog.FileNames)
                     {
-                        switch (i)
-                        {
-                            case 0:
-                                img1.Source = images[i];
-                                break;
-                            case 1:
-                                img2.Source = images[i];
-                                break;
-                            case 2:
-                                img3.Source = images[i];
-                                break;
-                            default:
-                                MessageBox.Show("Er kunnen maximaal 3 foto's worden geupload", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
-                                return;
-                        }
+                        BitmapImage bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.UriSource = new Uri(filename);
+                        bitmap.EndInit();
+                        images.Add(bitmap);
                     }
 
-                    // Opnieuw ophalen van de teBewerkenVoertuig-instantie
-                    teBewerkenVoertuig = GetVoertuigById(teBewerkenVoertuig.Id);
+                    // Alleen de afbeeldingsbron instellen als deze nog niet is ingesteld
+                    if (images.Count > 0 && img1.Source == null)
+                    {
+                        img1.Source = images[0];
+                    }
+                    if (images.Count > 1 && img2.Source == null)
+                    {
+                        img2.Source = images[1];
+                    }
+                    if (images.Count > 2 && img3.Source == null)
+                    {
+                        img3.Source = images[2];
+                    }
                 }
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                MessageBox.Show("Toegang geweigerd: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show("Bestandsleesfout: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Er is een fout opgetreden: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-
         private byte[] ImageToByte(Image img)
         {
             if (img.Source == null)

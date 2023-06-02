@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -46,7 +47,20 @@ namespace WpfGebruiker
             txtBouwjaar.Text = voertuig.Bouwjaar.ToString();
 
             // Haal de afbeeldingen op voor dit voertuig
-            List<Foto> fotos = Foto.GetFotosForVoertuig(voertuig.Id);
+            List<Foto> fotos = new List<Foto>();
+
+            try
+            {
+                fotos = Foto.GetFotosForVoertuig(voertuig.Id);
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show($"Er is een fout opgetreden bij het ophalen van de foto's voor voertuig {voertuig.Id}: {ex.Message}", "Databasefout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Er is een onverwachte fout opgetreden: {ex.Message}", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
             // Zet de byte-arrays om in afbeeldingen en stel de bron van de afbeeldingscontrols in
             for (int i = 0; i < fotos.Count; i++)
@@ -202,11 +216,11 @@ namespace WpfGebruiker
                     }
                     if (cbxTransmissie.SelectedIndex != 0)
                     {
-                        nieuwVoertuig.TransmissieType = (Transmissie)cbxBrandstof.SelectedIndex;
+                        nieuwVoertuig.TransmissieType = (Transmissie)cbxTransmissie.SelectedIndex;
                     }
                     else
                     {
-                        nieuwVoertuig.BrandstofType = null;
+                        nieuwVoertuig.TransmissieType = null;
                     }
 
                     if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))

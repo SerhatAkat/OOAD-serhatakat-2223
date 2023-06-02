@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -25,21 +26,46 @@ namespace WpfGebruiker
 
         private void BtnAnnuleren_Click(object sender, RoutedEventArgs e)
         {
-            if (MijnOntleningenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontl)
+            try
             {
-                if (ontl.Tot > DateTime.Now)
+                if (MijnOntleningenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontl)
                 {
-                    Ontlening.VerwijderOntlening(ontl.Id);
-                    LaadOntleningen();
-                    LoadAanvragen();
+                    if (ontl.Tot > DateTime.Now)
+                    {
+                        Ontlening.VerwijderOntlening(ontl.Id);
+                        LaadOntleningen();
+                        LoadAanvragen();
+                    }
                 }
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show("Databasefout bij het annuleren van de ontlending: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Er is een fout opgetreden bij het annuleren van de ontlending: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void LaadOntleningen()
         {
             MijnOntleningenListBox.Items.Clear();
-            List<Ontlening> mijnOntleningen = Ontlening.GetOntleningen(gebruikerId);
+            List<Ontlening> mijnOntleningen;
+            try
+            {
+                mijnOntleningen = Ontlening.GetOntleningen(gebruikerId);
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show("Databasefout bij het ophalen van de ontleningen: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Er is een fout opgetreden bij het ophalen van de ontleningen: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             // Sorteer de ontleningen op de Vanaf eigenschap, van meest recent naar oudst
             for (int i = 0; i < mijnOntleningen.Count; i++)

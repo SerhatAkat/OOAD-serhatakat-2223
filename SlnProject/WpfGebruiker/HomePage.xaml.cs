@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,7 +38,19 @@ namespace WpfGebruiker
             pnlItems.Children.Clear();
 
             // Haal de lijst met voertuigen op
-            List<Voertuig> voertuigen = Voertuig.GetVoertuigenVanAnderen(userid.Id);
+            List<Voertuig> voertuigen = null;
+            try
+            {
+                voertuigen = Voertuig.GetVoertuigenVanAnderen(userid.Id);
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show("Databasefout bij het ophalen van voertuigen: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Er is een fout opgetreden bij het ophalen van voertuigen: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
             foreach (Voertuig voertuig in voertuigen)
             {
@@ -145,7 +159,19 @@ namespace WpfGebruiker
             int voertuigId = int.Parse(knop.Tag.ToString());
 
             // Zoek het Voertuig in de list
-            List<Voertuig> alleVoertuigen = Voertuig.GetAllVoertuigen();
+            List<Voertuig> alleVoertuigen = null;
+            try
+            {
+                alleVoertuigen = Voertuig.GetAllVoertuigen();
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show("Databasefout bij het ophalen van alle voertuigen: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Er is een fout opgetreden bij het ophalen van alle voertuigen: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             Voertuig gevondenVoertuig = null;
             foreach (Voertuig voertuig in alleVoertuigen)
             {

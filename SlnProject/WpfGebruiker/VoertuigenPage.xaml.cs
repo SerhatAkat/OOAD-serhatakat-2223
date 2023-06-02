@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,7 +53,20 @@ namespace WpfGebruiker
             cardPanel = new WrapPanel();
 
             // Haal de lijst met voertuigen op van de huidige ingelogde gebruiker
-            voertuigen = Voertuig.GetAllVoertuigenOwnedByGebruiker(userId);
+            List<Voertuig> voertuigen = new List<Voertuig>();
+
+            try
+            {
+                voertuigen = Voertuig.GetAllVoertuigenOwnedByGebruiker(userId);
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show($"Er is een fout opgetreden bij het ophalen van de voertuigen voor gebruiker {userId}: {ex.Message}", "Databasefout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Er is een onverwachte fout opgetreden: {ex.Message}", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
             foreach (Voertuig voertuig in voertuigen)
             {
@@ -245,7 +260,20 @@ namespace WpfGebruiker
             int voertuigId = int.Parse(knop.Tag.ToString());
 
             // Zoek het Voertuig in de list
-            List<Voertuig> alleVoertuigen = Voertuig.GetAllVoertuigen();
+            List<Voertuig> alleVoertuigen = new List<Voertuig>();
+
+            try
+            {
+                alleVoertuigen = Voertuig.GetAllVoertuigen();
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show($"Er is een fout opgetreden bij het ophalen van alle voertuigen: {ex.Message}", "Databasefout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Er is een onverwachte fout opgetreden: {ex.Message}", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             Voertuig gevondenVoertuig = null;
             foreach (Voertuig voertuig in alleVoertuigen)
             {
