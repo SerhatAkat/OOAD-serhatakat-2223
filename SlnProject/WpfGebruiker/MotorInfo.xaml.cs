@@ -109,7 +109,7 @@ namespace WpfGebruiker
                     {
                         if (dtmVan.SelectedDate.Value.Date < currentDate)
                         {
-                            MessageBox.Show("De begindatum mag niet in het verleden zijn.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show("Gelieve een toekomstige datum te kiezen.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else
                         {

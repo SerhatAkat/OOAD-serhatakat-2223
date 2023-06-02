@@ -57,20 +57,11 @@ namespace MyClassLibrary
                     gebruiker.Achternaam = (string)reader["achternaam"];
                     string storedPassword = (string)reader["paswoord"];
 
-                    bool isPasswordCorrect = CheckPaswoord(password, storedPassword);
-                    if (isPasswordCorrect)
+                    string hashedInputPassword = ToSha256(password);
+                    if (hashedInputPassword == storedPassword)
                     {
-                        return gebruiker;
-                    }
-                    else
-                    {
-                        string hashedStoredPassword = ToSha256(storedPassword);
-                        string hashedInputPassword = ToSha256(password);
-                        if (hashedInputPassword == hashedStoredPassword)
-                        {
 
-                            return gebruiker;
-                        }
+                        return gebruiker;
                     }
 
                 }
@@ -127,37 +118,14 @@ namespace MyClassLibrary
             return null;
         }
 
-        private static bool CheckPaswoord(string inputPassword, string hashedPassword)
-        {
-            string hashedInputPassword = ToSha256(inputPassword);
-            return hashedInputPassword == hashedPassword;
-        }
-
         public static string ToSha256(string text)
         {
             using (SHA256 sha256 = SHA256.Create())
             {
-                byte[] inpBytes = Encoding.UTF8.GetBytes(text);
-                byte[] hashedPaswoordBytes = sha256.ComputeHash(inpBytes);
-                string hashedPassword = BitConverter.ToString(hashedPaswoordBytes).Replace("-", "");
-                return Convert.ToBase64String(hashedPaswoordBytes);
-            }
-        }
-        public static void StoreHashedPaswoord(string hashedPaswoord, int userId)
-        {
-            string connString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
-
-            using (SqlConnection connection = new SqlConnection(connString))
-            {
-                connection.Open();
-
-                string query = "UPDATE [Gebruiker] SET paswoord = @HashedPassword Where id = @ID";
-
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@HashedPassword", hashedPaswoord);
-                command.Parameters.AddWithValue("@ID", userId);
-
-                command.ExecuteNonQuery();
+                byte[] inputBytes = Encoding.UTF8.GetBytes(text);
+                byte[] hashedPasswordBytes = sha256.ComputeHash(inputBytes);
+                string hashedPassword = BitConverter.ToString(hashedPasswordBytes).Replace("-", "").ToLower();
+                return hashedPassword;
             }
         }
     }

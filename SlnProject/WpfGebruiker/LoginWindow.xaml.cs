@@ -67,8 +67,6 @@ namespace WpfGebruiker
                     MainWindow mainWindow = new MainWindow(gebruiker);
                     mainWindow.Show();
 
-                    Gebruiker.StoreHashedPaswoord(Gebruiker.ToSha256(txtPaswoord.Password), gebruiker.Id);
-
                     this.Close();
                 }
                 else

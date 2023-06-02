@@ -153,25 +153,39 @@ namespace WpfGebruiker
 
         private void btnAccepteren_Click(object sender, RoutedEventArgs e)
         {
-            if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontlening)
+            try
             {
-                ontlening.OntleningStatus = Ontlening.Status.Goedgekeurd;
-                Ontlening.WijzigStatus(ontlening);
+                if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontlening)
+                {
+                    ontlening.OntleningStatus = Ontlening.Status.Goedgekeurd;
+                    Ontlening.WijzigStatus(ontlening);
 
-                AanvragenListBox.Items.Remove(item);
-                LoadAanvragen();
+                    AanvragenListBox.Items.Remove(item);
+                    LoadAanvragen();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Er is een fout opgetreden: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void btnAfwijzen_Click(object sender, RoutedEventArgs e)
         {
-            if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontlening)
+            try
             {
-                ontlening.OntleningStatus = Ontlening.Status.Verworpen;
-                Ontlening.WijzigStatus(ontlening);
+                if (AanvragenListBox.SelectedItem is ListBoxItem item && item.Tag is Ontlening ontlening)
+                {
+                    ontlening.OntleningStatus = Ontlening.Status.Verworpen;
+                    Ontlening.WijzigStatus(ontlening);
 
-                AanvragenListBox.Items.Remove(item);
-                LaadOntleningen();
+                    AanvragenListBox.Items.Remove(item);
+                    LaadOntleningen();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Er is een fout opgetreden: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

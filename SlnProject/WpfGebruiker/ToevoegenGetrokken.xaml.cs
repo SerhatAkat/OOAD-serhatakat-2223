@@ -82,44 +82,50 @@ namespace WpfGebruiker
 
         private void BtnUploaden_Click(object sender, RoutedEventArgs e)
         {
-            // Controleer of minstens één afbeelding al een bron heeft
-            if (img1.Source != null || img2.Source != null || img3.Source != null)
+            try
             {
-                return; // Als dat zo is, doe niets
+                // Controleer of minstens één afbeelding al een bron heeft
+                if (img1.Source != null || img2.Source != null || img3.Source != null)
+                {
+                    return; // Als dat zo is, doe niets
+                }
+
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Multiselect = true;
+                openFileDialog.Filter = "Image files (*.jpg, *.png) | *.jpg; *.png";
+
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    List<BitmapImage> images = new List<BitmapImage>();
+                    foreach (string filename in openFileDialog.FileNames)
+                    {
+                        BitmapImage bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.UriSource = new Uri(filename);
+                        bitmap.EndInit();
+                        images.Add(bitmap);
+                    }
+
+                    // Alleen de afbeeldingsbron instellen als deze nog niet is ingesteld
+                    if (images.Count > 0 && img1.Source == null)
+                    {
+                        img1.Source = images[0];
+                    }
+                    if (images.Count > 1 && img2.Source == null)
+                    {
+                        img2.Source = images[1];
+                    }
+                    if (images.Count > 2 && img3.Source == null)
+                    {
+                        img3.Source = images[2];
+                    }
+                }
             }
-
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true;
-            openFileDialog.Filter = "Image files (*.jpg, *.png) | *.jpg; *.png";
-
-            if (openFileDialog.ShowDialog() == true)
+            catch (Exception ex)
             {
-                List<BitmapImage> images = new List<BitmapImage>();
-                foreach (string filename in openFileDialog.FileNames)
-                {
-                    BitmapImage bitmap = new BitmapImage();
-                    bitmap.BeginInit();
-                    bitmap.UriSource = new Uri(filename);
-                    bitmap.EndInit();
-                    images.Add(bitmap);
-                }
-
-                // Alleen de afbeeldingsbron instellen als deze nog niet is ingesteld
-                if (images.Count > 0 && img1.Source == null)
-                {
-                    img1.Source = images[0];
-                }
-                if (images.Count > 1 && img2.Source == null)
-                {
-                    img2.Source = images[1];
-                }
-                if (images.Count > 2 && img3.Source == null)
-                {
-                    img3.Source = images[2];
-                }
+                MessageBox.Show("Er is een fout opgetreden: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
 
         private void VerwijderAfbeelding_Click(object sender, RoutedEventArgs e)
         {
@@ -141,83 +147,90 @@ namespace WpfGebruiker
 
         private void btnOpslaan_Click(object sender, RoutedEventArgs e)
         {
-            // Reset error labels
-            lblNaamError.Content = "";
-            lblBeschrijvingError.Content = "";
-            lblBouwjaarError.Content = "";
+            try
+            {
+                // Reset error labels
+                lblNaamError.Content = "";
+                lblBeschrijvingError.Content = "";
+                lblBouwjaarError.Content = "";
 
-            bool isValid = true;
+                bool isValid = true;
 
-            // Validatie
-            if (string.IsNullOrEmpty(txtNaam.Text))
-            {
-                lblNaamError.Content = "Gelieve een naam te geven.";
-                isValid = false;
-            }
-            if (string.IsNullOrEmpty(txtBeschrijving.Text))
-            {
-                lblBeschrijvingError.Content = "Gelieve een beschrijving te geven.";
-                isValid = false;
-            }
-            if (string.IsNullOrEmpty(txtBouwjaar.Text))
-            {
-                lblBouwjaarError.Content = "Gelieve een bouwjaar in te vullen.";
-                isValid = false;
-            }
-
-            if (img1.Source == null && img2.Source == null && img3.Source == null)
-            {
-                lblImageError.Content = "Kies ten minste 1 afbeelding";
-                isValid = false;
-            }
-
-            // Voer de rest van de methode alleen uit als alle velden zijn gevalideerd
-            if (isValid)
-            {
-                Voertuig nieuwVoertuig = new Voertuig
+                // Validatie
+                if (string.IsNullOrEmpty(txtNaam.Text))
                 {
-                    Naam = txtNaam.Text,
-                    Merk = txtMerk.Text,
-                    Model = txtModel.Text,
-                    Beschrijving = txtBeschrijving.Text,
-                    Afmetingen = txtAfmetingen.Text,
-                    Geremd = rbnJa.IsChecked == true,
-                };
-
-                if (!string.IsNullOrEmpty(txtGewicht.Text)) nieuwVoertuig.Gewicht = (int?)Convert.ToInt32(txtGewicht.Text);
-                if (!string.IsNullOrEmpty(txtMax.Text)) nieuwVoertuig.MaxBelasting = (int?)Convert.ToInt32(txtMax.Text);
-                if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))
+                    lblNaamError.Content = "Gelieve een naam te geven.";
+                    isValid = false;
+                }
+                if (string.IsNullOrEmpty(txtBeschrijving.Text))
                 {
-                    MessageBox.Show("Gelieve een geldig bouwjaar in te vullen.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    lblBeschrijvingError.Content = "Gelieve een beschrijving te geven.";
+                    isValid = false;
+                }
+                if (string.IsNullOrEmpty(txtBouwjaar.Text))
+                {
+                    lblBouwjaarError.Content = "Gelieve een bouwjaar in te vullen.";
+                    isValid = false;
                 }
 
-                int voertuigId = nieuwVoertuig.ToevoegenGetrokkenVoertuig(nieuwVoertuig, currentId.Id);
-
-                // Controleer of voertuig succesvol is toegevoegd
-                if (voertuigId > 0)
+                if (img1.Source == null && img2.Source == null && img3.Source == null)
                 {
-                    Foto foto = new Foto();
+                    lblImageError.Content = "Kies ten minste 1 afbeelding";
+                    isValid = false;
+                }
 
-                    // Converteer elke afbeelding naar een byte array en voeg ze toe aan de database
-                    foreach (Image img in new[] { img1, img2, img3 })
+                // Voer de rest van de methode alleen uit als alle velden zijn gevalideerd
+                if (isValid)
+                {
+                    Voertuig nieuwVoertuig = new Voertuig
                     {
-                        if (img.Source != null)
-                        {
-                            var encoder = new PngBitmapEncoder();
-                            encoder.Frames.Add(BitmapFrame.Create((BitmapSource)img.Source));
+                        Naam = txtNaam.Text,
+                        Merk = txtMerk.Text,
+                        Model = txtModel.Text,
+                        Beschrijving = txtBeschrijving.Text,
+                        Afmetingen = txtAfmetingen.Text,
+                        Geremd = rbnJa.IsChecked == true,
+                    };
 
-                            using (var stream = new MemoryStream())
+                    if (!string.IsNullOrEmpty(txtGewicht.Text)) nieuwVoertuig.Gewicht = (int?)Convert.ToInt32(txtGewicht.Text);
+                    if (!string.IsNullOrEmpty(txtMax.Text)) nieuwVoertuig.MaxBelasting = (int?)Convert.ToInt32(txtMax.Text);
+                    if (!int.TryParse(txtBouwjaar.Text, out int bouwjaar))
+                    {
+                        MessageBox.Show("Gelieve een geldig bouwjaar in te vullen.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    int voertuigId = nieuwVoertuig.ToevoegenGetrokkenVoertuig(nieuwVoertuig, currentId.Id);
+
+                    // Controleer of voertuig succesvol is toegevoegd
+                    if (voertuigId > 0)
+                    {
+                        Foto foto = new Foto();
+
+                        // Converteer elke afbeelding naar een byte array en voeg ze toe aan de database
+                        foreach (Image img in new[] { img1, img2, img3 })
+                        {
+                            if (img.Source != null)
                             {
-                                encoder.Save(stream);
-                                byte[] imgData = stream.ToArray();
-                                Foto.AddFoto(imgData, voertuigId);
+                                var encoder = new PngBitmapEncoder();
+                                encoder.Frames.Add(BitmapFrame.Create((BitmapSource)img.Source));
+
+                                using (var stream = new MemoryStream())
+                                {
+                                    encoder.Save(stream);
+                                    byte[] imgData = stream.ToArray();
+                                    Foto.AddFoto(imgData, voertuigId);
+                                }
                             }
                         }
                     }
+                    VoertuigenPage.instance.UpdateVoertuigen();
+                    Close();
                 }
-                VoertuigenPage.instance.UpdateVoertuigen();
-                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Er is een fout opgetreden: " + ex.Message, "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
